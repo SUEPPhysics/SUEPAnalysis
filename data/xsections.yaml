@@ -1,0 +1,192 @@
+TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8:
+  xsec: 88.29
+  br  : 1.0
+  kr  : 1.0
+TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8:
+  xsec: 88.29
+  br  : 1.0
+  kr  : 1.0
+WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8:
+  xsec: 11.08
+  br  : 1.0
+  kr  : 1.0
+WWTo2L2Nu_DoubleScattering_13TeV-pythia8:
+  xsec: 0.1703
+  br  : 1.0
+  kr  : 1.0
+WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8:
+  xsec: 5.052
+  br  : 1.0
+  kr  : 1.0
+ZZTo2L2Nu_13TeV_powheg_pythia8:
+  xsec: 0.5644
+  br  : 1.0
+  kr  : 1.0
+WZZ_TuneCP5_13TeV-amcatnlo-pythia8:
+  xsec: 0.05565
+  br  : 1.0
+  kr  : 1.0
+WWZ_TuneCP5_13TeV-amcatnlo-pythia8:
+  xsec: 0.16510
+  br  : 1.0
+  kr  : 1.0
+WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8:
+  xsec: 0.16510
+  br  : 1.0
+  kr  : 1.0
+DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8:
+  xsec: 6529.0
+  br  : 1.0
+  kr  : 1.0
+ZZZ_TuneCP5_13TeV-amcatnlo-pythia8:
+  xsec: 0.01398
+  br  : 1.0
+  kr  : 1.0
+ZZTo4L_13TeV_powheg_pythia8:
+  xsec: 1.256
+  br  : 1.0
+  kr  : 1.0
+ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8:
+  xsec: 3.688
+  br  : 1.0
+  kr  : 1.0
+ZZTo2L2Nu_13TeV_powheg_pythia8:
+  xsec: 0.5644
+  br  : 1.0
+  kr  : 1.0
+TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8:
+  xsec: 0.5104
+  br  : 1.0
+  kr  : 1.0
+TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8:
+  xsec: 0.2432
+  br  : 1.0
+  kr  : 1.0
+TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8:
+  xsec: 0.2149
+  br  : 1.0
+  kr  : 1.0
+TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8:
+  xsec: 0.4316
+  br  : 1.0
+  kr  : 1.0
+WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8:
+  xsec: 6.331
+  br  : 1.0
+  kr  : 1.0
+DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8:
+  xsec: 6529.0
+  br  : 1.0
+  kr  : 1.0
+DY1JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 316.6
+  br  : 1.0
+  kr  : 1.0
+DY1JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 9.543
+  br  : 1.0
+  kr  : 1.0
+DY1JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 1.098
+  br  : 1.0
+  kr  : 1.0
+DY1JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 0.1193
+  br  : 1.0
+  kr  : 1.0
+DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 169.6
+  br  : 1.0
+  kr  : 1.0
+DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 15.65
+  br  : 1.0
+  kr  : 1.0
+DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 2.737
+  br  : 1.0
+  kr  : 1.0
+DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8:
+  xsec: 0.4477
+  br  : 1.0
+  kr  : 1.0
+DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCP5_PSweights_13TeV-amcatnloFXFX-pythia8:
+  xsec: 6505.0
+  br  : 1.0
+  kr  : 1.0
+ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8:
+  xsec: 34.97
+  br  : 1.0 
+  kr  : 1.0
+ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8:
+  xsec: 34.91
+  br  : 1.0 
+  kr  : 1.0
+GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8:
+  xsec: 3.291
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8:
+  xsec: 17.72
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8:
+  xsec: 3.29
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8:
+  xsec: 17.72
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8:
+  xsec: 3.289
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8:
+  xsec: 1.405
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8:
+  xsec: 1.402
+  br  : 1.0
+  kr  : 1.0
+GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8:
+  xsec: 1.407
+  br  : 1.0
+  kr  : 1.0
+WZTo3LNu_0Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.63820
+  br  : 1.109
+  kr  : 1.20
+WZTo3LNu_1Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.33815
+  br  : 1.109
+  kr  : 1.20
+WZTo3LNu_2Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.06622
+  br  : 1.109
+  kr  : 1.20
+WZTo3LNu_3Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.09545
+  br  : 1.109
+  kr  : 1.20
+WZTo3LNu_0Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 2.50836
+  br  : 1.0
+  kr  : 1.0
+WZTo3LNu_1Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.48728
+  br  : 1.0
+  kr  : 1.0
+WZTo3LNu_2Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.16390
+  br  : 1.0
+  kr  : 1.0
+WZTo3LNu_3Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8:
+  xsec: 0.07123
+  br  : 1.0
+  kr  : 1.0
+WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8:
+  xsec: 12.17766469464
+  br  : 1.0
+  kr  : 1.0

@@ -1,0 +1,17 @@
+input_files: [
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/80000/E6FAC772-F112-E811-BE0E-002590FD0F3E.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/80000/BAF1178F-D812-E811-B97F-E0071B7AC7B0.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/80000/B4FA4C70-F112-E811-9697-3C4A92F8FC10.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/80000/A035A965-F112-E811-9559-A0369F3016EC.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/80000/74141C68-F112-E811-AE5E-20CF3027A561.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/80000/6C4A2B67-F112-E811-A35B-B496910A0290.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/7C103D82-F312-E811-B03A-B4969109F68C.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/6CC25A8B-F312-E811-B698-D4856445D5D6.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/44921EA7-F312-E811-9CE2-24BE05CEEDA1.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/4438057A-F312-E811-94F9-D8D385AF8902.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/140CC85E-D012-E811-AB05-E0071B7AC7B0.root",
+  "root://cms-xrd-global.cern.ch//store/mc/RunIISummer16NanoAOD/ZZTo2L2Nu_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/0C16FE80-F312-E811-8555-44A84225C629.root" ]
+
+datasets: [
+  "/MonoZ"
+]

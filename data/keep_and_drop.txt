@@ -1,0 +1,37 @@
+drop * 
+
+# Collections
+keep Electron_*
+keep Flag_*
+keep LHE_*
+# keep GenMET_*
+keep CaloMET_*
+# keep GenPart_*
+keep Gen*
+keep Jet_*
+keep *LHEWeight*
+keep *LHEPdfWeight*
+keep *LHEScaleWeight*
+keep MET_*
+keep Muon_*
+keep Tau_*
+keep *PSWeight*
+keep PV_*
+keep Pileup_*
+keep RawMET_*
+keep PuppiMET_*
+keep TkMET_*
+keep *btagWeight*
+keep event
+keep genWeight
+keep luminosityBlock
+keep run
+
+# HLT paths
+keep HLT_Mu*
+keep HLT_Ele*
+keep HLT_DiMu*
+keep HLT_TripleMu*
+keep HLT_IsoMu*
+keep HLT_DoubleEle*
+

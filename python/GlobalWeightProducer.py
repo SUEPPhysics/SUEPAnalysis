@@ -10,12 +10,11 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
 class GlobalWeightProducer(Module):
-    def __init__(self, isMC, lumiWeight, do_syst=False, syst_var=None):
+    def __init__(self, isMC, lumiWeight, xsec=1.0):
         self.isMC = isMC
         self.lumiWeight = lumiWeight
-        self.do_syst = do_syst
-        self.syst_var = syst_var
-
+        self.xsec = xsec
+        
     def beginJob(self):
         pass
 
@@ -26,6 +25,7 @@ class GlobalWeightProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("weight", "F")
         self.out.branch("lumiWeight", "F")
+        self.out.branch("weightRaw", "F")
         
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -35,9 +35,12 @@ class GlobalWeightProducer(Module):
         # only valid in the MC samples
         if self.isMC:
             weight = event.genWeight * self.lumiWeight 
+            weight_raw = event.genWeight * self.xsec
         else:
             weight = 1.0
+            weight_raw = 1.0
         
         self.out.fillBranch("weight", weight)
         self.out.fillBranch("lumiWeight", self.lumiWeight if self.isMC else 1.0)
+        self.out.fillBranch("weightRaw", weight_raw)
         return True

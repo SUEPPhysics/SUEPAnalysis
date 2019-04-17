@@ -76,16 +76,51 @@ class MonoZProducer(Module):
         pass
 
     def electron_id(self, electron, wp):
+        pass_id = 0
         if (self.era == "2016" and wp == "80"):
             return electron.mvaSpring16GP_WP80
         elif (self.era == "2016" and wp == "90"):
             return electron.mvaSpring16GP_WP90
         elif (self.era == "2017" and wp == "80"):
-            return electron.mvaFall17Iso_WP80
+            try:
+                pass_id = electron.mvaFall17V2Iso_WP80
+            except:
+                try:
+                    pass_id = electron.mvaFall17V1Iso_WP80
+                except:
+                    try:
+                        pass_id = electron.mvaFall17Iso_WP80
+                    except ValueError:
+                        print "[error] not mvaFall17 electron id found ... "
+                        
+            return pass_id
         elif (self.era == "2017" and wp == "90"):
-            return electron.mvaFall17Iso_WP90
+            try:
+                pass_id = electron.mvaFall17V2Iso_WP90
+            except:
+                try:
+                    pass_id = electron.mvaFall17V1Iso_WP90
+                except:
+                    try:
+                        pass_id = electron.mvaFall17Iso_WP90
+                    except ValueError:
+                        print "[error] not mvaFall17 electron id found ... "
+                        
+            return pass_id
         elif (self.era == "2017" and wp == "WPL"):
-            return electron.mvaFall17Iso_WPL
+            try:
+                pass_id = electron.mvaFall17V2Iso_WPL
+            except:
+                try:
+                    pass_id = electron.mvaFall17V1Iso_WPL
+                except:
+                    try:
+                        pass_id = electron.mvaFall17Iso_WPL
+                    except ValueError:
+                        print "[error] not mvaFall17 electron id found ... "
+                        
+            return pass_id
+
 
     def btag_id(self, wp):
         # ref : https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
@@ -104,7 +139,7 @@ class MonoZProducer(Module):
     
     def lorentz_shift(self, obj, p4err, shiftUp=True):
         p4vec = obj.p4()
-        relErr = p4err/p4vec.Pt()
+        relErr = p4err/p4vec.Pt() if p4vec.Pt()>0 else 0.0 
         if shiftUp:
             p4vec *= (1. + relErr)
         else:
@@ -157,24 +192,36 @@ class MonoZProducer(Module):
             syst_var = "nom"
         else:
             syst_var = self.syst_var
+        # checking something
         try:
             var_jet_pts = getattr(event,  "Jet_pt_{}".format(syst_var), None)
-            var_met_pt  = getattr(event,  "MET_pt_{}".format(syst_var), None)
-            var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
-            
             if var_jet_pts:
                 for i,jet in enumerate(jets):
                     jet.pt = var_jet_pts[i]
             else: print 'WARNING: jet pts with variation {} not available, using the nominal value'.format(syst_var)
-                                
+        except:
+            var_jet_pts = getattr(event,  "Jet_pt_nom", None)
+            for i,jet in enumerate(jets):
+                jet.pt = var_jet_pts[i]
+                
+        try:
+            var_met_pt  = getattr(event,  "MET_pt_{}".format(syst_var), None)
+            var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
             if var_met_pt:
                 met.pt = var_met_pt
             else: print 'WARNING: MET pt with variation {} not available, using the nominal value'.format(syst_var)
             if var_met_phi:
                 met.phi = var_met_phi
             else: print 'WARNING: MET phi with variation {} not available, using the nominal value'.format(syst_var)
-        except: pass
+        except: 
+            pass
         
+        # Electrons Energy
+        if "ElectronEn" in self.syst_var: 
+            for i,elec in enumerate(electrons):
+                self.lorentz_shift(elec, elec.energyErr, "Up" in self.syst_var)
+                                
+        # Muons Energy
         try:
             muons_pts = getattr(event, "Muon_pt_corrected")
             for i, muon in enumerate(muons):
@@ -182,12 +229,6 @@ class MonoZProducer(Module):
         except:
             print "warning : Muon_pt_corrected deosn't exist ... " 
             
-        # Electrons Energy
-        if "ElectronEn" in self.syst_var: 
-            for i,elec in enumerate(electrons):
-                self.lorentz_shift(elec, elec.energyErr, "Up" in self.syst_var)
-                                
-        # Muons Energy
         if "MuonEn" in self.syst_var:
             for i,muon in enumerate(muons):
                 self.lorentz_shift(muon, muon.ptErr, "Up" in self.syst_var)
@@ -195,7 +236,6 @@ class MonoZProducer(Module):
         # Muon SF
         if "MuonSF" in self.syst_var:
             muon_sf_uncert = getattr(event, "Muon_pt_sys_uncert")
-            print "muon_sf_uncert : ", muon_sf_uncert
             for i,muon in enumerate(muons):
                 if "Up" in self.syst_var:
                     muon.pt += muon_sf_uncert[i]
@@ -430,9 +470,9 @@ class MonoZProducer(Module):
         # Let remove the negative categories with no obvious meaning meaning
 	# This will reduce the size of most of the bacground and data
         if lep_category > 0:
-          return True
+            return True
 	else:
-          return False
+            return False
 
 MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
 MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")

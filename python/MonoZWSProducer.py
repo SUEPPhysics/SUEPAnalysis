@@ -111,7 +111,7 @@ class MonoZWSProducer(Module):
         weight = event.weightRaw # wieght without deviding on number of events
         # pu uncertainty
         if self.isMC: 
-            weight *= event.genWeight
+            #weight *= event.genWeight
             if "puWeight" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.puWeightUp
@@ -119,9 +119,9 @@ class MonoZWSProducer(Module):
                     weight *= event.puWeightDown
             else:
             	weight *= event.puWeight            
-        # PDF uncertainty
-        
-        # QCD Scale weights
+            # PDF uncertainty
+            
+            # QCD Scale weights
         
         # Filling histograms for given selection only:
         if (event.Z_pt > 60.0 and event.ngood_jets < 2 and new_lepcat > 0 and 

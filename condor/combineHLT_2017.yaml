@@ -1,0 +1,39 @@
+Run2017B.SingleMuon: "
+(HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL || HLT_IsoMu20 || HLT_IsoMu24 || HLT_IsoMu27)
+"
+Run2017B.DoubleMuon: "
+HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 && !(HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL || HLT_IsoMu20 || HLT_IsoMu24 || HLT_IsoMu27)
+"
+
+Run2017B.SingleElectron: "
+(HLT_Ele27_WPTight_Gsf || HLT_Ele35_WPTight_Gsf || HLT_Ele38_WPTight_Gsf || HLT_Ele40_WPTight_Gsf) && !(HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL || HLT_IsoMu20 || HLT_IsoMu24 || HLT_IsoMu27)
+"
+
+Run2017B.DoubleEG: "
+HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ && !(HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL || HLT_IsoMu20 || HLT_IsoMu24 || HLT_IsoMu27) &&!(HLT_Ele27_WPTight_Gsf || HLT_Ele35_WPTight_Gsf || HLT_Ele38_WPTight_Gsf || HLT_Ele40_WPTight_Gsf) && !(HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8)
+"
+
+Run2017B.MuonEG: "
+( HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ ) && !(HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ) & !(HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL || HLT_IsoMu20 || HLT_IsoMu24 || HLT_IsoMu27) && !(HLT_Ele27_WPTight_Gsf || HLT_Ele35_WPTight_Gsf || HLT_Ele38_WPTight_Gsf || HLT_Ele40_WPTight_Gsf) &&
+!(HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8)
+"
+
+Run2017CF.SingleMuon: "
+( HLT_IsoMu24 || HLT_IsoMu27 || HLT_IsoMu30 || HLT_Mu50 )
+"
+
+Run2017CF.DoubleMuon: "
+( HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass8 ) && !(HLT_IsoMu24 || HLT_IsoMu27 || HLT_IsoMu30 || HLT_Mu50 )
+"
+
+Run2017CF.SingleElectron : "
+( HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_Ele35_WPTight_Gsf || HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_Photon200) && !( HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass8 ) && !(HLT_IsoMu24 || HLT_IsoMu27 || HLT_IsoMu30 || HLT_Mu50 ) 
+"
+
+Run2017CF.DoubleEG : "
+(HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL || HLT_DiEle27_WPTightCaloOnly_L1DoubleEG || HLT_DoubleEle33_CaloIdL_MW || HLT_DoubleEle25_CaloIdL_MW || HLT_DoublePhoton70) && !( HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_Ele35_WPTight_Gsf || HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_Photon200) && !( HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass8 ) && !(HLT_IsoMu24 || HLT_IsoMu27 || HLT_IsoMu30 || HLT_Mu50 ) 
+"
+
+Run2017CF.MuonEG : "
+(HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL || HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL || HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL) && !(HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ || HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL || HLT_DiEle27_WPTightCaloOnly_L1DoubleEG || HLT_DoubleEle33_CaloIdL_MW || HLT_DoubleEle25_CaloIdL_MW || HLT_DoublePhoton70) && !( HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_Ele35_WPTight_Gsf || HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_Photon200) && !( HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass3p8 || HLT_Mu19_TrkIsoVVL_Mu9_TrkIsoVVL_DZ_Mass8 ) && !(HLT_IsoMu24 || HLT_IsoMu27 || HLT_IsoMu30 || HLT_Mu50 ) 
+"

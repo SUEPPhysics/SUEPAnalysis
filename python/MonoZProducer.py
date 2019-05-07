@@ -227,7 +227,10 @@ class MonoZProducer(Module):
             for i, muon in enumerate(muons):
                 muon.pt = muons_pts[i]
         except:
-            print "warning : Muon_pt_corrected deosn't exist ... " 
+            if self.isMC:
+                print "warning : Muon_pt_corrected deosn't exist ... "
+            else:
+                pass 
             
         if "MuonEn" in self.syst_var:
             for i,muon in enumerate(muons):

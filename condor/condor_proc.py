@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, re
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # import PSet
@@ -7,11 +7,11 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import Pos
 from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jecUncertainties import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties import *
-from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetRecalib import *
+from PhysicsTools.NanoAODTools.postprocessing.modules.jme import jetRecalib
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.JetSysColl import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProducer import *
-from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles, runsAndLumis
+#from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles, runsAndLumis
 
 
 from PhysicsTools.MonoZ.MonoZProducer import *
@@ -21,23 +21,54 @@ from PhysicsTools.MonoZ.GlobalWeightProducer import *
 
 import argparse
 
-
 parser = argparse.ArgumentParser("")
 parser.add_argument('-isMC'   , '--isMC'   , type=int, default=1     , help="")
 parser.add_argument('-jobNum' , '--jobNum' , type=int, default=1     , help="")
 parser.add_argument('-era'    , '--era'    , type=str, default="2017", help="")
 parser.add_argument('-doSyst' , '--doSyst' , type=int, default=0     , help="")
+parser.add_argument('-infile' , '--infile' , type=str, default=None  , help="")
 parser.add_argument('-dataset', '--dataset', type=str, default="X"   , help="")
 parser.add_argument('-catalog', '--catalog', type=str, default="configs/catalogue_2017.yaml", help="")
+
 options  = parser.parse_args()
+
+def inputfile(nanofile):
+   tested   = False
+   forceaaa = False
+   pfn=os.popen("edmFileUtil -d %s"%(nanofile)).read()
+   pfn=re.sub("\n","",pfn)
+   print nanofile," -> ",pfn
+   if (os.getenv("GLIDECLIENT_Group","") != "overflow" and  
+       os.getenv("GLIDECLIENT_Group","") != "overflow_conservative" and not 
+       forceaaa ):
+      if not tested:
+         print "Testing file open"
+         testfile=ROOT.TFile.Open(pfn)
+         if testfile and testfile.IsOpen() :
+            print "Test OK"
+            nanofile=pfn
+            testfile.Close()
+         else:
+            nanofile = "root://cms-xrd-global.cern.ch/" + nanofile if "root://cms-xrd-global.cern.ch/" not in nanofile else nanofile
+            forceaaa=True
+      else:
+         nanofile = pfn
+   else:
+      nanofile = "root://cms-xrd-global.cern.ch/" + nanofile if "root://cms-xrd-global.cern.ch/" not in nanofile else nanofile
+   return nanofile
+
+options.infile = inputfile(options.infile)
+
 print "---------------------------"
 print " -- options  = ", options
 print " -- is MC    = ", options.isMC
 print " -- jobNum   = ", options.jobNum
 print " -- era      = ", options.era
+print " -- in file  = ", options.infile
 print " -- dataset  = ", options.dataset
 print " -- catalog  = ", options.catalog
 print "---------------------------"
+
 
 weightRaw  = 1.0
 lumiWeight  = 1.0
@@ -45,7 +76,7 @@ if options.isMC:
    from PhysicsTools.NanoAODTools.postprocessing.monoZ.catalog_2017 import catalog
    condtag_ = "NANOAODSIM"
    if options.dataset == "X":
-      options.dataset = inputFiles().value()[0]
+      options.dataset = options.infile
       options.dataset = options.dataset.split('/store')[1].split("/")
       condtag_ = options.dataset[5]
       options.dataset = options.dataset[3]
@@ -69,7 +100,7 @@ if options.isMC:
       print "lumiWeight == ", lumiWeight
 else:
    if options.dataset == "X":
-      options.dataset = inputFiles().value()[0]
+      options.dataset = options.infile
       options.dataset = options.dataset.split('/store')[1].split("/")
       condtag_ = options.dataset[2]
       options.dataset = options.dataset[3]
@@ -83,9 +114,9 @@ from PhysicsTools.NanoAODTools.postprocessing.monoZ.HLT_NotIn_2017 import HLT_pa
 if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 
-pre_selection = "( ( Sum$(Electron_pt>20&&abs(Electron_eta)<2.5) + Sum$(Muon_pt>20&&abs(Muon_eta)<2.5) )>=1 )"
-pre_selection += ' && (Entry$ < 10)'
-modules_2017 = [
+pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
+pre_selection += '&& (Entry$ < 1000)'
+modules_2017   = [
     GlobalWeightProducer(options.isMC, lumiWeight, weightRaw),
 ]
 
@@ -121,28 +152,26 @@ else:
    except yaml.YAMLError as exc:
       print(exc)
    if 'Run2017B' in condtag_:
-      #modules_2017.append(CombineHLT(fileName="combineHLT_2017.yaml", hltSet="Run2017B.%s" % options.dataset, doFilter=True))
       pre_selection = pre_selection + " && (" + combineHLT.get("Run2017B.%s" % options.dataset, 1) + ")"
    else:
-      #modules_2017.append(CombineHLT(fileName="combineHLT_2017.yaml", hltSet="Run2017CF.%s" % options.dataset, doFilter=True))
       pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, 1) + ")"
    # ---
    print " -- era : ",
-   #modules_2017.append(jetRecalib("Fall17_17Nov2017%s_V6_DATA" % condtag_.split(options.era)) )
-   modules_2017.append(jetRecalib2017B() )
+   modules_2017.append(getattr(jetRecalib, 'jetRecalib2017%s' % condtag_.split(options.era)[1])() )
    modules_2017.append(MonoZProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
    modules_2017.append(MonoZWSProducer(isMC=options.isMC, era=str(options.era),
                                        do_syst=1, syst_var='', sample="data"))
 p = PostProcessor(
-   ".", inputFiles(),
+   ".", [options.infile],
    cut=pre_selection,
-   branchsel="../data/keep_and_drop.txt",
-   outputbranchsel="../data/drop_all.txt",
+   branchsel="keep_and_drop.txt",
+   outputbranchsel="drop_all.txt",
+   haddFileName="tree_%s.root" % str(options.jobNum),
    modules=modules_2017,
    provenance=True,
    noOut=False,
    fwkJobReport=True,
-   jsonInput=runsAndLumis()
+   #jsonInput=runsAndLumis()
 )
 
 p.run()

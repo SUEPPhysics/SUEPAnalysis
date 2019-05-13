@@ -8,10 +8,7 @@ log                   = condorrun/$(ClusterId).$(ProcId).log
 Should_Transfer_Files = YES
 initialdir            = /afs/cern.ch/user/y/yhaddad/work/CMSSW_9_4_9/src/PhysicsTools/MonoZ/condor/
 WhenToTransferOutput  = ON_EXIT
-#want_graceful_removal = true
 max_retries           = 1
 +JobFlavour           = "espresso"
-# output_destination    = root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/monoZ/condortest
-transfer_output_files = tree_$(ProcId).root
 
 queue jobid from inputfiles.txt 

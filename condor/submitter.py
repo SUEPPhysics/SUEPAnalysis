@@ -25,26 +25,37 @@ queue jobid from {jobids_file}
 """
 
 script_template = """
+#!/bin/bash
+echo
+export X509_USER_PROXY={PROXY}
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH=slc6_amd64_gcc630
 
+cd /afs/cern.ch/user/y/yhaddad/work/CMSSW_9_4_9/src/
+eval `scramv1 runtime -sh`
+echo
+echo ${_CONDOR_SCRATCH_DIR}
+cd   ${_CONDOR_SCRATCH_DIR}
+echo
+echo "... start job at" `date "+%Y-%m-%d %H:%M:%S"`
+echo "----- directory before running:"
+ls -lR .
+echo "----- CMSSW BASE, python path, pwd:"
+echo "+ CMSSW_BASE  = $CMSSW_BASE"
+echo "+ PYTHON_PATH = $PYTHON_PATH"
+echo "+ PWD         = $PWD"
+echo "----- Found Proxy in: $X509_USER_PROXY"
+python condor_proc.py --jobNum=$1 --isMC=0 --era=2017 --infile=$2
+echo "----- transfert output to eos :"
+xrdcp -s tree_$1.root root://eoscms.cern.ch//store/group/phys_exotica/monoZ/condortest/
+echo "----- directory after running :"
+ls -lR .
+echo "----- checking if eos is mounted : "
+ls -lR  /eos/cms/store/group/phys_exotica/monoZ/condortest/
+echo " ------ THE END (everyone dies !) ----- "
 """
-class Wrap:
-    def __init__(self, func, args, retqueue, runqueue):
-        self.retqueue = retqueue
-        self.runqueue = runqueue
-        self.func = func
-        self.args = args
-    def __call__(self,interactive=False):
-        if not interactive:
-            self.runqueue.put(1)
-        ret = self.func( *self.args )
-        if interactive:
-            return ret
-        else:
-            self.runqueue.get()
-            self.runqueue.task_done()
-            self.retqueue.put( ret  )
 
-class parallel(object):
+class Submitter(object):
     def __init__(self, queue=None, name="job", jobdriver=None, maxthreads=500):
         self.returned = Queue()
         self.jobdriver = jobdriver

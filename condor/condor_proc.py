@@ -115,7 +115,7 @@ if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 
 pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
-pre_selection += '&& (Entry$ < 1000)'
+#pre_selection += '&& (Entry$ < 100)'
 modules_2017   = [
     GlobalWeightProducer(options.isMC, lumiWeight, weightRaw),
 ]

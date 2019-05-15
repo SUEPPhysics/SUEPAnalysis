@@ -73,7 +73,7 @@ print "---------------------------"
 weightRaw  = 1.0
 lumiWeight  = 1.0
 if options.isMC:
-   from PhysicsTools.NanoAODTools.postprocessing.monoZ.catalog_2017 import catalog
+   from PhysicsTools.MonoZ.catalog_2017 import catalog
    condtag_ = "NANOAODSIM"
    if options.dataset == "X":
       options.dataset = options.infile
@@ -110,7 +110,7 @@ else:
       options.dataset = options.dataset[1]
 
 # This has only been tested on 2017 samples
-from PhysicsTools.NanoAODTools.postprocessing.monoZ.HLT_NotIn_2017 import HLT_paths, HLT_not_in
+from PhysicsTools.MonoZ.HLT_NotIn_2017 import HLT_paths, HLT_not_in
 if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 

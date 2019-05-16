@@ -38,8 +38,8 @@ def inputfile(nanofile):
    pfn=os.popen("edmFileUtil -d %s"%(nanofile)).read()
    pfn=re.sub("\n","",pfn)
    print nanofile," -> ",pfn
-   if (os.getenv("GLIDECLIENT_Group","") != "overflow" and  
-       os.getenv("GLIDECLIENT_Group","") != "overflow_conservative" and not 
+   if (os.getenv("GLIDECLIENT_Group","") != "overflow" and
+       os.getenv("GLIDECLIENT_Group","") != "overflow_conservative" and not
        forceaaa ):
       if not tested:
          print "Testing file open"
@@ -115,7 +115,7 @@ if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 
 pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
-#pre_selection += '&& (Entry$ < 100)'
+#pre_selection += '&& (Entry$ < 10000)'
 modules_2017   = [
     GlobalWeightProducer(options.isMC, lumiWeight, weightRaw),
 ]
@@ -142,7 +142,7 @@ if options.isMC:
    for sys in ext_syst:
        for var in ["Up", "Down"]:
            modules_2017.append(
-               MonoZWSProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var, weight_syst=True)
+               MonoZWSProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var, weight_syst=True, sample=m.get("sample", ""))
            )
 
 else:

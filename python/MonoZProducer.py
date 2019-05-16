@@ -1,5 +1,5 @@
 import ROOT
-import sys, os 
+import sys, os
 import numpy as np
 from importlib import import_module
 import itertools
@@ -61,14 +61,15 @@ class MonoZProducer(Module):
 
         self.out.branch("delta_met_rec{}".format(self.syst_suffix), "F")
         self.out.branch("hadronic_recoil{}".format(self.syst_suffix), "F")
-        
+
         self.out.branch("emulatedMET{}".format(self.syst_suffix), "F")
         self.out.branch("emulatedMET_phi{}".format(self.syst_suffix), "F")
-        
+
         self.out.branch("mass_alllep{}".format(self.syst_suffix), "F")
         self.out.branch("trans_mass{}".format(self.syst_suffix), "F")
+        self.out.branch("remll_mass{}".format(self.syst_suffix), "F")
         self.out.branch("pt_alllep{}".format(self.syst_suffix), "F")
-        
+
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
 
@@ -92,7 +93,7 @@ class MonoZProducer(Module):
                         pass_id = electron.mvaFall17Iso_WP80
                     except ValueError:
                         print "[error] not mvaFall17 electron id found ... "
-                        
+
             return pass_id
         elif (self.era == "2017" and wp == "90"):
             try:
@@ -105,7 +106,7 @@ class MonoZProducer(Module):
                         pass_id = electron.mvaFall17Iso_WP90
                     except ValueError:
                         print "[error] not mvaFall17 electron id found ... "
-                        
+
             return pass_id
         elif (self.era == "2017" and wp == "WPL"):
             try:
@@ -118,7 +119,7 @@ class MonoZProducer(Module):
                         pass_id = electron.mvaFall17Iso_WPL
                     except ValueError:
                         print "[error] not mvaFall17 electron id found ... "
-                        
+
             return pass_id
 
 
@@ -136,10 +137,10 @@ class MonoZProducer(Module):
             return 0.4941
         elif (self.era == "2017" and wp == "tight"):
             return 0.8001
-    
+
     def lorentz_shift(self, obj, p4err, shiftUp=True):
         p4vec = obj.p4()
-        relErr = p4err/p4vec.Pt() if p4vec.Pt()>0 else 0.0 
+        relErr = p4err/p4vec.Pt() if p4vec.Pt()>0 else 0.0
         if shiftUp:
             p4vec *= (1. + relErr)
         else:
@@ -149,7 +150,7 @@ class MonoZProducer(Module):
         obj.phi = p4vec.Phi()
         obj.mass = p4vec.M()
         return p4vec
-    
+
     def met_filter(self, flag, filter_mask=True):
         return filter_mask and (
               (flag.HBHENoiseFilter)
@@ -182,12 +183,12 @@ class MonoZProducer(Module):
         taus = list(Collection(event, "Tau"))
         flag = Object(event, "Flag")
         met = Object(event, "MET")
-        
+
         met_p4 = ROOT.TLorentzVector()
         met_p4.SetPtEtaPhiM(met.pt,0.0,met.phi, 0.0)
         # in case of systematic take the shifted values are default
         # For the central values, need to include jetMetTool all the time
-        # Jet systematics 
+        # Jet systematics
         if self.syst_var == "":
             syst_var = "nom"
         else:
@@ -203,7 +204,7 @@ class MonoZProducer(Module):
             var_jet_pts = getattr(event,  "Jet_pt_nom", None)
             for i,jet in enumerate(jets):
                 jet.pt = var_jet_pts[i]
-                
+
         try:
             var_met_pt  = getattr(event,  "MET_pt_{}".format(syst_var), None)
             var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
@@ -213,14 +214,14 @@ class MonoZProducer(Module):
             if var_met_phi:
                 met.phi = var_met_phi
             else: print 'WARNING: MET phi with variation {} not available, using the nominal value'.format(syst_var)
-        except: 
+        except:
             pass
-        
+
         # Electrons Energy
-        if "ElectronEn" in self.syst_var: 
+        if "ElectronEn" in self.syst_var:
             for i,elec in enumerate(electrons):
                 self.lorentz_shift(elec, elec.energyErr, "Up" in self.syst_var)
-                                
+
         # Muons Energy
         try:
             muons_pts = getattr(event, "Muon_pt_corrected")
@@ -230,12 +231,12 @@ class MonoZProducer(Module):
             if self.isMC:
                 print "warning : Muon_pt_corrected deosn't exist ... "
             else:
-                pass 
-            
+                pass
+
         if "MuonEn" in self.syst_var:
             for i,muon in enumerate(muons):
                 self.lorentz_shift(muon, muon.ptErr, "Up" in self.syst_var)
-        
+
         # Muon SF
         if "MuonSF" in self.syst_var:
             muon_sf_uncert = getattr(event, "Muon_pt_sys_uncert")
@@ -244,17 +245,17 @@ class MonoZProducer(Module):
                     muon.pt += muon_sf_uncert[i]
                 else:
                     muon.pt -= muon_sf_uncert[i]
-                        
-        
+
+
         # Electron SF
-        
+
         # EWK corrections
         # [TODO] -> take the code from here [https://github.com/NEUAnalyses/monoZ_Analysis/blob/master/src/DibosonCorrections.cc]
-                
 
-	# apply the shift to the MET. From the old code : 
+
+	# apply the shift to the MET. From the old code :
 	# const Vector2D met = getMet(systematic) + systShiftsForMet;
-	
+
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
@@ -279,7 +280,7 @@ class MonoZProducer(Module):
 
         for el in electrons:
             id_CB = el.cutBased
-            # changing to MVA based ID : 
+            # changing to MVA based ID :
             if el.pt >= 20 and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
                 good_electrons.append(el)
 
@@ -311,27 +312,27 @@ class MonoZProducer(Module):
         emulated_met = ROOT.TLorentzVector()
         all_lepton_p4 = ROOT.TLorentzVector()
         rem_lepton_p4 = ROOT.TLorentzVector()
-        
+
         good_leptons = good_electrons + good_muons
         good_leptons.sort(key=lambda x: x.pt, reverse=True)
-        
+
         ngood_leptons = len(good_leptons)
         nextra_leptons = len(extra_leptons)
-        
+
         if False:
             print "number of leptons [all, good, extra]: ", ngood_leptons, " : ", nextra_leptons
             print "        CBId electrons : ", [e.cutBased for e in good_electrons]
             print "        WP90 electrons : ", [e.mvaFall17Iso_WP90 for e in good_electrons]
             print "             muons     : ", [e.tightId for e in good_muons]
             print "        lepton pts     : ", [e.pt for e in good_leptons]
-        
+
         self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), ngood_leptons)
         self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), nextra_leptons)
-        
+
         lep_category = 0
         if ngood_leptons < 2:
             lep_category = -1
-            
+
         if ngood_leptons == 2 and nextra_leptons==0:
             # constructing the signal region
             if (good_leptons[0].pdgId * good_leptons[1].pdgId) == -11*11:
@@ -367,7 +368,7 @@ class MonoZProducer(Module):
                 if (pair[0].pdgId == -pair[1].pdgId) and (rem_pair[0].pdgId == -rem_pair[1].pdgId):
                     zcand_0 = pair[0].p4() + pair[1].p4()
                     zcand_1 = rem_pair[0].p4() + rem_pair[1].p4()
-                    
+
                     if abs(zcand_0.M()-self.zmass) < abs(zcand_p4.M()-self.zmass):
                         zcand_p4 = zcand_0
                         z_candidate = pair
@@ -379,7 +380,7 @@ class MonoZProducer(Module):
                         if abs(pair[0].pdgId) == 13:
                             lep_category = 7 # MMLL category
         else:
-            # too many bad leptons, with no obvious meaning ? 
+            # too many bad leptons, with no obvious meaning ?
             if len(good_leptons)==1 and (len(good_leptons) + len(extra_leptons))>=1:
                 lep_category = -2
             elif len(good_leptons)>=2 and (len(good_leptons) + len(extra_leptons))>=2:
@@ -401,7 +402,7 @@ class MonoZProducer(Module):
         _delta_phi_zmet = tk.deltaPhi(zcand_p4.Phi(), met.phi)
         _vec_delta_balance  = (met_p4 - zcand_p4).Pt()/zcand_p4.Pt() if zcand_p4.Pt() != 0 else -1
         _sca_delta_balance  = met.pt/zcand_p4.Pt() if zcand_p4.Pt() != 0 else -1
-        
+
         # hadronic recoil
         had_recoil_p4 = ROOT.TLorentzVector()
         had_recoil_p4 += met_p4
@@ -409,7 +410,7 @@ class MonoZProducer(Module):
             had_recoil_p4 += lep.p4()
         had_recoil_p4 = -had_recoil_p4
         _delta_met_rec = tk.deltaPhi(met.phi, had_recoil_p4.Phi()) if lep_category > 0 else -99
-                
+
         self.out.fillBranch("delta_phi_ll{}".format(self.syst_suffix), _delta_zphi)
         self.out.fillBranch("delta_eta_ll{}".format(self.syst_suffix), _delta_zeta)
         self.out.fillBranch("delta_R_ll{}".format(self.syst_suffix), _delta_zdR)
@@ -422,12 +423,12 @@ class MonoZProducer(Module):
         self.out.fillBranch("emulatedMET_phi{}".format(self.syst_suffix), emulated_met.Phi())
         self.out.fillBranch("mass_alllep{}".format(self.syst_suffix), all_lepton_p4.M())
         self.out.fillBranch("pt_alllep{}".format(self.syst_suffix), all_lepton_p4.Pt())
-        
+        self.out.fillBranch("remll_mass{}".format(self.syst_suffix), rem_lepton_p4.M())
         # checking the transverse mass
         _rem_p4 = ROOT.TLorentzVector()
         _rem_p4.SetPtEtaPhiM(rem_lepton_p4.Pt(), 0, rem_lepton_p4.Phi(), 0)
         self.out.fillBranch("trans_mass{}".format(self.syst_suffix), (_rem_p4 + met_p4).M())
-        
+
         # process jet
         good_jets  = []
         good_bjets = []
@@ -439,7 +440,7 @@ class MonoZProducer(Module):
             if tk.closest(jet, good_leptons)[1] < 0.4:
                 continue
             good_jets.append(jet)
-            # Count b-tag with medium WP DeepCSV 
+            # Count b-tag with medium WP DeepCSV
             # ref : https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if abs(jet.eta) <= 2.4 and jet.btagDeepB > self.btag_id("medium"):
                 good_bjets.append(jet)
@@ -469,7 +470,7 @@ class MonoZProducer(Module):
                 had_taus.append(tau)
         self.out.fillBranch("nhad_taus{}".format(self.syst_suffix), len(had_taus))
         self.out.fillBranch("lead_tau_pt{}".format(self.syst_suffix), had_taus[0].pt if len(had_taus) else 0)
-        
+
         # Let remove the negative categories with no obvious meaning meaning
 	# This will reduce the size of most of the bacground and data
         if lep_category > 0:

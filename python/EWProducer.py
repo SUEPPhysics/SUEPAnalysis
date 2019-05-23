@@ -10,12 +10,21 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
 class EWProducer(Module):
-    def __init__(self, process):
+    def __init__(self, process, do_syst=False, syst_var=''):
         self.process = process
         if process==1:
             self.table = np.loadtxt('../data/data_ZZ_EwkCorrections.dat')
         elif process==2:
             self.table = np.loadtxt('../data/data_WZ_EwkCorrections.dat')
+
+        self.do_syst = do_syst
+        self.syst_var = syst_var
+        # No HIST for now
+        if self.syst_var !='':
+            self.syst_suffix = '_sys_' + syst_var if do_syst else ''
+        else:
+            self.syst_suffix = syst_var
+
 
     def beginJob(self):
         pass
@@ -153,7 +162,44 @@ class EWProducer(Module):
 
         kEW = 1. + self.table[itab][jtab]
 
+        if ( self.syst_var == "EWKUp" or self.syst_var == "EWKDown" ):
+            nlept = 0
+            sumptl = 0.
+            for parton in gen_part:
+                if ( parton.statusFlags & 128 ) == 0:
+                    continue
+                if parton.status != 1:
+                    continue
+                if ( abs(parton.pdgId) < 11 or abs(parton.pdgId) > 16 ): 
+                    continue
+                sumptl += parton.pt
+                nlept += 1
 
+            if nlept != 4:
+                # There are cases like this, namely tau and Z->4lep decays
+                # Could handle, but should really make no difference
+                # So just go conservative
+                sumptl = 1E-9
+
+            rhozz = vv.Pt() / sumptl
+
+            # Average QCD NLO k factors from arXiv:1105.0020
+            dkfactor_qcd = 0.
+            if process == 1:       
+                dkfactor_qcd = 15.99/ 9.89 - 1. # ZZ
+            elif process == 2: 
+                if ( gen_part[2].pdgId * gen_part[3].pdgId > 0 ): 
+                    dkfactor_qcd = 28.55 / 15.51 - 1. # W+Z
+                else:                  
+                    dkfactor_qcd = 18.19 / 9.53 - 1. # W-Z
+            
+            ewkUncert = 1. + abs(dkfactor_qcd * self.table[itab][jtab]) if rhozz<0.3 else 1. + abs(self.table[itab][jtab])
+
+            if self.syst_var == "EWKUp": 
+                kEW *= ewkUncert
+            elif self.syst_var == "EWKDown": 
+                kEW /= ewkUncert
+        
         self.out.fillBranch("kEW", kEW)
         return True
 

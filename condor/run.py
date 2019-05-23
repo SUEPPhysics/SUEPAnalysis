@@ -123,7 +123,7 @@ def main():
                 sample_files = subprocess.check_output(
                     ['dasgoclient','--query',"file dataset={}".format(sample)]
                 )
-                time.sleep(30)
+                time.sleep(15)
                 with open(os.path.join(jobs_dir, "inputfiles.dat"), 'w') as infiles:
                     infiles.write(sample_files)
                     infiles.close()

@@ -199,7 +199,9 @@ class MonoZProducer(Module):
             if var_jet_pts:
                 for i,jet in enumerate(jets):
                     jet.pt = var_jet_pts[i]
-            else: print 'WARNING: jet pts with variation {} not available, using the nominal value'.format(syst_var)
+            else:
+                print 'WARNING: jet pts with variation {}'
+                'not available, using the nominal value'.format(syst_var)
         except:
             var_jet_pts = getattr(event,  "Jet_pt_nom", None)
             for i,jet in enumerate(jets):
@@ -210,10 +212,14 @@ class MonoZProducer(Module):
             var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
             if var_met_pt:
                 met.pt = var_met_pt
-            else: print 'WARNING: MET pt with variation {} not available, using the nominal value'.format(syst_var)
+            else:
+                print 'WARNING: MET pt with variation '
+                '{} not available, using the nominal value'.format(syst_var)
             if var_met_phi:
                 met.phi = var_met_phi
-            else: print 'WARNING: MET phi with variation {} not available, using the nominal value'.format(syst_var)
+            else:
+                print 'WARNING: MET phi with variation {}'
+                'not available, using the nominal value'.format(syst_var)
         except:
             pass
 
@@ -248,13 +254,14 @@ class MonoZProducer(Module):
 
 
         # Electron SF
+        # bTag SF
 
         # EWK corrections
         # [TODO] -> take the code from here [https://github.com/NEUAnalyses/monoZ_Analysis/blob/master/src/DibosonCorrections.cc]
 
 
-	# apply the shift to the MET. From the old code :
-	# const Vector2D met = getMet(systematic) + systShiftsForMet;
+	    # apply the shift to the MET. From the old code :
+     	# const Vector2D met = getMet(systematic) + systShiftsForMet;
 
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
@@ -472,13 +479,12 @@ class MonoZProducer(Module):
         self.out.fillBranch("lead_tau_pt{}".format(self.syst_suffix), had_taus[0].pt if len(had_taus) else 0)
 
         # Let remove the negative categories with no obvious meaning meaning
-	# This will reduce the size of most of the bacground and data
-        if lep_category > 0:
+	    # This will reduce the size of most of the bacground and data
+        if lep_category > 0 and pass_met_filter:
             return True
-	else:
-            return False
+        else: return False
 
-MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
-MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")
-MonoZ_2016_data = lambda: MonoZProducer(False, "2016")
-MonoZ_2017_data = lambda: MonoZProducer(False, "2017")
+#MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
+#MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")
+#MonoZ_2016_data = lambda: MonoZProducer(False, "2016")
+#MonoZ_2017_data = lambda: MonoZProducer(False, "2017")

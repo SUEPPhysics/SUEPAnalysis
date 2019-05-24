@@ -8,7 +8,6 @@ import array as ar
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-
 class MonoZWSProducer(Module):
     def __init__(self, isMC, era=2017, sample="DY", do_syst=False, syst_var='', weight_syst=False):
         self.isMC = isMC
@@ -25,12 +24,13 @@ class MonoZWSProducer(Module):
 
     def beginJob(self, histFile=None,histDirName=None):
         Module.beginJob(self,histFile,histDirName)
+
         self.cats = {
-            1 : "EE",
-            2 : "EM",
-            3 : "MM",
-            4 : "3L",
-            5 : "4L",
+            1 : "EE" ,
+            2 : "EM" ,
+            3 : "MM" ,
+            4 : "3L" ,
+            5 : "4L" ,
             6 : "NRB",
             7 : "TOP"
         }
@@ -40,6 +40,16 @@ class MonoZWSProducer(Module):
             'njet{}{}'.format("_" + self.sample, self.syst_suffix),
             'njet{}{}'.format("_" + self.sample, self.syst_suffix),
             6, 0, 6
+        )
+        self.h_bal = ROOT.TH1F(
+            'balance{}{}'.format("_" + self.sample, self.syst_suffix),
+            'balance{}{}'.format("_" + self.sample, self.syst_suffix),
+            10, 0, 1
+        )
+        self.h_phi = ROOT.TH1F(
+            'phizmet{}{}'.format("_" + self.sample, self.syst_suffix),
+            'phizmet{}{}'.format("_" + self.sample, self.syst_suffix),
+            10, 0, 1
         )
         self.h_mll = {}
         for i,cat in self.cats.items():
@@ -54,23 +64,25 @@ class MonoZWSProducer(Module):
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     12, ar.array('d', [40,45,50,55,60,65,70,75,80,85,90,95,100])
-                    )
-            elif cat == "EE" or cat=="MM" or cat=="EM":
-                self.h_met[i] = ROOT.TH1F(
-                    'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    13, ar.array('d', [40,50,75,100,125,150,175,200,250,300,350,400,500,600])
                 )
-            else:
+            elif cat == "EM":
                 self.h_met[i] = ROOT.TH1F(
                     'emulatedMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'emulatedMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     20, 0, 200
                 )
+            else:
+                self.h_met[i] = ROOT.TH1F(
+                    'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
+                    'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
+                    13, ar.array('d', [40,50,75,100,125,150,175,200,250,300,350,400,500,600])
+                )
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
         outputFile.cd()
+        outputFile.mkdir("Shapes")
+        outputFile.cd("Shapes")
         for i,cat in self.cats.items():
             self.h_met[i].Write()
             self.h_mll[i].Write()
@@ -79,56 +91,45 @@ class MonoZWSProducer(Module):
 
     def analyze(self, event):
         # only valid in the MC samples
-        if False:
-            print " puWeight        : ", event.puWeight
-            print " lepton_category : ", event.lep_category
-            print " lumiWeight      : ", event.lumiWeight
 
-        measMET = 0
-        measMll = 0
-        Njets = -1
+        meas_MET     = 0
+        meas_Mll     = 0
+        meas_Njet    = -1
         lep_category = 0
         try:
             lep_category = getattr(event, "lep_category{}".format(self.syst_suffix))
         except:
             lep_category = getattr(event, "lep_category")
 
-        if lep_category <= 3:
-            if self.weight_syst:
-                measMET = getattr(event, "met_pt")
-                measMll = getattr(event, "Z_mass")
-                Njets   = getattr(event, "ngood_jets")
-            else:
-                measMET = getattr(event, "met_pt{}".format(self.syst_suffix))
-                measMll = getattr(event, "Z_mass{}".format(self.syst_suffix))
-                Njets   = getattr(event, "ngood_jets{}".format(self.syst_suffix))
+        if self.weight_syst:
+            meas_MET = getattr(event, "met_pt")
+            meas_Mll = getattr(event, "Z_mass")
+            meas_Njet= getattr(event, "ngood_jets")
         else:
-            if self.weight_syst:
-                measMET = getattr(event, "emulatedMET")
-                measMll = getattr(event, "Z_mass")
-                Njets   = getattr(event, "ngood_jets")
-            else:
-                measMET = getattr(event, "emulatedMET{}".format(self.syst_suffix))
-                measMll = getattr(event, "Z_mass{}".format(self.syst_suffix))
-                Njets   = getattr(event, "ngood_jets{}".format(self.syst_suffix))
+            meas_MET = getattr(event, "met_pt{}".format(self.syst_suffix))
+            meas_Mll = getattr(event, "Z_mass{}".format(self.syst_suffix))
+            meas_Njet= getattr(event, "ngood_jets{}".format(self.syst_suffix))
 
-        #    0 : "NOL",
-        #    1 : "EE",
-        #    2 : "EM",
-        #    3 : "MM",
-        #    4 : "EEL",
-        #    5 : "MML",
-        #    6 : "EELL",
-        #    7 : "MMLL"
         new_lepcat = lep_category
-        if (lep_category == 4 or lep_category == 5):
+        if   (lep_catgory  <= 3):
+            new_lepcat = lep_category
+        elif (lep_category == 4 or lep_category == 5):
             new_lepcat = 4
         elif (lep_category == 6 or lep_category == 7):
             new_lepcat = 5
-        weight = event.weightRaw # wieght without deviding on number of events
+        else:
+            new_lepcat = lep_category
+
+        # cross-section
+        weight = 1.0
+        try:
+            weight = getattr(event, "xsecscale")
+        except:
+            return "ERROR: weight branch doesn't exist"
+
         # pu uncertainty
         if self.isMC:
-            #weight *= event.genWeight
+            # weight *= event.genWeight
             if "puWeight" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.puWeightUp
@@ -136,12 +137,29 @@ class MonoZWSProducer(Module):
                     weight *= event.puWeightDown
             else:
             	weight *= event.puWeight
-            # PDF uncertainty
 
+            # PDF uncertainty
+            if "PDF" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.pdfw_Up
+                else:
+                    weight *= event.pdfw_Down
             # QCD Scale weights
+            if "QCDScale" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.pdfw_Up
+                else:
+                    weight *= event.pdfw_Down
+            # bTagSF
+            weigth *= event.Jet_btagSF
+            if "bTagSF" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.Jet_btagSF_up
+                else:
+                    weight *= event.Jet_btagSF_down
+
 
         # Filling histograms for given selection only:
-
         if ( abs(event.Z_mass - 91.1876) < 15
              and event.Z_pt        >  60
              and event.nhad_taus   == 0
@@ -151,6 +169,7 @@ class MonoZWSProducer(Module):
              and abs(event.delta_phi_j_met) > 0.5
              and event.delta_R_ll < 1.8):
             self.h_njet.Fill(Njets, weight)
+
         # Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3)
             and abs(event.Z_mass - 91.1876) < 15

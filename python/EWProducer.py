@@ -10,12 +10,15 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
 class EWProducer(Module):
-    def __init__(self, process, do_syst=False, syst_var=''):
+    def __init__(self, process, addNnloQcd=False, do_syst=False, syst_var=''):
+        self.addNnloQcd = addNnloQcd
         self.process = process
-        if process==1:
-            self.table = np.loadtxt('../data/data_ZZ_EwkCorrections.dat')
-        elif process==2:
-            self.table = np.loadtxt('../data/data_WZ_EwkCorrections.dat')
+        if self.process==1:
+            # self.table = np.loadtxt('../data/data_ZZ_EwkCorrections.dat')
+            self.table = np.loadtxt('data_ZZ_EwkCorrections.dat')
+        elif self.process==2:
+            # self.table = np.loadtxt('../data/data_WZ_EwkCorrections.dat')
+            self.table = np.loadtxt('data_WZ_EwkCorrections.dat')
 
         self.do_syst = do_syst
         self.syst_var = syst_var
@@ -35,10 +38,58 @@ class EWProducer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.out.branch("kEW", "F")
+        self.out.branch("kNNLO", "F")
         
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
+
+    def getQCDNNLOcorrection(dphi):
+        nnloQcdKfactor_ = [
+            1.513834489150, #  0 
+            1.541738780180, #  1 
+            1.497829632510, #  2 
+            1.534956782920, #  3 
+            1.478217033060, #  4 
+            1.504330859290, #  5 
+            1.520626246850, #  6 
+            1.507013090030, #  7 
+            1.494243156250, #  8 
+            1.450536096150, #  9 
+            1.460812521660, # 10 
+            1.471603622200, # 11 
+            1.467700038200, # 12 
+            1.422408690640, # 13 
+            1.397184022730, # 14 
+            1.375593447520, # 15 
+            1.391901318370, # 16 
+            1.368564350560, # 17 
+            1.317884804290, # 18 
+            1.314019950800, # 19 
+            1.274641749910, # 20 
+            1.242346606820, # 21 
+            1.244727403840, # 22 
+            1.146259351670, # 23 
+            1.107804993520, # 24 
+            1.042053646740, # 25 
+            0.973608545141, # 26 
+            0.872169942668, # 27 
+            0.734505279177, # 28 
+            1.163152837230, # 29 
+            1.163152837230, # 30 
+            1.163152837230  # 31 
+            ] 
+        # Find index in array of QCD NNLO k factors
+        # E.g. dphi = 1.4578 --> dphi*10 = 14.578 --> rintl(dphi*10) = 14
+        # Only difference w.r.t. the original function below:
+        # upper edge of each bin is included in the next bin
+        # e.g. 0.1 -> idx = 1 (instead of 0)
+        idx = int(round(dphi * 10.))
+        if(idx>31): 
+            return 1.1
+
+        return nnloQcdKfactor_[idx]
+
 
     def analyze(self, event):
         # EW correction
@@ -46,10 +97,10 @@ class EWProducer(Module):
 
         fq1 = abs(gen_part[0].pdgId)
         fq2 = abs(gen_part[1].pdgId)
-        print " --------------- "
-        for parton in gen_part:
-            print " --- parton : ", parton.pdgId, " :pt: ", parton.pt, " :status: ", parton.statusFlags, " :mother: ", parton.genPartIdxMother
-        print " --------------- "
+        # print " --------------- "
+        # for parton in gen_part:
+        #     print " --- parton : ", parton.pdgId, " :pt: ", parton.pt, " :status: ", parton.statusFlags, " :mother: ", parton.genPartIdxMother
+        # print " --------------- "
 
         if ( (fq1>=1 and fq1<=6) or fq1==21 ):
             # q1 = ROOT.TLorentzVector( gen_part[0].p4().X(), gen_part[0].p4().Y(), gen_part[0].p4().Z(), gen_part[0].p4().T() )
@@ -185,9 +236,9 @@ class EWProducer(Module):
 
             # Average QCD NLO k factors from arXiv:1105.0020
             dkfactor_qcd = 0.
-            if process == 1:       
+            if self.process == 1:       
                 dkfactor_qcd = 15.99/ 9.89 - 1. # ZZ
-            elif process == 2: 
+            elif self.process == 2: 
                 if ( gen_part[2].pdgId * gen_part[3].pdgId > 0 ): 
                     dkfactor_qcd = 28.55 / 15.51 - 1. # W+Z
                 else:                  
@@ -199,7 +250,12 @@ class EWProducer(Module):
                 kEW *= ewkUncert
             elif self.syst_var == "EWKDown": 
                 kEW /= ewkUncert
-        
+
+        kNNLO = 1.
+        if (self.addNnloQcd and self.process==1):
+            kNNLO = self.getQCDNNLOcorrection( abs(ROOT.TLorentzVector.DeltaPhi(v1, v2)) ) # DeltaPhi must be in [-Pi,Pi]
+
         self.out.fillBranch("kEW", kEW)
+        self.out.fillBranch("kNNLO", kNNLO)
         return True
 

@@ -45,7 +45,7 @@ class MonoZProducer(Module):
         self.out.branch("Z_phi{}".format(self.syst_suffix), "F")
         self.out.branch("Z_mass{}".format(self.syst_suffix), "F")
         self.out.branch("Z_mt{}".format(self.syst_suffix), "F")
-
+        
         self.out.branch("delta_phi_ZMet{}".format(self.syst_suffix), "F")
         self.out.branch("vec_balance{}".format(self.syst_suffix), "F")
         self.out.branch("sca_balance{}".format(self.syst_suffix), "F")
@@ -69,7 +69,7 @@ class MonoZProducer(Module):
         self.out.branch("trans_mass{}".format(self.syst_suffix), "F")
         self.out.branch("remll_mass{}".format(self.syst_suffix), "F")
         self.out.branch("pt_alllep{}".format(self.syst_suffix), "F")
-
+                
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
 
@@ -244,24 +244,13 @@ class MonoZProducer(Module):
                 self.lorentz_shift(muon, muon.ptErr, "Up" in self.syst_var)
 
         # Muon SF
-        if "MuonSF" in self.syst_var:
+        if "MuonSFRoc" in self.syst_var:
             muon_sf_uncert = getattr(event, "Muon_pt_sys_uncert")
             for i,muon in enumerate(muons):
                 if "Up" in self.syst_var:
                     muon.pt += muon_sf_uncert[i]
                 else:
                     muon.pt -= muon_sf_uncert[i]
-
-
-        # Electron SF
-        # bTag SF
-
-        # EWK corrections
-        # [TODO] -> take the code from here [https://github.com/NEUAnalyses/monoZ_Analysis/blob/master/src/DibosonCorrections.cc]
-
-
-	    # apply the shift to the MET. From the old code :
-     	# const Vector2D met = getMet(systematic) + systShiftsForMet;
 
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
@@ -435,7 +424,7 @@ class MonoZProducer(Module):
         _rem_p4 = ROOT.TLorentzVector()
         _rem_p4.SetPtEtaPhiM(rem_lepton_p4.Pt(), 0, rem_lepton_p4.Phi(), 0)
         self.out.fillBranch("trans_mass{}".format(self.syst_suffix), (_rem_p4 + met_p4).M())
-
+        
         # process jet
         good_jets  = []
         good_bjets = []

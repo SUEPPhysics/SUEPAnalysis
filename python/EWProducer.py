@@ -44,7 +44,7 @@ class EWProducer(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
-    def getQCDNNLOcorrection(dphi):
+    def getQCDNNLOcorrection(self, dphi):
         nnloQcdKfactor_ = [
             1.513834489150, #  0 
             1.541738780180, #  1 
@@ -97,10 +97,10 @@ class EWProducer(Module):
 
         fq1 = abs(gen_part[0].pdgId)
         fq2 = abs(gen_part[1].pdgId)
-        # print " --------------- "
-        # for parton in gen_part:
-        #     print " --- parton : ", parton.pdgId, " :pt: ", parton.pt, " :status: ", parton.statusFlags, " :mother: ", parton.genPartIdxMother
-        # print " --------------- "
+        print " --------------- "
+        for parton in gen_part:
+            print " --- parton : ", parton.pdgId, " :pt: ", parton.pt, " :status: ", parton.statusFlags, " :mother: ", parton.genPartIdxMother
+        print " --------------- "
 
         if ( (fq1>=1 and fq1<=6) or fq1==21 ):
             # q1 = ROOT.TLorentzVector( gen_part[0].p4().X(), gen_part[0].p4().Y(), gen_part[0].p4().Z(), gen_part[0].p4().T() )
@@ -126,6 +126,11 @@ class EWProducer(Module):
         else:
             raise Exception("monoZ/EWKcorrection, GenParticle element 3 is neither a Z nor a W boson.")
 
+
+        # NNLO
+        kNNLO = 1.
+        if (self.addNnloQcd and self.process==1):
+            kNNLO = self.getQCDNNLOcorrection( abs(ROOT.TLorentzVector.DeltaPhi(v1, v2)) ) # DeltaPhi must be in [-Pi,Pi]
 
         # Diboson center of mass
         vv = v1 + v2
@@ -250,10 +255,6 @@ class EWProducer(Module):
                 kEW *= ewkUncert
             elif self.syst_var == "EWKDown": 
                 kEW /= ewkUncert
-
-        kNNLO = 1.
-        if (self.addNnloQcd and self.process==1):
-            kNNLO = self.getQCDNNLOcorrection( abs(ROOT.TLorentzVector.DeltaPhi(v1, v2)) ) # DeltaPhi must be in [-Pi,Pi]
 
         self.out.fillBranch("kEW", kEW)
         self.out.fillBranch("kNNLO", kNNLO)

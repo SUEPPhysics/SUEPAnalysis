@@ -340,23 +340,24 @@ class MonoZProducer(Module):
             w_muon_SF     = w_electron_SF     = 1.0
             w_muon_SFUp   = w_electron_SFUp   = 1.0
             w_muon_SFDown = w_electron_SFDown = 1.0
-            if abs(good_leptons[0].pdgId) == 11:
-                w_electron_SF     *=  good_leptons[0].SF
-                w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
-                w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
-            if abs(good_leptons[0].pdgId) == 11:
-                w_electron_SF     *=  good_leptons[1].SF
-                w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
-                w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-            if abs(good_leptons[0].pdgId) == 13:
-                w_muon_SF     *=  good_leptons[0].SF
-                w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
-                w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
-            if abs(good_leptons[1].pdgId) == 13:
-                w_muon_SF     *=  good_leptons[1].SF
-                w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
-                w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-                
+            if ngood_leptons >= 2:
+                if abs(good_leptons[0].pdgId) == 11:
+                    w_electron_SF     *=  good_leptons[0].SF
+                    w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+                    w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+                if abs(good_leptons[0].pdgId) == 11:
+                    w_electron_SF     *=  good_leptons[1].SF
+                    w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+                    w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+                if abs(good_leptons[0].pdgId) == 13:
+                    w_muon_SF     *=  good_leptons[0].SF
+                    w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+                    w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+                if abs(good_leptons[1].pdgId) == 13:
+                    w_muon_SF     *=  good_leptons[1].SF
+                    w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+                    w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+
             self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
             self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
             self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )

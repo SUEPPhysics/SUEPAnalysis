@@ -199,13 +199,13 @@ class MonoZWSProducer(Module):
                 else:
                     weight *= event.pdfw_Down
             # bTagSF
-            if "bTagSF" in self.syst_suffix:
-                if "Up" in self.syst_suffix:
-                    weight *= event.Jet_btagSF_up
-                else:
-                    weight *= event.Jet_btagSF_down
-            else:
-                weight *= event.Jet_btagSF
+            #if "bTagSF" in self.syst_suffix:
+            #    if "Up" in self.syst_suffix:
+            #        weight *= event.Jet_btagSF_up
+            #    else:
+            #        weight *= event.Jet_btagSF_down
+            #else:
+            #    weight *= event.Jet_btagSF
             # Muon SF
             if "MuonSFEff" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
@@ -225,20 +225,20 @@ class MonoZWSProducer(Module):
                 
         # MET: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "met_pt", "signal") ):
-            self.h_met[int(new_lepcat)].Fill(measMET, weight)
-            self.h_met[8].Fill(measMET, weight)
+            self.h_met[int(new_lepcat)].Fill(meas_MET, weight)
+            self.h_met[8].Fill(meas_MET, weight)
         # MET: CatNRB
         if ( (new_lepcat == 2) and self.passbut(event, "met_pt", "catNRB") ):
-            self.h_met[6].Fill(measMET, weight)
-            self.h_met[2].Fill(measMET, weight)
+            self.h_met[6].Fill(meas_MET, weight)
+            self.h_met[2].Fill(meas_MET, weight)
         # MET: CatTOP
         if ( (new_lepcat == 2) and self.passbut(event, "met_pt", "catTOP") ):
-            self.h_met[7].Fill(measMET, weight)
+            self.h_met[7].Fill(meas_MET, weight)
         # MET: Cat3L
         if ( (new_lepcat == 4) and self.passbut(event, "emulatedMET", "cat3L") ):
-            self.h_met[4].Fill(measMET, weight)
+            self.h_met[4].Fill(meas_MET, weight)
         # MET: Cat4L
         if ( (new_lepcat == 5) and self.passbut(event, "emulatedMET", "cat4L") ):
-            self.h_met[5].Fill(measMET, weight)
+            self.h_met[5].Fill(meas_MET, weight)
         
         return True

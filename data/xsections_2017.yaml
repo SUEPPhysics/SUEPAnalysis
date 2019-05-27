@@ -123,37 +123,37 @@ ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8:
   br  : 1.0 
   kr  : 1.0
 GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8:
-  xsec: 3.291
+  xsec: 0.0031942
   br  : 1.0
   kr  : 1.0
 GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8:
   xsec: 17.72
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8:
   xsec: 3.29
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8:
   xsec: 17.72
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8:
   xsec: 3.289
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8:
   xsec: 1.405
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8:
   xsec: 1.402
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8:
   xsec: 1.407
   br  : 1.0
-  kr  : 1.0
+  kr  : 0.001
 WZTo3LNu_0Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8:
   xsec: 0.63820
   br  : 1.109
@@ -422,3 +422,7 @@ Unpart_ZToEEAndMuMu_SU_0_dU_2p20_LU_15_TuneCP5_13TeV_pythia8:
   br: 1.0
   kr: 1.0
   xsec: 2.135e-06
+ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 8.687e+01

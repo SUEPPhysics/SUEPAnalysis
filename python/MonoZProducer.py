@@ -72,7 +72,16 @@ class MonoZProducer(Module):
                 
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
-
+        
+        if self.isMC and len(self.syst_suffix)==0:
+            self.out.branch("w_muon_SF{}".format(self.syst_suffix), "F")
+            self.out.branch("w_muon_SFUp{}".format(self.syst_suffix), "F")
+            self.out.branch("w_muon_SFDown{}".format(self.syst_suffix), "F")
+            self.out.branch("w_electron_SF{}".format(self.syst_suffix), "F")
+            self.out.branch("w_electron_SFUp{}".format(self.syst_suffix), "F")
+            self.out.branch("w_electron_SFDown{}".format(self.syst_suffix), "F")
+        
+        
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -251,7 +260,7 @@ class MonoZProducer(Module):
                     muon.pt += muon_sf_uncert[i]
                 else:
                     muon.pt -= muon_sf_uncert[i]
-
+        
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
@@ -324,7 +333,40 @@ class MonoZProducer(Module):
 
         self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), ngood_leptons)
         self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), nextra_leptons)
-
+        
+        # Leptons efficiency/Trigger/Isolation Scale factors
+        # These are applied only of the first 2 leading leptons
+        if self.isMC and len(self.syst_suffix)==0:
+            w_muon_SF     = w_electron_SF     = 1.0
+            w_muon_SFUp   = w_electron_SFUp   = 1.0
+            w_muon_SFDown = w_electron_SFDown = 1.0
+            if abs(good_leptons[0].pdgId) == 11:
+                w_electron_SF     *=  good_leptons[0].SF
+                w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+                w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+            if abs(good_leptons[0].pdgId) == 11:
+                w_electron_SF     *=  good_leptons[1].SF
+                w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+                w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+            if abs(good_leptons[0].pdgId) == 13:
+                w_muon_SF     *=  good_leptons[0].SF
+                w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+                w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+            if abs(good_leptons[1].pdgId) == 13:
+                w_muon_SF     *=  good_leptons[1].SF
+                w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+                w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+                
+            self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
+            self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
+            self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )
+            self.out.fillBranch("w_electron_SF"    , w_electron_SF    )
+            self.out.fillBranch("w_electron_SFUp"  , w_electron_SFUp  )
+            self.out.fillBranch("w_electron_SFDown", w_electron_SFDown)
+            
+            
+            
+        
         lep_category = 0
         if ngood_leptons < 2:
             lep_category = -1
@@ -469,7 +511,7 @@ class MonoZProducer(Module):
 
         # Let remove the negative categories with no obvious meaning meaning
 	    # This will reduce the size of most of the bacground and data
-        if lep_category > 0 and pass_met_filter:
+        if lep_category > 0 and pass_met_filter and abs(zcand_p4.M() - 91.1876) < 30 and zcand_p4.Pt()>60.0:
             return True
         else: return False
 

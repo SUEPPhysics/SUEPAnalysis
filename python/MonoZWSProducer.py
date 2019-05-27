@@ -21,20 +21,74 @@ class MonoZWSProducer(Module):
         else:
             self.syst_suffix = syst_var
         self.writeHistFile=True
-
+    
+    def passbut(self, event, excut=None, cat="signal"):
+        event_pass = True
+        for cut in self.selection[cat]:
+            if excut is not None:
+                if excut in cut: 
+                    continue
+            if eval(cut) is False:
+                event_pass = False
+        return event_pass
+        
     def beginJob(self, histFile=None,histDirName=None):
         Module.beginJob(self,histFile,histDirName)
 
         self.cats = {
-            1 : "EE" ,
-            2 : "EM" ,
-            3 : "MM" ,
-            4 : "3L" ,
-            5 : "4L" ,
-            6 : "NRB",
-            7 : "TOP"
+            1 : "catEE" ,
+            2 : "catEM" ,
+            3 : "catMM" ,
+            4 : "cat3L" ,
+            5 : "cat4L" ,
+            6 : "catNRB",
+            7 : "catTOP",
+            8 : "catDY",
         }
-
+        self.selection = {
+            "signal" : [
+                "event.Z_pt        >  60" ,
+                "abs(event.Z_mass - 91.1876) < 15",
+                "event.ngood_jets  <=  1" ,
+                "event.ngood_bjets ==  0" ,
+                "event.nhad_taus   ==  0" ,
+                "event.met_pt      >  50" ,
+                "abs(event.MET_phi-event.Z_phi) > 2.6",
+                "abs(event.Z_pt-event.met_pt)/event.Z_pt < 0.4",
+                "abs(event.delta_phi_j_met) > 0.5",
+                "event.delta_R_ll < 1.8"
+            ],
+            "cat3L": [
+                "event.Z_pt        >  60" ,
+                "abs(event.Z_mass - 91.1876) < 15",
+                "event.ngood_jets  <=  1" ,
+                "event.ngood_bjets ==  0" ,
+                "event.met_pt      >  30" ,
+                "event.mass_alllep > 100" ,
+                "abs(event.Z_pt - event.emulatedMET)/event.Z_pt < 0.4",
+                "abs(event.emulatedMET_phi-event.Z_phi) > 2.8)"
+            ],
+            "cat3L": [
+                "event.Z_pt        >  60" ,
+                "abs(event.Z_mass - 91.1876) < 35",
+                "event.ngood_jets  <=  1" ,
+                "abs(event.emulatedMET_phi-event.Z_phi) > 2.8)"
+            ],
+            "catNRB": [
+                "event.Z_pt        >  60" ,
+                "abs(event.Z_mass - 91.1876) < 15",
+                "event.ngood_jets  <=  1" ,
+                "event.ngood_bjets ==  0" ,
+                "event.met_pt      >  30" 
+            ],
+            "catTOP": [
+                "event.Z_pt        >  60" ,
+                "abs(event.Z_mass - 91.1876) < 15",
+                "event.ngood_jets  >   2" ,
+                "event.ngood_bjets >=  1" ,
+                "event.met_pt      >  30" 
+            ]
+        }
         self.h_met  = {}
         self.h_njet = ROOT.TH1F(
             'njet{}{}'.format("_" + self.sample, self.syst_suffix),
@@ -59,23 +113,17 @@ class MonoZWSProducer(Module):
                 50, 50, 150
             )
             # different binning for different regions
-            if cat == 'NRB' or cat=="TOP":
+            if cat == 'catNRB' or cat=="catTOP" or cat=="catDY":
                 self.h_met[i] = ROOT.TH1F(
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    12, ar.array('d', [40,45,50,55,60,65,70,75,80,85,90,95,100])
-                )
-            elif cat == "EM":
-                self.h_met[i] = ROOT.TH1F(
-                    'emulatedMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    'emulatedMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    20, 0, 200
+                    10, ar.array('d', [50,55,60,65,70,75,80,85,90,95,100])
                 )
             else:
                 self.h_met[i] = ROOT.TH1F(
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    13, ar.array('d', [40,50,75,100,125,150,175,200,250,300,350,400,500,600])
+                    11, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600])
                 )
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -111,7 +159,7 @@ class MonoZWSProducer(Module):
             meas_Njet= getattr(event, "ngood_jets{}".format(self.syst_suffix))
 
         new_lepcat = lep_category
-        if   (lep_catgory  <= 3):
+        if   (lep_category  <= 3):
             new_lepcat = lep_category
         elif (lep_category == 4 or lep_category == 5):
             new_lepcat = 4
@@ -151,77 +199,46 @@ class MonoZWSProducer(Module):
                 else:
                     weight *= event.pdfw_Down
             # bTagSF
-            weigth *= event.Jet_btagSF
             if "bTagSF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.Jet_btagSF_up
                 else:
                     weight *= event.Jet_btagSF_down
-
-
-        # Filling histograms for given selection only:
-        if ( abs(event.Z_mass - 91.1876) < 15
-             and event.Z_pt        >  60
-             and event.nhad_taus   == 0
-             and event.met_pt      >  100
-             and abs(event.MET_phi-event.Z_phi) > 2.6
-             and abs(event.Z_pt-event.met_pt)/event.Z_pt < 0.4
-             and abs(event.delta_phi_j_met) > 0.5
-             and event.delta_R_ll < 1.8):
-            self.h_njet.Fill(Njets, weight)
-
-        # Signal region
-        if ( (new_lepcat == 1 or new_lepcat == 3)
-            and abs(event.Z_mass - 91.1876) < 15
-            and event.ngood_jets  <= 1
-            and event.ngood_bjets == 0
-            and event.Z_pt        >  60
-            and event.nhad_taus   == 0
-            and event.met_pt      >  100
-            and abs(event.MET_phi-event.Z_phi) > 2.6
-            and abs(event.Z_pt-event.met_pt)/event.Z_pt < 0.4
-            and abs(event.delta_phi_j_met) > 0.5
-            and event.delta_R_ll < 1.8):
-            #print " -- signal region"
+            else:
+                weight *= event.Jet_btagSF
+            # Muon SF
+            if "MuonSFEff" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.w_muon_SFUp
+                else:
+                    weight *= event.w_muon_SFDown
+            else:
+                weight *= event.w_muon_SF
+            # Electron SF
+            if "ElecronSFEff" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.w_electron_SFUp
+                else:
+                    weight *= event.w_electron_SFDown
+            else:
+                weight *= event.w_electron_SF
+                
+        # MET: Signal region
+        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "met_pt", "signal") ):
             self.h_met[int(new_lepcat)].Fill(measMET, weight)
-            self.h_mll[int(new_lepcat)].Fill(measMll, weight)
-        if (new_lepcat == 4
-            and event.Z_pt > 60
-            and abs(event.Z_mass - 91.1876) < 15.0
-            and event.ngood_jets  <= 1
-            and event.ngood_bjets == 0
-            and event.met_pt      >  30
-            and event.mass_alllep > 100
-            and abs(event.Z_pt - event.emulatedMET)/event.Z_pt < 0.4
-            and abs(event.emulatedMET_phi-event.Z_phi) > 2.8):
-            #print " -- WZ categiry"
-            self.h_met[4].Fill(measMET, weight)
-            self.h_mll[4].Fill(measMll, weight)
-        if (new_lepcat == 5
-            and event.Z_pt  > 60
-            and abs(event.Z_mass - 91.1876) < 30.0
-            and event.ngood_jets <= 1
-            and abs(event.emulatedMET_phi-event.Z_phi) > 2.8 ):
-            #print " -- ZZ categiry"
-            self.h_met[5].Fill(measMET, weight)
-            self.h_mll[5].Fill(measMll, weight)
-        if (new_lepcat == 2
-            and event.Z_pt  > 60
-            and abs(event.Z_mass - 91.1876) < 15
-            and event.ngood_jets  <= 1
-            and event.ngood_bjets == 0
-            and event.met_pt      >  50 ):
-            #print " -- NRB categiry"
+            self.h_met[8].Fill(measMET, weight)
+        # MET: CatNRB
+        if ( (new_lepcat == 2) and self.passbut(event, "met_pt", "catNRB") ):
             self.h_met[6].Fill(measMET, weight)
-            self.h_mll[6].Fill(measMll, weight)
-        if (new_lepcat == 2
-            and event.Z_pt  > 60
-            and abs(event.Z_mass - 91.1876) < 15
-            and event.ngood_jets  >  2
-            and event.ngood_bjets >= 1
-            and event.met_pt      >  50):
-            #print " -- TOP categiry"
+            self.h_met[2].Fill(measMET, weight)
+        # MET: CatTOP
+        if ( (new_lepcat == 2) and self.passbut(event, "met_pt", "catTOP") ):
             self.h_met[7].Fill(measMET, weight)
-            self.h_mll[7].Fill(measMll, weight)
-
+        # MET: Cat3L
+        if ( (new_lepcat == 4) and self.passbut(event, "emulatedMET", "cat3L") ):
+            self.h_met[4].Fill(measMET, weight)
+        # MET: Cat4L
+        if ( (new_lepcat == 5) and self.passbut(event, "emulatedMET", "cat4L") ):
+            self.h_met[5].Fill(measMET, weight)
+        
         return True

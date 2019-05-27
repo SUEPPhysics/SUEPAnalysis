@@ -200,6 +200,24 @@ class MonoZWSProducer(Module):
             else:
             	weight *= event.puWeight
 
+            # Electroweak
+            try:
+                if "EWK" in self.syst_suffix:
+                    if "Up" in self.syst_suffix:
+                        weight *= event.kEWUp
+                    else:
+                        weight *= event.kEWDown
+                else:
+                    weight *= kEW
+            except:
+                pass
+                
+            # NNLO crrection
+            try:
+                weight *= event.kNNLO
+            except:
+                pass
+            
             # PDF uncertainty
             if "PDF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
@@ -207,6 +225,7 @@ class MonoZWSProducer(Module):
                 else:
                     weight *= event.pdfw_Down
             # QCD Scale weights
+            # TODO: add various variations
             if "QCDScale" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.pdfw_Up

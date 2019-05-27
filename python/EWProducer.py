@@ -1,5 +1,5 @@
 import ROOT
-import sys
+import sys, os 
 import numpy as np
 from importlib import import_module
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
@@ -15,10 +15,14 @@ class EWProducer(Module):
         self.process = process
         if self.process==1:
             # self.table = np.loadtxt('../data/data_ZZ_EwkCorrections.dat')
-            self.table = np.loadtxt('data_ZZ_EwkCorrections.dat')
+            self.table = np.loadtxt(
+                '{}/src/PhysicsTools/MonoZ/data/data_ZZ_EwkCorrections.dat'.format(os.environ['CMSSW_BASE'])
+            )
         elif self.process==2:
             # self.table = np.loadtxt('../data/data_WZ_EwkCorrections.dat')
-            self.table = np.loadtxt('data_WZ_EwkCorrections.dat')
+            self.table = np.loadtxt(
+                '{}/src/PhysicsTools/MonoZ/data/data_WZ_EwkCorrections.dat'.format(os.environ['CMSSW_BASE'])
+            )
 
         self.do_syst = do_syst
         self.syst_var = syst_var
@@ -37,9 +41,11 @@ class EWProducer(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.out.branch("kEW", "F")
-        self.out.branch("kNNLO", "F")
-        
+        self.out.branch("kEW"    , "F")
+        self.out.branch("kEWUp"  , "F")
+        self.out.branch("kEWDown", "F")
+        self.out.branch("kNNLO"  , "F")
+                
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -97,31 +103,23 @@ class EWProducer(Module):
 
         fq1 = abs(gen_part[0].pdgId)
         fq2 = abs(gen_part[1].pdgId)
-        print " --------------- "
-        for parton in gen_part:
-            print " --- parton : ", parton.pdgId, " :pt: ", parton.pt, " :status: ", parton.statusFlags, " :mother: ", parton.genPartIdxMother
-        print " --------------- "
-
+        
         if ( (fq1>=1 and fq1<=6) or fq1==21 ):
-            # q1 = ROOT.TLorentzVector( gen_part[0].p4().X(), gen_part[0].p4().Y(), gen_part[0].p4().Z(), gen_part[0].p4().T() )
             q1 = ROOT.TLorentzVector( 0, 0, 100., 100. )
         else:
             raise Exception("monoZ/EWKcorrection, GenParticle element 0 is neither a quark nor a gluon.")
 
         if ( (fq2>=1 and fq2<=6) or fq2==21 ):
-            # q2 = ROOT.TLorentzVector( gen_part[1].p4().X(), gen_part[1].p4().Y(), gen_part[1].p4().Z(), gen_part[1].p4().T() )
             q2 = ROOT.TLorentzVector( 0, 0, -100., 100. )
         else:
             raise Exception("monoZ/EWKcorrection, GenParticle element 1 is neither a quark nor a gluon.")
 
         if ( gen_part[2].pdgId==23 or abs(gen_part[2].pdgId)==24 ):
-            # v1 = ROOT.TLorentzVector( gen_part[2].p4().X(), gen_part[2].p4().Y(), gen_part[2].p4().Z(), gen_part[2].p4().T() )
             v1 = gen_part[2].p4()
         else:
             raise Exception("monoZ/EWKcorrection, GenParticle element 2 is neither a Z nor a W boson.")
 
         if ( gen_part[3].pdgId==23 or abs(gen_part[3].pdgId)==24 ):
-            # v2 = ROOT.TLorentzVector( gen_part[3].p4().X(), gen_part[3].p4().Y(), gen_part[3].p4().Z(), gen_part[3].p4().T() )
             v2 = gen_part[3].p4()
         else:
             raise Exception("monoZ/EWKcorrection, GenParticle element 3 is neither a Z nor a W boson.")
@@ -217,46 +215,47 @@ class EWProducer(Module):
                 raise Exception("monoZ/EWKcorrection, Unknown quark type.")
 
         kEW = 1. + self.table[itab][jtab]
+        kEW_up = kEW
+        kEW_dw = kEW
+        #if ( self.syst_var == "EWKUp" or self.syst_var == "EWKDown" ):
+        nlept = 0
+        sumptl = 0.
+        for parton in gen_part:
+            if ( parton.statusFlags & 128 ) == 0:
+                continue
+            if parton.status != 1:
+                continue
+            if ( abs(parton.pdgId) < 11 or abs(parton.pdgId) > 16 ): 
+                continue
+            sumptl += parton.pt
+            nlept += 1
 
-        if ( self.syst_var == "EWKUp" or self.syst_var == "EWKDown" ):
-            nlept = 0
-            sumptl = 0.
-            for parton in gen_part:
-                if ( parton.statusFlags & 128 ) == 0:
-                    continue
-                if parton.status != 1:
-                    continue
-                if ( abs(parton.pdgId) < 11 or abs(parton.pdgId) > 16 ): 
-                    continue
-                sumptl += parton.pt
-                nlept += 1
-
-            if nlept != 4:
-                # There are cases like this, namely tau and Z->4lep decays
-                # Could handle, but should really make no difference
-                # So just go conservative
-                sumptl = 1E-9
-
-            rhozz = vv.Pt() / sumptl
-
-            # Average QCD NLO k factors from arXiv:1105.0020
-            dkfactor_qcd = 0.
-            if self.process == 1:       
-                dkfactor_qcd = 15.99/ 9.89 - 1. # ZZ
-            elif self.process == 2: 
-                if ( gen_part[2].pdgId * gen_part[3].pdgId > 0 ): 
-                    dkfactor_qcd = 28.55 / 15.51 - 1. # W+Z
-                else:                  
-                    dkfactor_qcd = 18.19 / 9.53 - 1. # W-Z
+        if nlept != 4:
+            # There are cases like this, namely tau and Z->4lep decays
+            # Could handle, but should really make no difference
+            # So just go conservative
+            sumptl = 1E-9
             
-            ewkUncert = 1. + abs(dkfactor_qcd * self.table[itab][jtab]) if rhozz<0.3 else 1. + abs(self.table[itab][jtab])
+        rhozz = vv.Pt() / sumptl
 
-            if self.syst_var == "EWKUp": 
-                kEW *= ewkUncert
-            elif self.syst_var == "EWKDown": 
-                kEW /= ewkUncert
+        # Average QCD NLO k factors from arXiv:1105.0020
+        dkfactor_qcd = 0.
+        if self.process == 1:       
+            dkfactor_qcd = 15.99/ 9.89 - 1. # ZZ
+        elif self.process == 2: 
+            if ( gen_part[2].pdgId * gen_part[3].pdgId > 0 ): 
+                dkfactor_qcd = 28.55 / 15.51 - 1. # W+Z
+            else:                  
+                dkfactor_qcd = 18.19 / 9.53 - 1. # W-Z
+            
+        ewkUncert = 1. + abs(dkfactor_qcd * self.table[itab][jtab]) if rhozz<0.3 else 1. + abs(self.table[itab][jtab])
+            
+        kEW_up *= ewkUncert
+        kEW_dw /= ewkUncert
 
         self.out.fillBranch("kEW", kEW)
+        self.out.fillBranch("kEWUp"  , kEW_up)
+        self.out.fillBranch("kEWDown", kEW_dw)
         self.out.fillBranch("kNNLO", kNNLO)
         return True
 

@@ -11,7 +11,7 @@ parser.add_argument("-c", "--config", type=str, default='configs/sample_mc_2017.
 parser.add_argument("-d", "--dir"   , type=str, default='/eos/cms/', help="scan this directory")
 parser.add_argument("-p", "--use_parent", type=str, default='True',
                     help="use MiniAOD parent instead of NanoAOD")
-parser.add_argument("-x", "--xsec"  , type=str, default='configs/xsections.yaml', help="scan this directory")
+parser.add_argument("-x", "--xsec"  , type=str, default='../data/xsections_2017.yaml', help="scan this directory")
 parser.add_argument("--include_files", "--include_files", type=bool, default=True, help="")
 parser.add_argument("--otype", "--otype", type=str, default="python", help="[python,yaml]")
 

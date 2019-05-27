@@ -16,6 +16,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer impor
 from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
 from PhysicsTools.MonoZ.GenWeightProducer import *
+from PhysicsTools.MonoZ.EWProducer import *
 
 import argparse
 
@@ -110,8 +111,11 @@ if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 
 pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
-if options.nevt > 0:
-   pre_selection += '&& (Entry$ < {})'.format(options.nevt)
+pre_selection += "&& Flag_METFilters"
+
+if float(options.nevt) > 0:
+   print " passing this cut and : ", options.nevt 
+   pre_selection += ' && (Entry$ < {})'.format(options.nevt)
 
 modules_2017   = [
     GenWeightProducer(
@@ -122,7 +126,7 @@ modules_2017   = [
 ]
 
 pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff"]
+ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK"]
 
 if options.isMC:
    modules_2017.append(puWeight_2017())
@@ -135,6 +139,11 @@ if options.isMC:
       isMC=options.isMC, era=str(options.era),
       do_syst=1, syst_var='', sample=m.get("sample", "")
    ))
+   # WW or ZZ sample
+   if "ZZTo" in m.get("sample", "") and "GluGluToContin" not in m.get("sample", ""):
+      modules_2017.append(EWProducer(1, True))
+   if "WZTo" in m.get("sample", ""):
+      modules_2017.append(EWProducer(2, False))
    # for variation-based systematics
    for sys in pro_syst:
        for var in ["Up", "Down"]:
@@ -173,6 +182,8 @@ else:
 
 for i in modules_2017:
    print "modules : ", i
+
+print "Selection : ", pre_selection
 
 p = PostProcessor(
    ".", [options.infile],

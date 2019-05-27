@@ -45,7 +45,7 @@ class MonoZProducer(Module):
         self.out.branch("Z_phi{}".format(self.syst_suffix), "F")
         self.out.branch("Z_mass{}".format(self.syst_suffix), "F")
         self.out.branch("Z_mt{}".format(self.syst_suffix), "F")
-
+        
         self.out.branch("delta_phi_ZMet{}".format(self.syst_suffix), "F")
         self.out.branch("vec_balance{}".format(self.syst_suffix), "F")
         self.out.branch("sca_balance{}".format(self.syst_suffix), "F")
@@ -69,10 +69,19 @@ class MonoZProducer(Module):
         self.out.branch("trans_mass{}".format(self.syst_suffix), "F")
         self.out.branch("remll_mass{}".format(self.syst_suffix), "F")
         self.out.branch("pt_alllep{}".format(self.syst_suffix), "F")
-
+                
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
-
+        
+        if self.isMC and len(self.syst_suffix)==0:
+            self.out.branch("w_muon_SF{}".format(self.syst_suffix), "F")
+            self.out.branch("w_muon_SFUp{}".format(self.syst_suffix), "F")
+            self.out.branch("w_muon_SFDown{}".format(self.syst_suffix), "F")
+            self.out.branch("w_electron_SF{}".format(self.syst_suffix), "F")
+            self.out.branch("w_electron_SFUp{}".format(self.syst_suffix), "F")
+            self.out.branch("w_electron_SFDown{}".format(self.syst_suffix), "F")
+        
+        
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -199,7 +208,9 @@ class MonoZProducer(Module):
             if var_jet_pts:
                 for i,jet in enumerate(jets):
                     jet.pt = var_jet_pts[i]
-            else: print 'WARNING: jet pts with variation {} not available, using the nominal value'.format(syst_var)
+            else:
+                print 'WARNING: jet pts with variation {}'
+                'not available, using the nominal value'.format(syst_var)
         except:
             var_jet_pts = getattr(event,  "Jet_pt_nom", None)
             for i,jet in enumerate(jets):
@@ -210,10 +221,14 @@ class MonoZProducer(Module):
             var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
             if var_met_pt:
                 met.pt = var_met_pt
-            else: print 'WARNING: MET pt with variation {} not available, using the nominal value'.format(syst_var)
+            else:
+                print 'WARNING: MET pt with variation '
+                '{} not available, using the nominal value'.format(syst_var)
             if var_met_phi:
                 met.phi = var_met_phi
-            else: print 'WARNING: MET phi with variation {} not available, using the nominal value'.format(syst_var)
+            else:
+                print 'WARNING: MET phi with variation {}'
+                'not available, using the nominal value'.format(syst_var)
         except:
             pass
 
@@ -238,24 +253,14 @@ class MonoZProducer(Module):
                 self.lorentz_shift(muon, muon.ptErr, "Up" in self.syst_var)
 
         # Muon SF
-        if "MuonSF" in self.syst_var:
+        if "MuonSFRoc" in self.syst_var:
             muon_sf_uncert = getattr(event, "Muon_pt_sys_uncert")
             for i,muon in enumerate(muons):
                 if "Up" in self.syst_var:
                     muon.pt += muon_sf_uncert[i]
                 else:
                     muon.pt -= muon_sf_uncert[i]
-
-
-        # Electron SF
-
-        # EWK corrections
-        # [TODO] -> take the code from here [https://github.com/NEUAnalyses/monoZ_Analysis/blob/master/src/DibosonCorrections.cc]
-
-
-	# apply the shift to the MET. From the old code :
-	# const Vector2D met = getMet(systematic) + systShiftsForMet;
-
+        
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
@@ -328,7 +333,41 @@ class MonoZProducer(Module):
 
         self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), ngood_leptons)
         self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), nextra_leptons)
+        
+        # Leptons efficiency/Trigger/Isolation Scale factors
+        # These are applied only of the first 2 leading leptons
+        if self.isMC and len(self.syst_suffix)==0:
+            w_muon_SF     = w_electron_SF     = 1.0
+            w_muon_SFUp   = w_electron_SFUp   = 1.0
+            w_muon_SFDown = w_electron_SFDown = 1.0
+            if ngood_leptons >= 2:
+                if abs(good_leptons[0].pdgId) == 11:
+                    w_electron_SF     *=  good_leptons[0].SF
+                    w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+                    w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+                if abs(good_leptons[0].pdgId) == 11:
+                    w_electron_SF     *=  good_leptons[1].SF
+                    w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+                    w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+                if abs(good_leptons[0].pdgId) == 13:
+                    w_muon_SF     *=  good_leptons[0].SF
+                    w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+                    w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+                if abs(good_leptons[1].pdgId) == 13:
+                    w_muon_SF     *=  good_leptons[1].SF
+                    w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+                    w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
 
+            self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
+            self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
+            self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )
+            self.out.fillBranch("w_electron_SF"    , w_electron_SF    )
+            self.out.fillBranch("w_electron_SFUp"  , w_electron_SFUp  )
+            self.out.fillBranch("w_electron_SFDown", w_electron_SFDown)
+            
+            
+            
+        
         lep_category = 0
         if ngood_leptons < 2:
             lep_category = -1
@@ -428,7 +467,7 @@ class MonoZProducer(Module):
         _rem_p4 = ROOT.TLorentzVector()
         _rem_p4.SetPtEtaPhiM(rem_lepton_p4.Pt(), 0, rem_lepton_p4.Phi(), 0)
         self.out.fillBranch("trans_mass{}".format(self.syst_suffix), (_rem_p4 + met_p4).M())
-
+        
         # process jet
         good_jets  = []
         good_bjets = []
@@ -472,13 +511,18 @@ class MonoZProducer(Module):
         self.out.fillBranch("lead_tau_pt{}".format(self.syst_suffix), had_taus[0].pt if len(had_taus) else 0)
 
         # Let remove the negative categories with no obvious meaning meaning
-	# This will reduce the size of most of the bacground and data
-        if lep_category > 0:
+        # This will reduce the size of most of the bacground and data
+        
+        if (lep_category > 0 and
+            len(self.syst_suffix) == 0 and
+            pass_met_filter and 
+            abs(zcand_p4.M() - 91.1876) < 40 and 
+            zcand_p4.Pt()>60.0):
             return True
-	else:
+        else: 
             return False
 
-MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
-MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")
-MonoZ_2016_data = lambda: MonoZProducer(False, "2016")
-MonoZ_2017_data = lambda: MonoZProducer(False, "2017")
+#MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
+#MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")
+#MonoZ_2016_data = lambda: MonoZProducer(False, "2016")
+#MonoZ_2017_data = lambda: MonoZProducer(False, "2017")

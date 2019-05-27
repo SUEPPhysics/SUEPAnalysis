@@ -511,10 +511,16 @@ class MonoZProducer(Module):
         self.out.fillBranch("lead_tau_pt{}".format(self.syst_suffix), had_taus[0].pt if len(had_taus) else 0)
 
         # Let remove the negative categories with no obvious meaning meaning
-	    # This will reduce the size of most of the bacground and data
-        if lep_category > 0 and pass_met_filter and abs(zcand_p4.M() - 91.1876) < 30 and zcand_p4.Pt()>60.0:
+        # This will reduce the size of most of the bacground and data
+        
+        if (lep_category > 0 and
+            len(self.syst_suffix) == 0 and
+            pass_met_filter and 
+            abs(zcand_p4.M() - 91.1876) < 40 and 
+            zcand_p4.Pt()>60.0):
             return True
-        else: return False
+        else: 
+            return False
 
 #MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
 #MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")

@@ -70,6 +70,7 @@ print " -- dataset  = ", options.dataset
 print "---------------------------"
 
 xsection = 1.0
+nevents = 1
 if options.isMC:
    from PhysicsTools.MonoZ.catalog_2017 import catalog
    condtag_ = "NANOAODSIM"
@@ -84,6 +85,7 @@ if options.isMC:
          xsection  = 1000.0 * m.get("xsec")
          xsection *= m.get("br", 1.0)
          xsection *= m.get("kf", 1.0)
+         nevents = m.get("nevents", 1)
          print "---------------------------"
          print "sample     == ", m.get("sample", "")
          print "dataset    == ", ds
@@ -115,12 +117,12 @@ modules_2017   = [
     GenWeightProducer(
        isMC = options.isMC,
        xsec = xsection,
-       nevt = float(m.get("nevents", 1))
+       nevt = nevents
     )
 ]
 
-pro_syst = []#[ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = []#[ "puWeight" ]
+pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
+ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff"]
 
 if options.isMC:
    modules_2017.append(puWeight_2017())
@@ -182,6 +184,6 @@ p = PostProcessor(
    provenance=True,
    noOut=False,
    fwkJobReport=True,
-   #jsonInput=options.json
+   jsonInput=options.json
 )
 p.run()

@@ -104,7 +104,9 @@ class GenWeightProducer(Module):
         # -------
         mean = 1.0
         werr = 0.0
-        if not (self.isMC or self.dopdf):
+        if not self.isMC:
+            return True
+        if not self.dopdf:
             return True
 
         w_pdf = self.getobject(event, "LHEPdfWeight" )

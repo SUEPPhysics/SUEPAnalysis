@@ -11,9 +11,11 @@ cmsenv
 
 
 mkdir PhysicsTools/
-git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODTools
+git clone https://github.com/yhaddad/nanoAOD-tools.git PhysicsTools/NanoAODTools
 git clone git@github.com:yhaddad/MonoZNanoAOD.git PhysicsTools/MonoZ
 
+cd $CMSSW_BASE/src/PhysicsTools/NanoAODTools
+git checkout remotes/origin/topic-2017-lepton-scale-factors
 cd $CMSSW_BASE/src
 scram b -j 10
 

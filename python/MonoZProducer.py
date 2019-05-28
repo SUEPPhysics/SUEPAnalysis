@@ -45,7 +45,7 @@ class MonoZProducer(Module):
         self.out.branch("Z_phi{}".format(self.syst_suffix), "F")
         self.out.branch("Z_mass{}".format(self.syst_suffix), "F")
         self.out.branch("Z_mt{}".format(self.syst_suffix), "F")
-        
+
         self.out.branch("delta_phi_ZMet{}".format(self.syst_suffix), "F")
         self.out.branch("vec_balance{}".format(self.syst_suffix), "F")
         self.out.branch("sca_balance{}".format(self.syst_suffix), "F")
@@ -69,10 +69,10 @@ class MonoZProducer(Module):
         self.out.branch("trans_mass{}".format(self.syst_suffix), "F")
         self.out.branch("remll_mass{}".format(self.syst_suffix), "F")
         self.out.branch("pt_alllep{}".format(self.syst_suffix), "F")
-                
+
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
-        
+
         if self.isMC and len(self.syst_suffix)==0:
             self.out.branch("w_muon_SF{}".format(self.syst_suffix), "F")
             self.out.branch("w_muon_SFUp{}".format(self.syst_suffix), "F")
@@ -80,8 +80,8 @@ class MonoZProducer(Module):
             self.out.branch("w_electron_SF{}".format(self.syst_suffix), "F")
             self.out.branch("w_electron_SFUp{}".format(self.syst_suffix), "F")
             self.out.branch("w_electron_SFDown{}".format(self.syst_suffix), "F")
-        
-        
+
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -260,7 +260,7 @@ class MonoZProducer(Module):
                     muon.pt += muon_sf_uncert[i]
                 else:
                     muon.pt -= muon_sf_uncert[i]
-        
+
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
@@ -333,7 +333,7 @@ class MonoZProducer(Module):
 
         self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), ngood_leptons)
         self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), nextra_leptons)
-        
+
         # Leptons efficiency/Trigger/Isolation Scale factors
         # These are applied only of the first 2 leading leptons
         if self.isMC and len(self.syst_suffix)==0:
@@ -364,10 +364,10 @@ class MonoZProducer(Module):
             self.out.fillBranch("w_electron_SF"    , w_electron_SF    )
             self.out.fillBranch("w_electron_SFUp"  , w_electron_SFUp  )
             self.out.fillBranch("w_electron_SFDown", w_electron_SFDown)
-            
-            
-            
-        
+
+
+
+
         lep_category = 0
         if ngood_leptons < 2:
             lep_category = -1
@@ -467,7 +467,7 @@ class MonoZProducer(Module):
         _rem_p4 = ROOT.TLorentzVector()
         _rem_p4.SetPtEtaPhiM(rem_lepton_p4.Pt(), 0, rem_lepton_p4.Phi(), 0)
         self.out.fillBranch("trans_mass{}".format(self.syst_suffix), (_rem_p4 + met_p4).M())
-        
+
         # process jet
         good_jets  = []
         good_bjets = []
@@ -512,9 +512,9 @@ class MonoZProducer(Module):
 
         # Let remove the negative categories with no obvious meaning meaning
         # This will reduce the size of most of the bacground and data
-        if (lep_category > 0):
+        if (lep_category > 0 and zcand_p4.Pt()>60 and zcand_p4.M() > 60 and zcand_p4.M() < 120):
             return True
-        else: 
+        else:
             return False
 
 #MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")

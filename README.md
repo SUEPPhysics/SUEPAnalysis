@@ -57,3 +57,10 @@ bash <(curl -s https://raw.githubusercontent.com/cms-analysis/CombineHarvester/m
 cd $CMSSW_BASE/src/
 scramv1 b clean; scramv1 b -j 10
 ```
+
+To run some of the plotting tools, you need third party pakages such as uproot. You can install by 
+
+```
+pip install uproot --user
+pip install thermcolor --user
+```

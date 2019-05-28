@@ -114,14 +114,18 @@ pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt
 pre_selection += "&& Flag_METFilters"
 
 if float(options.nevt) > 0:
-   print " passing this cut and : ", options.nevt 
+   print " passing this cut and : ", options.nevt
    pre_selection += ' && (Entry$ < {})'.format(options.nevt)
+
 
 modules_2017   = [
     GenWeightProducer(
        isMC = options.isMC,
        xsec = xsection,
-       nevt = nevents
+       nevt = nevents,
+       dopdf = False if ("ADDMonoZ2017_MD" in options.dataset or
+                         "Unpart"          in options.dataset or
+                         "DMSimp"          in options.dataset ) else True
     )
 ]
 
@@ -146,13 +150,16 @@ if options.isMC:
       modules_2017.append(EWProducer(2, False))
    # for variation-based systematics
    for sys in pro_syst:
-       for var in ["Up", "Down"]:
+      for var in ["Up", "Down"]:
            modules_2017.append(MonoZProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var))
            modules_2017.append(MonoZWSProducer(options.isMC, str(options.era), do_syst=1,
                                                syst_var=sys+var, sample=m.get("sample", "")))
    # for weight-based systematics
    for sys in ext_syst:
-       for var in ["Up", "Down"]:
+      if ("ADDMonoZ2017_MD" in options.dataset or
+          "Unpart"          in options.dataset  ) and "PDF" in sys:
+         continue
+      for var in ["Up", "Down"]:
           modules_2017.append(
               MonoZWSProducer(
                  options.isMC, str(options.era),
@@ -170,6 +177,8 @@ else:
       print(exc)
    if 'Run2017B' in condtag_:
       pre_selection = pre_selection + " && (" + combineHLT.get("Run2017B.%s" % options.dataset, 1) + ")"
+   elif 'Run2017C' in condtag_:
+      pre_selection = pre_selection + " && (" + combineHLT.get("Run2017C.%s" % options.dataset, 1) + ")"
    else:
       pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, 1) + ")"
    # ---

@@ -1,5 +1,5 @@
 import ROOT
-import sys, os 
+import sys, os
 import numpy as np
 from importlib import import_module
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
@@ -45,53 +45,53 @@ class EWProducer(Module):
         self.out.branch("kEWUp"  , "F")
         self.out.branch("kEWDown", "F")
         self.out.branch("kNNLO"  , "F")
-                
+
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
     def getQCDNNLOcorrection(self, dphi):
         nnloQcdKfactor_ = [
-            1.513834489150, #  0 
-            1.541738780180, #  1 
-            1.497829632510, #  2 
-            1.534956782920, #  3 
-            1.478217033060, #  4 
-            1.504330859290, #  5 
-            1.520626246850, #  6 
-            1.507013090030, #  7 
-            1.494243156250, #  8 
-            1.450536096150, #  9 
-            1.460812521660, # 10 
-            1.471603622200, # 11 
-            1.467700038200, # 12 
-            1.422408690640, # 13 
-            1.397184022730, # 14 
-            1.375593447520, # 15 
-            1.391901318370, # 16 
-            1.368564350560, # 17 
-            1.317884804290, # 18 
-            1.314019950800, # 19 
-            1.274641749910, # 20 
-            1.242346606820, # 21 
-            1.244727403840, # 22 
-            1.146259351670, # 23 
-            1.107804993520, # 24 
-            1.042053646740, # 25 
-            0.973608545141, # 26 
-            0.872169942668, # 27 
-            0.734505279177, # 28 
-            1.163152837230, # 29 
-            1.163152837230, # 30 
-            1.163152837230  # 31 
-            ] 
+            1.513834489150, #  0
+            1.541738780180, #  1
+            1.497829632510, #  2
+            1.534956782920, #  3
+            1.478217033060, #  4
+            1.504330859290, #  5
+            1.520626246850, #  6
+            1.507013090030, #  7
+            1.494243156250, #  8
+            1.450536096150, #  9
+            1.460812521660, # 10
+            1.471603622200, # 11
+            1.467700038200, # 12
+            1.422408690640, # 13
+            1.397184022730, # 14
+            1.375593447520, # 15
+            1.391901318370, # 16
+            1.368564350560, # 17
+            1.317884804290, # 18
+            1.314019950800, # 19
+            1.274641749910, # 20
+            1.242346606820, # 21
+            1.244727403840, # 22
+            1.146259351670, # 23
+            1.107804993520, # 24
+            1.042053646740, # 25
+            0.973608545141, # 26
+            0.872169942668, # 27
+            0.734505279177, # 28
+            1.163152837230, # 29
+            1.163152837230, # 30
+            1.163152837230  # 31
+            ]
         # Find index in array of QCD NNLO k factors
         # E.g. dphi = 1.4578 --> dphi*10 = 14.578 --> rintl(dphi*10) = 14
         # Only difference w.r.t. the original function below:
         # upper edge of each bin is included in the next bin
         # e.g. 0.1 -> idx = 1 (instead of 0)
         idx = int(round(dphi * 10.))
-        if(idx>31): 
+        if(idx>31):
             return 1.1
 
         return nnloQcdKfactor_[idx]
@@ -103,26 +103,46 @@ class EWProducer(Module):
 
         fq1 = abs(gen_part[0].pdgId)
         fq2 = abs(gen_part[1].pdgId)
-        
+
         if ( (fq1>=1 and fq1<=6) or fq1==21 ):
             q1 = ROOT.TLorentzVector( 0, 0, 100., 100. )
         else:
-            raise Exception("monoZ/EWKcorrection, GenParticle element 0 is neither a quark nor a gluon.")
+            print "[WARNING] MonoZ/EWKcorrection, GenParticle element 0 is neither a quark nor a gluon. weight set to 1"
+            self.out.fillBranch("kEW"    , 1)
+            self.out.fillBranch("kEWUp"  , 1)
+            self.out.fillBranch("kEWDown", 1)
+            self.out.fillBranch("kNNLO"  , 1)
+            return True
+            
 
         if ( (fq2>=1 and fq2<=6) or fq2==21 ):
             q2 = ROOT.TLorentzVector( 0, 0, -100., 100. )
         else:
-            raise Exception("monoZ/EWKcorrection, GenParticle element 1 is neither a quark nor a gluon.")
-
+            print "[WARNING] MonoZ/EWKcorrection, GenParticle element 1 is neither a quark nor a gluon. weight set to 1"
+            self.out.fillBranch("kEW"    , 1)
+            self.out.fillBranch("kEWUp"  , 1)
+            self.out.fillBranch("kEWDown", 1)
+            self.out.fillBranch("kNNLO"  , 1)
+            return True
         if ( gen_part[2].pdgId==23 or abs(gen_part[2].pdgId)==24 ):
             v1 = gen_part[2].p4()
         else:
-            raise Exception("monoZ/EWKcorrection, GenParticle element 2 is neither a Z nor a W boson.")
+            print "[WARNING] MonoZ/EWKcorrection, GenParticle element 2 is neither Z quark nor W gluon. weight set to 1"
+            self.out.fillBranch("kEW"    , 1)
+            self.out.fillBranch("kEWUp"  , 1)
+            self.out.fillBranch("kEWDown", 1)
+            self.out.fillBranch("kNNLO"  , 1)
+            return True
 
         if ( gen_part[3].pdgId==23 or abs(gen_part[3].pdgId)==24 ):
             v2 = gen_part[3].p4()
         else:
-            raise Exception("monoZ/EWKcorrection, GenParticle element 3 is neither a Z nor a W boson.")
+            print "[WARNING] MonoZ/EWKcorrection, GenParticle element 3 is neither Z quark nor W gluon. weight set to 1"
+            self.out.fillBranch("kEW"    , 1)
+            self.out.fillBranch("kEWUp"  , 1)
+            self.out.fillBranch("kEWDown", 1)
+            self.out.fillBranch("kNNLO"  , 1)
+            return True
 
 
         # NNLO
@@ -150,7 +170,7 @@ class EWProducer(Module):
         # Effective beam axis
         dq = uq1 - uq2
         # effective beam direction
-        udq = dq * (1./dq.Mag()) 
+        udq = dq * (1./dq.Mag())
         costheta = udq.Dot(uv1)
 
         # # Z boson mass, assumed to be on-shell
@@ -159,9 +179,9 @@ class EWProducer(Module):
         # mw = 80.385
         that = 0.
 
-        # if self.process==1: 
+        # if self.process==1:
         #     that = mz*mz - 0.5*shat + costheta * np.sqrt(0.25*shat*shat - mz*mz*shat)
-        # elif self.process==2: 
+        # elif self.process==2:
         #     b = 0.5/sqrshat * np.sqrt((shat - mz*mz - mw*mw)**2 - 4*mw*mw*mz*mz)
         #     a = np.sqrt(b*b + mz*mz)
         #     # Bad calculation! But needed to boost to the WZ c.m. frame (different masses)
@@ -172,8 +192,8 @@ class EWProducer(Module):
         # Select table row, based on s_hat and t_hat
         itab = 40000
         # highest value of sqrt(s_hat) in the table
-        sqrshatmax = 0.8E+04 
-        if sqrshat>sqrshatmax: 
+        sqrshatmax = 0.8E+04
+        if sqrshat>sqrshatmax:
             itab = 39800
         else:
             for itmp in range(0, 40000, 200):
@@ -203,12 +223,12 @@ class EWProducer(Module):
             # Flavor of incident quark (std::min in case one is a gluon)
             qtype = min(fq1, fq2)
             # d, s
-            if (qtype==1 or qtype==3): 
+            if (qtype==1 or qtype==3):
                 jtab = 3
-            elif (qtype==2 or qtype==4): 
+            elif (qtype==2 or qtype==4):
                 # u, c
                 jtab = 2
-            elif qtype==5: 
+            elif qtype==5:
                 # b
                 jtab = 4
             else:
@@ -225,7 +245,7 @@ class EWProducer(Module):
                 continue
             if parton.status != 1:
                 continue
-            if ( abs(parton.pdgId) < 11 or abs(parton.pdgId) > 16 ): 
+            if ( abs(parton.pdgId) < 11 or abs(parton.pdgId) > 16 ):
                 continue
             sumptl += parton.pt
             nlept += 1
@@ -235,21 +255,21 @@ class EWProducer(Module):
             # Could handle, but should really make no difference
             # So just go conservative
             sumptl = 1E-9
-            
+
         rhozz = vv.Pt() / sumptl
 
         # Average QCD NLO k factors from arXiv:1105.0020
         dkfactor_qcd = 0.
-        if self.process == 1:       
+        if self.process == 1:
             dkfactor_qcd = 15.99/ 9.89 - 1. # ZZ
-        elif self.process == 2: 
-            if ( gen_part[2].pdgId * gen_part[3].pdgId > 0 ): 
+        elif self.process == 2:
+            if ( gen_part[2].pdgId * gen_part[3].pdgId > 0 ):
                 dkfactor_qcd = 28.55 / 15.51 - 1. # W+Z
-            else:                  
+            else:
                 dkfactor_qcd = 18.19 / 9.53 - 1. # W-Z
-            
+
         ewkUncert = 1. + abs(dkfactor_qcd * self.table[itab][jtab]) if rhozz<0.3 else 1. + abs(self.table[itab][jtab])
-            
+
         kEW_up *= ewkUncert
         kEW_dw /= ewkUncert
 

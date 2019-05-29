@@ -64,3 +64,31 @@ To run some of the plotting tools, you need third party pakages such as uproot. 
 pip install uproot --user
 pip install thermcolor --user
 ```
+
+Then you need to checkout the packages to run the datacrad producer, you need to create a directory where to put the merged root files.
+
+```
+cd $CMSSW_BASE/src/
+https://github.com/yhaddad/MonoZFinalFit.git
+cd $CMSSW_BASE/src/MonoZFinalFit/
+cd data/
+python filemerger.py --dir=/eos/cms/store/group/phys_exotica/monoZ/DarkNight/
+```
+
+`DarkNight` is the latest production to be replaced with the tag that you run with. 
+
+Please make sure to edit `config/merged_inputs.yaml` and make appropriate changes about how the group merging should be done (dont change the group name, only the file names)
+
+to make datacards for all the different control regions you can run: 
+```
+./makeQuickCard --channel catEE --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,DrellYanBinned,Data --input=config/merged_inputs.yaml
+./makeQuickCard --channel catMM --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,DrellYanBinned,Data --input=config/merged_inputs.yaml
+./makeQuickCard --channel cat3L --stack=WZ3lnu,ZGamma,Other3l,NonPromptDY,Data --input=config/merged_inputs.yaml
+./makeQuickCard --channel cat4L --stack=qqZZ4l,ggZZ4l,Other4l,Data --input=config/merged_inputs.yaml
+./makeQuickCard --channel catNRB --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,Data --input=config/merged_inputs.yaml
+./makeQuickCard --channel catTOP --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,Data --input=config/merged_inputs.yaml
+```
+
+
+
+

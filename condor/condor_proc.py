@@ -133,7 +133,7 @@ pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
 ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK"]
 
 if options.isMC:
-   modules_2017.append(puWeight_2017())
+   modules_2017.append(puAutoWeight_2017())
    modules_2017.append(jetmetUncertainties2017All())
    modules_2017.append(btagSFProducer("2017", "deepcsv"))
    modules_2017.append(muonScaleRes2017())

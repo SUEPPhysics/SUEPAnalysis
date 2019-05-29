@@ -69,7 +69,7 @@ Then you need to checkout the packages to run the datacrad producer, you need to
 
 ```
 cd $CMSSW_BASE/src/
-https://github.com/yhaddad/MonoZFinalFit.git
+git clone https://github.com/yhaddad/MonoZFinalFit.git
 cd $CMSSW_BASE/src/MonoZFinalFit/
 cd data/
 python filemerger.py --dir=/eos/cms/store/group/phys_exotica/monoZ/DarkNight/
@@ -81,14 +81,31 @@ Please make sure to edit `config/merged_inputs.yaml` and make appropriate change
 
 to make datacards for all the different control regions you can run: 
 ```
-./makeQuickCard --channel catEE --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,DrellYanBinned,Data --input=config/merged_inputs.yaml
-./makeQuickCard --channel catMM --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,DrellYanBinned,Data --input=config/merged_inputs.yaml
-./makeQuickCard --channel cat3L --stack=WZ3lnu,ZGamma,Other3l,NonPromptDY,Data --input=config/merged_inputs.yaml
-./makeQuickCard --channel cat4L --stack=qqZZ4l,ggZZ4l,Other4l,Data --input=config/merged_inputs.yaml
-./makeQuickCard --channel catNRB --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,Data --input=config/merged_inputs.yaml
-./makeQuickCard --channel catTOP --stack=Nonresonant,qqZZ2l2nu,ggZZ2l2nu,WZ3lnu,Other,Data --input=config/merged_inputs.yaml
+./run.sh
 ```
 
+please edit this file and make approperiate changes, such as "python3 to python".
+to run the limits, you hit the follwing command
+
+```
+combineCards.py -S DMY1000Xd200/card_* > combined_DMY1000Xd200.dat
+text2workspace.py combined_DMY1000Xd200.dat
+combine -M AsymptoticLimits combined_DMY1000Xd200.dat.root  --run blind
+```
+
+Sometimes it complains about "0.000" please changes it to "0.100" if it does. 
+
+the output of such command is :
+
+```
+ -- AsymptoticLimits ( CLs ) --
+Expected  2.5%: r < 5.1239
+Expected 16.0%: r < 7.3816
+Expected 50.0%: r < 11.4062
+Expected 84.0%: r < 18.0897
+Expected 97.5%: r < 27.4244
+```
+Where 5.1239 is the expected limit using the input signal. 
 
 
 

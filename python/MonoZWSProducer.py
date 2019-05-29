@@ -134,9 +134,9 @@ class MonoZWSProducer(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
         outputFile.cd()
-        if not outputFile.Get("Shapes"):
-            outputFile.mkdir("Shapes")
-        outputFile.cd("Shapes")
+        #if not outputFile.Get("Shapes"):
+        #    outputFile.mkdir("Shapes")
+        #outputFile.cd("Shapes")
         for i,cat in self.cats.items():
             self.h_met[i].Write()
             self.h_mll[i].Write()
@@ -188,7 +188,7 @@ class MonoZWSProducer(Module):
             weight = getattr(event, "xsecscale")
         except:
             return "ERROR: weight branch doesn't exist"
-
+        
         # pu uncertainty
         if self.isMC:
             # weight *= event.genWeight
@@ -199,7 +199,6 @@ class MonoZWSProducer(Module):
                     weight *= event.puWeightDown
             else:
             	weight *= event.puWeight
-
             # Electroweak
             try:
                 if "EWK" in self.syst_suffix:
@@ -211,13 +210,11 @@ class MonoZWSProducer(Module):
                     weight *= kEW
             except:
                 pass
-
             # NNLO crrection
             try:
                 weight *= event.kNNLO
             except:
                 pass
-
             # PDF uncertainty
             if "PDF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
@@ -255,7 +252,6 @@ class MonoZWSProducer(Module):
                     weight *= event.w_electron_SFDown
             else:
                 weight *= event.w_electron_SF
-
         # NJETS: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "ngood_jets", "signal") ):
             self.h_njet.Fill(meas_Njet)

@@ -5,8 +5,8 @@ MonoZ analysis using NanoAOD
 ## Quick start
 
 ```bash
-cmsrel CMSSW_9_4_9
-cd CMSSW_9_4_9/src
+cmsrel CMSSW_10_6_0_pre4
+cd CMSSW_10_6_0_pre4/src
 cmsenv
 
 
@@ -107,5 +107,13 @@ Expected 97.5%: r < 27.4244
 ```
 Where 5.1239 is the expected limit using the input signal. 
 
+To run the impact parameters tools check the documentation [here](https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/nonstandard/#nuisance-parameter-impacts)
+
+```
+combineTool.py -M Impacts -d combined_DMY2000Xd1.dat.root -m 125 --doInitialFit --robustFit 1
+combineTool.py -M Impacts -d combined_DMY2000Xd1.dat.root -m 125 --robustFit 1 --doFits
+combineTool.py -M Impacts -d combined_DMY2000Xd1.dat.root -m 125 --o impacts.json
+plotImpacts.py -i impacts.json -o impacts
+```
 
 

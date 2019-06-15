@@ -7,7 +7,7 @@ import os.path
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-c", "--config", type=str, default='configs/sample_mc_2017.dat',help="directory config")
+parser.add_argument("-c", "--config", type=str, default='../configs/samples_2018_MC.dat',help="directory config")
 parser.add_argument("-d", "--dir"   , type=str, default='/eos/cms/', help="scan this directory")
 parser.add_argument("-p", "--use_parent", type=str, default='True',
                     help="use MiniAOD parent instead of NanoAOD")
@@ -86,7 +86,7 @@ for s in data.split('\n'):
     }
 
 if options.otype == "yaml":
-    with open('catalog_2017.yml', 'w') as outfile:
+    with open('catalog_2018.yml', 'w') as outfile:
         yaml.dump(catalog, outfile, default_flow_style=False)
 
 elif options.otype == "python":
@@ -94,7 +94,7 @@ elif options.otype == "python":
     import os
     dataset = {}
     """
-    with open("catalog_2017.py", "w") as outfile:
+    with open("catalog_2018.py", "w") as outfile:
         outfile.write("# auto-generated \n")
         outfile.write("catalog={} \n")
         for name, c in catalog.items():

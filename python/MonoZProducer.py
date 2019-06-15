@@ -91,6 +91,7 @@ class MonoZProducer(Module):
             return electron.mvaSpring16GP_WP80
         elif (self.era == "2016" and wp == "90"):
             return electron.mvaSpring16GP_WP90
+
         elif (self.era == "2017" and wp == "80"):
             try:
                 pass_id = electron.mvaFall17V2Iso_WP80
@@ -129,7 +130,51 @@ class MonoZProducer(Module):
                     except ValueError:
                         print "[error] not mvaFall17 electron id found ... "
 
+        elif (self.era == "2018" and wp == "80"):
+            try:
+                pass_id = electron.mvaFall17V2Iso_WP80
+            except:
+                try:
+                    pass_id = electron.mvaFall17V1Iso_WP80
+                except:
+                    try:
+                        pass_id = electron.mvaFall17Iso_WP80
+                    except ValueError:
+                        print "[error] not mvaFall17 electron id found ... "
+
             return pass_id
+        elif (self.era == "2018" and wp == "90"):
+            try:
+                pass_id = electron.mvaFall17V2Iso_WP90
+            except:
+                try:
+                    pass_id = electron.mvaFall17V1Iso_WP90
+                except:
+                    try:
+                        pass_id = electron.mvaFall17Iso_WP90
+                    except ValueError:
+                        print "[error] not mvaFall17 electron id found ... "
+
+            return pass_id
+        elif (self.era == "2018" and wp == "WPL"):
+            try:
+                pass_id = electron.mvaFall17V2Iso_WPL
+            except:
+                try:
+                    pass_id = electron.mvaFall17V1Iso_WPL
+                except:
+                    try:
+                        pass_id = electron.mvaFall17Iso_WPL
+                    except ValueError:
+                        print "[error] not mvaFall18 electron id found ... "
+
+            return pass_id
+        #elif (self.era == "2018" and wp == "80"):
+        #    return electron.mvaFall17V1Iso_WP80
+        #elif (self.era == "2018" and wp == "90"):
+        #    return electron.mvaFall17V1Iso_WP90
+        #elif (self.era == "2018" and wp == "WPL"):
+        #    return electron.mvaFall17V1Iso_WPL
 
 
     def btag_id(self, wp):
@@ -145,6 +190,12 @@ class MonoZProducer(Module):
         elif (self.era == "2017" and wp == "medium"):
             return 0.4941
         elif (self.era == "2017" and wp == "tight"):
+            return 0.8001
+        elif (self.era == "2018" and wp == "loose"):
+            return 0.1522
+        elif (self.era == "2018" and wp == "medium"):
+            return 0.4941
+        elif (self.era == "2018" and wp == "tight"):
             return 0.8001
 
     def lorentz_shift(self, obj, p4err, shiftUp=True):
@@ -273,7 +324,10 @@ class MonoZProducer(Module):
         good_muons = []
         good_electrons = []
         lep_category = -1
-
+        
+        count = 0
+	muons.sort(key=lambda muon: muon.pt, reverse=True)
+        electrons.sort(key=lambda el: el.pt, reverse=True)
         # Choose tight-quality e/mu for event categorization
         for mu in muons:
             isoLep   = mu.pfRelIso04_all
@@ -281,17 +335,24 @@ class MonoZProducer(Module):
             pass_fid = abs(mu.eta) < 2.4 and mu.pt >= 20
             pass_ids = mu.tightId and isoLep <= 0.15
             if pass_fid and pass_ids and pass_ips:
-                good_muons.append(mu)
-
+		if count == 0 and mu.pt >= 25:
+                	good_muons.append(mu)
+                if count != 0:
+                        good_muons.append(mu)
+	    count = count + 1
+        count = 0
         for el in electrons:
             id_CB = el.cutBased
             # changing to MVA based ID :
             if el.pt >= 20 and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
-                good_electrons.append(el)
-
+                if count == 0 and el.pt >= 25:
+                	good_electrons.append(el)
+                if count != 0:
+			good_electrons.append(el)
         # let sort the muons in pt
         good_muons.sort(key=lambda x: x.pt, reverse=True)
         good_electrons.sort(key=lambda x: x.pt, reverse=True)
+
 
         # Find any remaining e/mu that pass looser selection
         extra_leptons = []
@@ -357,7 +418,7 @@ class MonoZProducer(Module):
                     w_muon_SF     *=  good_leptons[1].SF
                     w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
                     w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-
+		    #print "hello"
             self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
             self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
             self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )

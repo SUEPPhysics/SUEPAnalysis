@@ -325,30 +325,22 @@ class MonoZProducer(Module):
         good_electrons = []
         lep_category = -1
         
-        count = 0
 	muons.sort(key=lambda muon: muon.pt, reverse=True)
         electrons.sort(key=lambda el: el.pt, reverse=True)
         # Choose tight-quality e/mu for event categorization
-        for mu in muons:
+        for idx,mu in muons:
             isoLep   = mu.pfRelIso04_all
             pass_ips = abs(mu.dxy) < 0.02 and abs(mu.dz) < 0.1
-            pass_fid = abs(mu.eta) < 2.4 and mu.pt >= 20
+            pass_fid = abs(mu.eta) < 2.4 and mu.pt >= (25 if idx==0 else 20)
             pass_ids = mu.tightId and isoLep <= 0.15
             if pass_fid and pass_ids and pass_ips:
-		if count == 0 and mu.pt >= 25:
-                	good_muons.append(mu)
-                if count != 0:
-                        good_muons.append(mu)
-	    count = count + 1
-        count = 0
-        for el in electrons:
+                good_muons.append(mu)
+        for idx,el in electrons:
             id_CB = el.cutBased
             # changing to MVA based ID :
-            if el.pt >= 20 and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
-                if count == 0 and el.pt >= 25:
-                	good_electrons.append(el)
-                if count != 0:
-			good_electrons.append(el)
+            if el.pt >= (25 if idx==0 else 20) and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
+                good_electrons.append(el)
+
         # let sort the muons in pt
         good_muons.sort(key=lambda x: x.pt, reverse=True)
         good_electrons.sort(key=lambda x: x.pt, reverse=True)
@@ -418,7 +410,6 @@ class MonoZProducer(Module):
                     w_muon_SF     *=  good_leptons[1].SF
                     w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
                     w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-		    #print "hello"
             self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
             self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
             self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )

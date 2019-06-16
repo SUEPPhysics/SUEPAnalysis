@@ -328,17 +328,17 @@ class MonoZProducer(Module):
 	muons.sort(key=lambda muon: muon.pt, reverse=True)
         electrons.sort(key=lambda el: el.pt, reverse=True)
         # Choose tight-quality e/mu for event categorization
-        for idx,mu in muons:
+        for idx,mu in enumerate(muons):
             isoLep   = mu.pfRelIso04_all
             pass_ips = abs(mu.dxy) < 0.02 and abs(mu.dz) < 0.1
             pass_fid = abs(mu.eta) < 2.4 and mu.pt >= (25 if idx==0 else 20)
             pass_ids = mu.tightId and isoLep <= 0.15
             if pass_fid and pass_ids and pass_ips:
                 good_muons.append(mu)
-        for idx,el in electrons:
+        for idy,el in enumerate(electrons):
             id_CB = el.cutBased
             # changing to MVA based ID :
-            if el.pt >= (25 if idx==0 else 20) and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
+            if el.pt >= (25 if idy==0 else 20) and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
                 good_electrons.append(el)
 
         # let sort the muons in pt

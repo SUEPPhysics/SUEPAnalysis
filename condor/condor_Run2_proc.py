@@ -150,7 +150,6 @@ if options.isMC:
    	modules_era.append(muonScaleRes2017())
    	modules_era.append(lepSF())
    if options.era=="2018":
-        print "I made it here"
         modules_era.append(puAutoWeight_2018())
         modules_era.append(jetmetUncertainties2018All())
         modules_era.append(btagSFProducer("2017", "deepcsv"))

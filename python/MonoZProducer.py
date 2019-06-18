@@ -244,8 +244,6 @@ class MonoZProducer(Module):
         flag = Object(event, "Flag")
         met = Object(event, "MET")
 
-        met_p4 = ROOT.TLorentzVector()
-        met_p4.SetPtEtaPhiM(met.pt,0.0,met.phi, 0.0)
         # in case of systematic take the shifted values are default
         # For the central values, need to include jetMetTool all the time
         # Jet systematics
@@ -282,6 +280,9 @@ class MonoZProducer(Module):
                 'not available, using the nominal value'.format(syst_var)
         except:
             pass
+        met_p4 = ROOT.TLorentzVector()
+        met_p4.SetPtEtaPhiM(met.pt,0.0,met.phi, 0.0)
+
 
         # Electrons Energy
         if "ElectronEn" in self.syst_var:

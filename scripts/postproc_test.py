@@ -13,7 +13,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProduce
 
 from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
-from PhysicsTools.MonoZ.GlobalWeightProducer import *
+#from PhysicsTools.MonoZ.GlobalWeightProducer import *
 import argparse
 
 
@@ -47,7 +47,8 @@ files = [
 weightRaw  = 1.0
 lumiWeight = 1.0
 if isMC:
-    from PhysicsTools.NanoAODTools.postprocessing.monoZ.catalog_2017 import catalog
+    #from PhysicsTools.NanoAODTools.postprocessing.monoZ.catalog_2017 import catalog
+    from PhysicsTools.MonoZ.catalog_2017 import catalog
     condtag_ = "NANOAODSIM"
     if options.dataset == "X":
         options.dataset = files[0] #inputFiles().value()[0]
@@ -72,7 +73,7 @@ if isMC:
         lumiWeight = 1.0
         print "---------------------------"
         print "lumiWeight  == ", lumiWeight
-        print "sample name == ", sample_name.split("_")[0]
+        #print "sample name == ", sample_name.split("_")[0]
     
 print "---------------------------"
 from PhysicsTools.MonoZ.HLT_NotIn_2017 import HLT_paths, HLT_not_in
@@ -85,14 +86,14 @@ pre_selection = " && ".join([pre_selection, "(Entry$ < 5000)"])
 print("pre_selection : ", pre_selection)
 
 modules_2017 = [
-    GlobalWeightProducer(options.isMC, lumiWeight, weightRaw),
+#    GlobalWeightProducer(options.isMC, lumiWeight, weightRaw),
 ]
 
 pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
 ext_syst = [ "puWeight" ]
 
 if options.isMC:
-   modules_2017.append(puAutoWeight())
+   modules_2017.append(puAutoWeight_2017())
    modules_2017.append(jetmetUncertainties2017All())
    modules_2017.append(btagSFProducer("2017", "deepcsv"))
    modules_2017.append(muonScaleRes2017())

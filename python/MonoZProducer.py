@@ -192,11 +192,11 @@ class MonoZProducer(Module):
         elif (self.era == "2017" and wp == "tight"):
             return 0.8001
         elif (self.era == "2018" and wp == "loose"):
-            return 0.1522
+            return 0.1241
         elif (self.era == "2018" and wp == "medium"):
-            return 0.4941
+            return 0.4184
         elif (self.era == "2018" and wp == "tight"):
-            return 0.8001
+            return 0.7527
 
     def lorentz_shift(self, obj, p4err, shiftUp=True):
         p4vec = obj.p4()

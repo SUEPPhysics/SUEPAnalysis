@@ -193,14 +193,14 @@ else:
    except yaml.YAMLError as exc:
       print(exc)
 
-   #specifically for private NanoAOD production!!
-   options.dataset2 = options.infile
-   options.dataset2 = options.dataset2.split('/store')[1].split("/")
-   condtag_ = options.dataset2[6]
-   options.dataset = options.dataset2[5]
-   print options.dataset
-   print condtag_
-   #specifically for private NanoAOD production!!
+   ##specifically for private NanoAOD production!!
+   #options.dataset2 = options.infile
+   #options.dataset2 = options.dataset2.split('/store')[1].split("/")
+   #condtag_ = options.dataset2[6]
+   #options.dataset = options.dataset2[5]
+   #print options.dataset
+   #print condtag_
+   ##specifically for private NanoAOD production!!
 
    if options.era=="2016":
         pre_selection = pre_selection + " && (" + combineHLT.get("Run2016All.%s" % options.dataset, 1) + ")"

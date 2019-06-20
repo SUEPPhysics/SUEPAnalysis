@@ -260,6 +260,14 @@ class MonoZWSProducer(Module):
                     weight *= event.PrefireWeight_Down
             else:
                 weight *= event.PrefireWeight
+            #nvtx Weight
+            if "nvtxWeight" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.nvtxWeightUp
+                else:
+                    weight *= event.nvtxWeightDown
+            else:
+                weight *= event.nvtxWeight
 
 
         # NJETS: Signal region

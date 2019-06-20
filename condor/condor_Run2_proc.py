@@ -12,6 +12,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.JetSysColl import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
 
 from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
@@ -134,17 +135,19 @@ modules_era   = [
 ]
 print "start simple"
 pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK"]
+ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight"]
 
 if options.isMC:
    if options.era=="2016":
         modules_era.append(puAutoWeight_2016())
+        modules_era.append(PrefCorr())
         modules_era.append(jetmetUncertainties2016All())
         modules_era.append(btagSFProducer("2016", "deepcsv"))
         modules_era.append(muonScaleRes2016())
         modules_era.append(lepSF())
    if options.era=="2017":
    	modules_era.append(puAutoWeight_2017())
+        modules_era.append(PrefCorr())
    	modules_era.append(jetmetUncertainties2017All())
    	modules_era.append(btagSFProducer("2017", "deepcsv"))
    	modules_era.append(muonScaleRes2017())
@@ -193,14 +196,14 @@ else:
    except yaml.YAMLError as exc:
       print(exc)
 
-   #specifically for private NanoAOD production!!
-   options.dataset2 = options.infile
-   options.dataset2 = options.dataset2.split('/store')[1].split("/")
-   condtag_ = options.dataset2[6]
-   options.dataset = options.dataset2[5]
-   print options.dataset
-   print condtag_
-   #specifically for private NanoAOD production!!
+   ##specifically for private NanoAOD production!!
+   #options.dataset2 = options.infile
+   #options.dataset2 = options.dataset2.split('/store')[1].split("/")
+   #condtag_ = options.dataset2[6]
+   #options.dataset = options.dataset2[5]
+   #print options.dataset
+   #print condtag_
+   ##specifically for private NanoAOD production!!
 
    if options.era=="2016":
         pre_selection = pre_selection + " && (" + combineHLT.get("Run2016All.%s" % options.dataset, 1) + ")"

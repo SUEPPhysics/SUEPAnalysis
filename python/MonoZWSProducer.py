@@ -252,6 +252,16 @@ class MonoZWSProducer(Module):
                     weight *= event.w_electron_SFDown
             else:
                 weight *= event.w_electron_SF
+	    #Prefire Weight
+            if "PrefireWeight" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.PrefireWeight_Up
+                else:
+                    weight *= event.PrefireWeight_Down
+            else:
+                weight *= event.PrefireWeight
+
+
         # NJETS: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "ngood_jets", "signal") ):
             self.h_njet.Fill(meas_Njet)

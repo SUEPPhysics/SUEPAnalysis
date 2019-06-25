@@ -18,6 +18,7 @@ from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
 from PhysicsTools.MonoZ.GenWeightProducer import *
 from PhysicsTools.MonoZ.EWProducer import *
+from PhysicsTools.MonoZ.NvtxPUreweight import *
 
 import argparse
 
@@ -135,7 +136,7 @@ modules_era   = [
 ]
 print "start simple"
 pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight"]
+ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight","nvtxWeight"]
 
 if options.isMC:
    if options.era=="2016":
@@ -145,6 +146,7 @@ if options.isMC:
         modules_era.append(btagSFProducer("2016", "deepcsv"))
         modules_era.append(muonScaleRes2016())
         modules_era.append(lepSF())
+	modules_era.append(nvtxWeight_2016())
    if options.era=="2017":
    	modules_era.append(puAutoWeight_2017())
         modules_era.append(PrefCorr())
@@ -152,12 +154,14 @@ if options.isMC:
    	modules_era.append(btagSFProducer("2017", "deepcsv"))
    	modules_era.append(muonScaleRes2017())
    	modules_era.append(lepSF())
+        modules_era.append(nvtxWeight_2017())
    if options.era=="2018":
         modules_era.append(puAutoWeight_2018())
         modules_era.append(jetmetUncertainties2018All())
         modules_era.append(btagSFProducer("2017", "deepcsv"))
         modules_era.append(muonScaleRes2018())
         modules_era.append(lepSF())
+        modules_era.append(nvtxWeight_2018())
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
    modules_era.append(MonoZWSProducer(
       isMC=options.isMC, era=str(options.era),

@@ -143,7 +143,7 @@ if options.isMC:
         modules_era.append(puAutoWeight_2016())
         modules_era.append(PrefCorr())
         modules_era.append(jetmetUncertainties2016All())
-        modules_era.append(btagSFProducer("2016", "deepcsv"))
+        modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
         modules_era.append(muonScaleRes2016())
         modules_era.append(lepSF_2016())
 	modules_era.append(nvtxWeight_2016())
@@ -158,7 +158,7 @@ if options.isMC:
    if options.era=="2018":
         modules_era.append(puAutoWeight_2018())
         modules_era.append(jetmetUncertainties2018All())
-        modules_era.append(btagSFProducer("2017", "deepcsv"))
+        modules_era.append(btagSFProducer("2018", "deepcsv"))
         modules_era.append(muonScaleRes2018())
         modules_era.append(lepSF_2018())
         modules_era.append(nvtxWeight_2018())

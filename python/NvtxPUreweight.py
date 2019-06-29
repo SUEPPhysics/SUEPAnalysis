@@ -43,7 +43,7 @@ class nvtxWeightProducer(Module):
 	    for bin in range(1,nBins+1):
 		if nvtx > self.targeth.GetBinLowEdge(bin) and nvtx < self.targeth.GetBinLowEdge(bin) + self.targeth.GetBinWidth(bin) :
 			weight = self.targeth.GetBinContent(bin)
-			weightError = self.targeth.GetBinError(bin)/2
+			weightError = self.targeth.GetBinError(bin)
 	    self.out.fillBranch(self.name, weight)
 	    if self.doSysVar:	    
  		self.out.fillBranch(self.name+"Up", weight+weightError)

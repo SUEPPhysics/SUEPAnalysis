@@ -3,6 +3,7 @@ import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # import PSet
 import yaml
+#Import the NanoAOD-tools that we will need
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jecUncertainties import *
@@ -13,12 +14,14 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer im
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
-
+#Import the MonoZ analysis tools
 from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
 from PhysicsTools.MonoZ.GenWeightProducer import *
 from PhysicsTools.MonoZ.EWProducer import *
 from PhysicsTools.MonoZ.NvtxPUreweight import *
+from PhysicsTools.MonoZ.BtagEventWeightProducer import *
+from PhysicsTools.MonoZ.TriggerSFProducer import *
 
 import argparse
 
@@ -136,7 +139,7 @@ modules_era   = [
 ]
 print "start simple"
 pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight","nvtxWeight"]
+ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight","nvtxWeight","TriggerSFWeight"]
 
 if options.isMC:
    if options.era=="2016":
@@ -147,6 +150,7 @@ if options.isMC:
         modules_era.append(muonScaleRes2016())
         modules_era.append(lepSF())
 	modules_era.append(nvtxWeight_2016())
+        modules_era.append(BtagEventWeight_2016())
    if options.era=="2017":
    	modules_era.append(puAutoWeight_2017())
         modules_era.append(PrefCorr())
@@ -155,6 +159,7 @@ if options.isMC:
    	modules_era.append(muonScaleRes2017())
    	modules_era.append(lepSF())
         modules_era.append(nvtxWeight_2017())
+        modules_era.append(BtagEventWeight_2017())
    if options.era=="2018":
         modules_era.append(puAutoWeight_2018())
         modules_era.append(jetmetUncertainties2018All())
@@ -162,11 +167,24 @@ if options.isMC:
         modules_era.append(muonScaleRes2018())
         modules_era.append(lepSF())
         modules_era.append(nvtxWeight_2018())
+        modules_era.append(BtagEventWeight_2018())
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
+   #modules_era.append(MonoZWSProducer(
+   #   isMC=options.isMC, era=str(options.era),
+   #   do_syst=1, syst_var='', sample=m.get("sample", "")
+   #))
+   if options.era=="2016":
+        modules_era.append(TriggerSF_2016())
+   if options.era=="2017":
+        modules_era.append(TriggerSF_2017())
+   if options.era=="2018":
+        modules_era.append(TriggerSF_2018())
    modules_era.append(MonoZWSProducer(
       isMC=options.isMC, era=str(options.era),
       do_syst=1, syst_var='', sample=m.get("sample", "")
    ))
+
+
    # WW or ZZ sample
    if "ZZTo" in m.get("sample", "") and "GluGluToContin" not in m.get("sample", ""):
       modules_era.append(EWProducer(1, True))

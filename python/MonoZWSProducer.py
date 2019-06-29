@@ -268,8 +268,31 @@ class MonoZWSProducer(Module):
                     weight *= event.nvtxWeightDown
             else:
                 weight *= event.nvtxWeight
+            #TriggerSFWeight
+            if "TriggerSFWeight" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.TriggerSFWeightUp
+                else:
+                    weight *= event.TriggerSFWeightDown
+            else:
+                weight *= event.TriggerSFWeight
 
-
+        #print "nom MET pT"
+	#print getattr(event, "MET_pt_nom")
+        #print "Met we use"
+        #print getattr(event, "met_pt")
+        #print "Now the MET is the WS producer"
+        #print meas_MET
+        #print "MET pT jesAbsoluteScaleUp"
+        #print getattr(event, "MET_pt_jesAbsoluteScaleUp")
+        #print "MET pT jesAbsoluteScaleDown"
+        #print getattr(event, "MET_pt_jesAbsoluteScaleDown")
+        #print "nom Jet pT"
+        #print getattr(event, "Jet_pt_nom")
+        #print "Jet pT jesAbsoluteScaleUp"
+        #print getattr(event, "Jet_pt_jesAbsoluteScaleUp")
+        #print "Jet pT jesAbsoluteScaleDown"
+        #print getattr(event, "Jet_pt_jesAbsoluteScaleDown")
         # NJETS: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "ngood_jets", "signal") ):
             self.h_njet.Fill(meas_Njet)

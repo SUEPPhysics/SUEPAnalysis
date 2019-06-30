@@ -139,7 +139,7 @@ modules_era   = [
 ]
 print "start simple"
 pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight","nvtxWeight","TriggerSFWeight"]
+ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight","nvtxWeight","TriggerSFWeight","btagEventWeight"]
 
 if options.isMC:
    if options.era=="2016":

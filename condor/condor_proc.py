@@ -17,6 +17,7 @@ from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
 from PhysicsTools.MonoZ.GenWeightProducer import *
 from PhysicsTools.MonoZ.EWProducer import *
+from  PhysicsTools.MonoZ.CombineHLT import *
 
 import argparse
 
@@ -110,8 +111,10 @@ from PhysicsTools.MonoZ.HLT_NotIn_2017 import HLT_paths, HLT_not_in
 if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 
-pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
-pre_selection += "&& Flag_METFilters"
+# pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
+# pre_selection += "&& Flag_METFilters"
+# pre_selection = "(Flag_METFilters==1)"
+pre_selection = "1"
 
 if float(options.nevt) > 0:
    print " passing this cut and : ", options.nevt
@@ -129,8 +132,8 @@ modules_2017   = [
     )
 ]
 
-pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK"]
+pro_syst = []# "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
+ext_syst = []# "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK"]
 
 if options.isMC:
    modules_2017.append(puAutoWeight_2017())
@@ -171,22 +174,38 @@ if options.isMC:
 
 else:
    print "sample : ", options.dataset, " candtag : ", condtag_
+   path_hlt = "/afs/cern.ch/work/y/yhaddad/CMSSW_10_6_0_pre4/src/PhysicsTools/MonoZ/condor"
+   path_hlt = "./"
+   print "condtag : ", condtag_, "dataset : ", options.dataset
+
+   if 'Run2017B' in condtag_:
+      modules_2017.append(CombineHLT(fileName=path_hlt + "/combineHLT_Run2.yaml", 
+                                     hltSet="Run2017B.{}".format(options.dataset) ))
+   elif 'Run2017C' in condtag_:
+      modules_2017.append(CombineHLT(fileName=path_hlt + "/combineHLT_Run2.yaml", 
+                                     hltSet="Run2017CF.{}".format(options.dataset) ))
+   else:
+      modules_2017.append(CombineHLT(fileName=path_hlt + "/combineHLT_Run2.yaml", 
+                                     hltSet="Run2017CF.{}".format(options.dataset) ))
+     
+   """
    try:
-      combineHLT = yaml.load(open("combineHLT_2017.yaml"))
+      combineHLT = yaml.load(open("combineHLT_Run2.yaml"))
    except yaml.YAMLError as exc:
       print(exc)
    if 'Run2017B' in condtag_:
       pre_selection = pre_selection + " && (" + combineHLT.get("Run2017B.%s" % options.dataset, 1) + ")"
    elif 'Run2017C' in condtag_:
-      pre_selection = pre_selection + " && (" + combineHLT.get("Run2017C.%s" % options.dataset, 1) + ")"
-   else:
       pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, 1) + ")"
+   else:
+      pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, 1)+ ")"
+   """                                 
    # ---
    print " -- era : ",
-   modules_2017.append(getattr(jetRecalib, 'jetRecalib2017%s' % condtag_.split(options.era)[1])() )
-   modules_2017.append(MonoZProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
-   modules_2017.append(MonoZWSProducer(isMC=options.isMC, era=str(options.era),
-                                       do_syst=1, syst_var='', sample="data"))
+   #modules_2017.append(getattr(jetRecalib, 'jetRecalib2017%s' % condtag_.split(options.era)[1])() )
+   #modules_2017.append(MonoZProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
+   #modules_2017.append(MonoZWSProducer(isMC=options.isMC, era=str(options.era),
+   #                                    do_syst=1, syst_var='', sample="data"))
 
 
 for i in modules_2017:

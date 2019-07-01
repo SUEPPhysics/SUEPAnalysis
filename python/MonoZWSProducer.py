@@ -268,7 +268,22 @@ class MonoZWSProducer(Module):
                     weight *= event.nvtxWeightDown
             else:
                 weight *= event.nvtxWeight
-
+            #TriggerSFWeight
+            if "TriggerSFWeight" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.TriggerSFWeightUp
+                else:
+                    weight *= event.TriggerSFWeightDown
+            else:
+                weight *= event.TriggerSFWeight
+            #BTagEventWeight
+            if "btagEventWeight" in self.syst_suffix:
+                if "Up" in self.syst_suffix:
+                    weight *= event.btagEventWeightUp
+                else:
+                    weight *= event.btagEventWeightDown
+            else:
+                weight *= event.btagEventWeight
 
         # NJETS: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "ngood_jets", "signal") ):

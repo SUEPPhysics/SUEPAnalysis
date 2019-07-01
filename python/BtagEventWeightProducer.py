@@ -40,22 +40,17 @@ class BtagEventWeightProducer(Module):
         weight = 1.0
 	weight_up = 1.0
 	weight_down = 1.0
-	#weightError = 0.0 
 	jets = list(Collection(event, "Jet"))
         for i,j in enumerate(jets):
         	flavor =  j.hadronFlavour
 		SF = j.btagSF # lets see if this works
 		SFup = j.btagSF_up
                 SFdown = j.btagSF_down	
-		print flavor, SF
 		if flavor == 5: #this is for the actual bottom events
-			print "This is a bottom quark jet"
                 	hist = self.loadHisto(self.targetfile,"bottom_eff")
 	        elif flavor == 4: #this is for the charm events
-			print "This is a charm quark jet"
                         hist = self.loadHisto(self.targetfile,"charm_eff")
 		elif flavor == 0: #this is for the light flavored jets
-			print "This is a light quark jet"
                         hist = self.loadHisto(self.targetfile,"light_eff")
 		else:
 			print "The jet flavor does not make sense!!!!!!"
@@ -79,12 +74,12 @@ class BtagEventWeightProducer(Module):
 	                        searchbiny = ybin
 	
 	        eff = hist.GetBinContent(searchbinx,searchbiny)                
-		effup = hist.GetBinErrorUp(searchbinx,searchbiny)
-		effdown = hist.GetBinErrorLow(searchbinx,searchbiny)
-		print effup,effdown
+		err = np.sqrt(eff*(1-eff)/5000.)
+		test = hist.GetBinError(searchbinx,searchbiny)
+		print test
 		weight *= (1.0 - SF * eff)
-		weight_up *= (1.0 - SFup * (eff + effup))
-		weight_down *= (1.0 - SFdown * (eff - effdown))
+		weight_up *= (1.0 - SFup * (eff + err))
+		weight_down *= (1.0 - SFdown * (eff - err))
 	  	print "the new weight is %5f"%weight 
         self.out.fillBranch(self.name, weight)
         if self.doSysVar:

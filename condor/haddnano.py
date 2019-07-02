@@ -15,7 +15,7 @@ def zeroFill(tree,brName,brObj) :
 		buff=array('B',[0])
 		b=tree.Branch(brName,buff,brName+"/O")
 	        b.SetBasketSize(tree.GetEntries()*2) #be sure we do not trigger flushing
-		for x in xrange(0,tree.GetEntries()):	
+		for x in xrange(0,tree.GetEntries()):
 			b.Fill()
 		b.ResetAddress()
 fileHandles=[]
@@ -33,7 +33,7 @@ of.cd()
 
 for e in fileHandles[0].GetListOfKeys() :
 	name=e.GetName()
-        if "Events" in name: continue
+    #if "Events" in name: continue
 	print "Merging" ,name
 	obj=e.ReadObj()
 	cl=ROOT.TClass.GetClass(e.GetClassName())
@@ -45,34 +45,34 @@ for e in fileHandles[0].GetListOfKeys() :
 	for fh in fileHandles[1:] :
 		otherObj=fh.GetListOfKeys().FindObject(name).ReadObj()
 		inputs.Add(otherObj)
-		if isTree and obj.GetName()=='Events'  :	
+		if isTree and obj.GetName()=='Events'  :
 			otherObj.SetAutoFlush(0)
 			otherBranches=set([ x.GetName() for x in otherObj.GetListOfBranches() ])
 			missingBranches=list(branchNames-otherBranches)
 			additionalBranches=list(otherBranches-branchNames)
 			print "missing:",missingBranches,"\n Additional:",additionalBranches
 			for br in missingBranches :
-				#fill "Other"	
+				#fill "Other"
 				zeroFill(otherObj,br,obj.GetListOfBranches().FindObject(br))
 			for br in additionalBranches :
-				#fill main	
+				#fill main
 				branchNames.add(br)
 				zeroFill(obj,br,otherObj.GetListOfBranches().FindObject(br))
 			#merge immediately for trees
                 if isTree:
 	        	obj.Merge(inputs,"fast" if goFast else "")
 			inputs.Clear()
-	
+
         if isTree  :
-		obj.Write()	
-	elif obj.IsA().InheritsFrom(ROOT.TH1.Class()) :		
+		obj.Write()
+	elif obj.IsA().InheritsFrom(ROOT.TH1.Class()) :
 		obj.Merge(inputs)
 		obj.Write()
-	elif obj.IsA().InheritsFrom(ROOT.TObjString.Class()) :	
+	elif obj.IsA().InheritsFrom(ROOT.TObjString.Class()) :
 		for st in inputs:
 		 	if  st.GetString()!=obj.GetString():
 				print "Strings are not matching"
 		obj.Write()
 	else:
 		print "Cannot handle ", obj.IsA().GetName()
-	
+

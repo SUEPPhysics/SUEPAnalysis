@@ -93,15 +93,16 @@ class MonoZWSProducer(Module):
             ]
         }
         self.h_met  = {}
+        self.h_mT   = {}
         self.h_bal = ROOT.TH1F(
             'balance{}{}'.format("_" + self.sample, self.syst_suffix),
             'balance{}{}'.format("_" + self.sample, self.syst_suffix),
-            10, 0, 1
+            50, 0, 1
         )
         self.h_phi = ROOT.TH1F(
             'phizmet{}{}'.format("_" + self.sample, self.syst_suffix),
             'phizmet{}{}'.format("_" + self.sample, self.syst_suffix),
-            10, 0, 1
+            50, 0, 1
         )
         self.h_njet = ROOT.TH1F(
             'njet{}{}'.format("_" + self.sample, self.syst_suffix),
@@ -116,6 +117,11 @@ class MonoZWSProducer(Module):
                 'mll{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                 50, 50, 150
             )
+            self.h_mT[i] = ROOT.TH1F(
+                'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
+                'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
+                100, 0, 200
+            )
             # different binning for different regions
             if cat == 'catNRB' or cat=="catTOP" or cat=="catDY":
                 self.h_met[i] = ROOT.TH1F(
@@ -129,7 +135,7 @@ class MonoZWSProducer(Module):
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     11, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600])
                 )
-
+                
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
         outputFile.cd()
@@ -293,7 +299,7 @@ class MonoZWSProducer(Module):
             self.h_bal.Fill(meas_BAL)
 
         # ZMET-Phi : Signal region
-        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "delta_phi_j_met", "signal") ):
+        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "MET_phi", "signal") ):
             self.h_phi.Fill(meas_ZMETPHI)
 
         # MET: Signal region

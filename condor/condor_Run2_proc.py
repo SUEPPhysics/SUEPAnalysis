@@ -228,17 +228,17 @@ else:
    ##specifically for private NanoAOD production!!
 
    if options.era=="2016":
-        pre_selection = pre_selection + " && (" + combineHLT.get("Run2016All.%s" % options.dataset, 1) + ")"
+        pre_selection = pre_selection + " && (" + combineHLT.get("Run2016All.%s" % options.dataset, "") + ")"
 	print "still need to add 2016 HLT"
    if options.era=="2017":
 	if 'Run2017B' in condtag_:
-		pre_selection = pre_selection + " && (" + combineHLT.get("Run2017B.%s" % options.dataset, 1) + ")"
+		pre_selection = pre_selection + " && (" + combineHLT.get("Run2017B.%s" % options.dataset, "") + ")"
 	elif 'Run2017C' in condtag_:
-		pre_selection = pre_selection + " && (" + combineHLT.get("Run2017C.%s" % options.dataset, 1) + ")"
+		pre_selection = pre_selection + " && (" + combineHLT.get("Run2017C.%s" % options.dataset, "") + ")"
 	else:
-		pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, 1) + ")"
+		pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, "") + ")"
    if options.era=="2018":
-	pre_selection = pre_selection + " && (" + combineHLT.get("Run2018All.%s" % options.dataset, 1) + ")"
+	pre_selection = pre_selection + " && (" + combineHLT.get("Run2018All.%s" % options.dataset, "") + ")"
    print " -- era : ",
    if options.era=="2016":
       modules_era.append(getattr(jetRecalib, 'jetRecalib2016%s' % condtag_.split(options.era)[1])() )

@@ -237,12 +237,9 @@ class MonoZWSProducer(Module):
             # QCD Scale weights
             # TODO: add various variations
             if "QCDScale" in self.syst_suffix:
-                if "Up" in self.syst_suffix:
-                    weight *= event.pdfw_Up
-                else:
-                    weight *= event.pdfw_Down
+                weight *= 1.0
             
-            if "MuonSFEff" in self.syst_suffix:
+            if "MuonSF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.w_muon_SFUp
                 else:
@@ -250,7 +247,7 @@ class MonoZWSProducer(Module):
             else:
                 weight *= event.w_muon_SF
             # Electron SF
-            if "ElecronSFEff" in self.syst_suffix:
+            if "ElecronSF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.w_electron_SFUp
                 else:
@@ -258,13 +255,16 @@ class MonoZWSProducer(Module):
             else:
                 weight *= event.w_electron_SF
 	    #Prefire Weight
-            if "PrefireWeight" in self.syst_suffix:
-                if "Up" in self.syst_suffix:
-                    weight *= event.PrefireWeight_Up
+            try:
+                if "PrefireWeight" in self.syst_suffix:
+                    if "Up" in self.syst_suffix:
+                        weight *= event.PrefireWeight_Up
+                    else:
+                        weight *= event.PrefireWeight_Down
                 else:
-                    weight *= event.PrefireWeight_Down
-            else:
-                weight *= event.PrefireWeight
+                    weight *= event.PrefireWeight
+            except:
+                pass
             #nvtx Weight
             if "nvtxWeight" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
@@ -334,10 +334,10 @@ class MonoZWSProducer(Module):
             self.h_mll[7].Fill(meas_Mll, weight)
         # Mass: Cat3L
         if ( (new_lepcat == 4) and self.passbut(event, "Z_mass", "cat3L") ):
-            self.h_mll[4].Fill(emul_Mll, weight)
+            self.h_mll[4].Fill(meas_Mll, weight)
         # Mass: Cat4L
         if ( (new_lepcat == 5) and self.passbut(event, "Z_mass", "cat4L") ):
-            self.h_mll[5].Fill(emul_Mll, weight)
+            self.h_mll[5].Fill(meas_Mll, weight)
 
 
 

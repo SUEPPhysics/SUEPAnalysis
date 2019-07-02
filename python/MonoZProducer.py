@@ -302,29 +302,20 @@ class MonoZProducer(Module):
                 self.lorentz_shift(elec, elec.energyErr, "Up" in self.syst_var)
 
         # Muons Energy
-        try:
-            muons_pts = getattr(event, "Muon_pt_corrected")
+        if "MuonEn" in self.syst_var:
+            if "Up" in self.syst_var:
+                muons_pts = getattr(event, "Muon_correctedUp_pt")
+                for i, muon in enumerate(muons):
+                    muon.pt = muons_pts[i]
+            else:
+                muons_pts = getattr(event, "Muon_correctedDown_pt")
+                for i, muon in enumerate(muons):
+                    muon.pt = muons_pts[i]
+        else:
+            muons_pts = getattr(event, "Muon_corrected_pt")
             for i, muon in enumerate(muons):
                 muon.pt = muons_pts[i]
-        except:
-            if self.isMC:
-                print "warning : Muon_pt_corrected deosn't exist ... "
-            else:
-                pass
-
-        if "MuonEn" in self.syst_var:
-            for i,muon in enumerate(muons):
-                self.lorentz_shift(muon, muon.ptErr, "Up" in self.syst_var)
-
-        # Muon SF
-        if "MuonSFRoc" in self.syst_var:
-            muon_sf_uncert = getattr(event, "Muon_pt_sys_uncert")
-            for i,muon in enumerate(muons):
-                if "Up" in self.syst_var:
-                    muon.pt += muon_sf_uncert[i]
-                else:
-                    muon.pt -= muon_sf_uncert[i]
-
+        
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)

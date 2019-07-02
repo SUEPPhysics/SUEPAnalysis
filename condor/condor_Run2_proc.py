@@ -138,8 +138,8 @@ modules_era   = [
     )
 ]
 print "start simple"
-pro_syst = [ "ElectronEn", "MuonEn", "MuonSF", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSFEff", "ElecronSFEff", "EWK","PrefireWeight","nvtxWeight","TriggerSFWeight","btagEventWeight"]
+pro_syst = [ "ElectronEn", "MuonEn", "jesTotal", "jer", "unclustEn"]
+ext_syst = [ "puWeight", "PDF", "MuonSF", "ElecronSF", "EWK", "nvtxWeight","TriggerSFWeight","btagEventWeight"]
 
 if options.isMC:
    if options.era=="2016":
@@ -151,6 +151,7 @@ if options.isMC:
         modules_era.append(lepSF_2016())
 	modules_era.append(nvtxWeight_2016())
         modules_era.append(BtagEventWeight_2016())
+        ext_syst.append("PrefireWeight")
    if options.era=="2017":
    	modules_era.append(puAutoWeight_2017())
         modules_era.append(PrefCorr())
@@ -160,6 +161,7 @@ if options.isMC:
    	modules_era.append(lepSF_2017())
         modules_era.append(nvtxWeight_2017())
         modules_era.append(BtagEventWeight_2017())
+        ext_syst.append("PrefireWeight")
    if options.era=="2018":
         modules_era.append(puAutoWeight_2018())
         modules_era.append(jetmetUncertainties2018All())
@@ -180,7 +182,7 @@ if options.isMC:
    if options.era=="2018":
         modules_era.append(TriggerSF_2018())
    modules_era.append(MonoZWSProducer(
-      isMC=options.isMC, era=str(options.era),
+      isMC=options.isMC, era=int(options.era),
       do_syst=1, syst_var='', sample=m.get("sample", "")
    ))
 

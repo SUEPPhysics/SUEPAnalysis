@@ -76,11 +76,11 @@ class BtagEventWeightProducer(Module):
 	        eff = hist.GetBinContent(searchbinx,searchbiny)                
 		err = np.sqrt(eff*(1-eff)/5000.)
 		test = hist.GetBinError(searchbinx,searchbiny)
-		print test
+		
 		weight *= (1.0 - SF * eff)
 		weight_up *= (1.0 - SFup * (eff + err))
 		weight_down *= (1.0 - SFdown * (eff - err))
-	  	print "the new weight is %5f"%weight 
+	  	
         self.out.fillBranch(self.name, weight)
         if self.doSysVar:
                 self.out.fillBranch(self.name+"Up", weight_up)

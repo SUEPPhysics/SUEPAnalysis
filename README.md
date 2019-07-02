@@ -11,7 +11,7 @@ cmsenv
 
 
 mkdir PhysicsTools/
-git clone https://github.com/bingranw/nanoAOD-tools.git PhysicsTools/NanoAODTools
+git clone https://github.com/yhaddad/nanoAOD-tools.git PhysicsTools/NanoAODTools
 git clone git@github.com:yhaddad/MonoZNanoAOD.git PhysicsTools/MonoZ
 
 cd $CMSSW_BASE/src/PhysicsTools/NanoAODTools

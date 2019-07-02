@@ -38,16 +38,15 @@ class MonoZWSProducer(Module):
 
     def beginJob(self, histFile=None,histDirName=None):
         Module.beginJob(self,histFile,histDirName)
-
         self.cats = {
-            1 : "catEE" ,
-            2 : "catEM" ,
-            3 : "catMM" ,
-            4 : "cat3L" ,
-            5 : "cat4L" ,
-            6 : "catNRB",
-            7 : "catTOP",
-            8 : "catDY",
+            1  : "catSignal-0jet" ,
+            2  : "catEM" ,
+            3  : "catSignal-1jet" ,
+            4  : "cat3L" ,
+            5  : "cat4L" ,
+            6  : "catNRB",
+            7  : "catTOP",
+            8  : "catDY",
         }
         self.selection = {
             "signal" : [
@@ -150,10 +149,12 @@ class MonoZWSProducer(Module):
 
         meas_MET     = 0
         meas_Mll     = 0
+        emul_MET     = 0
         meas_Njet    = -1
         meas_ZMETPHI = -1
         meas_BAL     = -1
         lep_category = 0
+        
         try:
             lep_category = getattr(event, "lep_category{}".format(self.syst_suffix))
         except:
@@ -161,20 +162,26 @@ class MonoZWSProducer(Module):
 
         if self.weight_syst:
             meas_MET = getattr(event, "met_pt")
+            emul_MET = getattr(event, "emulatedMET")
             meas_Mll = getattr(event, "Z_mass")
             meas_Njet= getattr(event, "ngood_jets")
             meas_BAL = getattr(event, "sca_balance")
             meas_ZMETPHI = getattr(event, "delta_phi_ZMet")
         else:
             meas_MET = getattr(event, "met_pt{}".format(self.syst_suffix))
+            emul_MET = getattr(event, "emulatedMET{}".format(self.syst_suffix))
             meas_Mll = getattr(event, "Z_mass{}".format(self.syst_suffix))
             meas_Njet= getattr(event, "ngood_jets{}".format(self.syst_suffix))
             meas_BAL = getattr(event, "sca_balance{}".format(self.syst_suffix))
             meas_ZMETPHI = getattr(event, "delta_phi_ZMet{}".format(self.syst_suffix))
 
         new_lepcat = lep_category
-        if   (lep_category  <= 3):
-            new_lepcat = lep_category
+        if (lep_category == 1 or lep_category == 3) and meas_Njet==0:
+            new_lepcat = 1
+        elif (lep_category == 1 or lep_category == 3) and meas_Njet==1:
+            new_lepcat = 3
+        elif lep_category == 2:
+            new_lepcat = 2
         elif (lep_category == 4 or lep_category == 5):
             new_lepcat = 4
         elif (lep_category == 6 or lep_category == 7):
@@ -228,15 +235,7 @@ class MonoZWSProducer(Module):
                     weight *= event.pdfw_Up
                 else:
                     weight *= event.pdfw_Down
-            # bTagSF
-            #if "bTagSF" in self.syst_suffix:
-            #    if "Up" in self.syst_suffix:
-            #        weight *= event.Jet_btagSF_up
-            #    else:
-            #        weight *= event.Jet_btagSF_down
-            #else:
-            #    weight *= event.Jet_btagSF
-            # Muon SF
+            
             if "MuonSFEff" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.w_muon_SFUp
@@ -310,10 +309,10 @@ class MonoZWSProducer(Module):
             self.h_met[7].Fill(meas_MET, weight)
         # MET: Cat3L
         if ( (new_lepcat == 4) and self.passbut(event, "emulatedMET", "cat3L") ):
-            self.h_met[4].Fill(meas_MET, weight)
+            self.h_met[4].Fill(emul_MET, weight)
         # MET: Cat4L
         if ( (new_lepcat == 5) and self.passbut(event, "emulatedMET", "cat4L") ):
-            self.h_met[5].Fill(meas_MET, weight)
+            self.h_met[5].Fill(emul_MET, weight)
 
 
         # Mass: Signal region
@@ -329,10 +328,10 @@ class MonoZWSProducer(Module):
             self.h_mll[7].Fill(meas_Mll, weight)
         # Mass: Cat3L
         if ( (new_lepcat == 4) and self.passbut(event, "Z_mass", "cat3L") ):
-            self.h_mll[4].Fill(meas_Mll, weight)
+            self.h_mll[4].Fill(emul_Mll, weight)
         # Mass: Cat4L
         if ( (new_lepcat == 5) and self.passbut(event, "Z_mass", "cat4L") ):
-            self.h_mll[5].Fill(meas_Mll, weight)
+            self.h_mll[5].Fill(emul_Mll, weight)
 
 
 

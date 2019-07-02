@@ -285,7 +285,13 @@ class MonoZProducer(Module):
                 print 'WARNING: MET phi with variation {}'
                 'not available, using the nominal value'.format(syst_var)
         except:
-            pass
+            var_met_pt  = getattr(event,  "MET_pt_nom", None)
+            var_met_phi = getattr(event, "MET_phi_nom", None)
+            if var_met_pt:
+                met.pt = var_met_pt
+            if var_met_phi:
+                met.phi = var_met_phi
+
         met_p4 = ROOT.TLorentzVector()
         met_p4.SetPtEtaPhiM(met.pt,0.0,met.phi, 0.0)
 

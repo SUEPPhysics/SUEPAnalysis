@@ -244,7 +244,7 @@ else:
          pre_selection = pre_selection + " && (" + combineHLT.get("Run2018AB.%s" % options.dataset, "") + ")"
       else:
          pre_selection = pre_selection + " && (" + combineHLT.get("Run2018CD.%s" % options.dataset, "") + ")"
-      
+
    print " -- era : ",
    if options.era=="2016":
       modules_era.append(getattr(jetRecalib, 'jetRecalib2016%s' % condtag_.split(options.era)[1][:1])() )
@@ -274,7 +274,7 @@ p = PostProcessor(
    ".", [options.infile],
    cut=pre_selection,
    branchsel="keep_and_drop.txt",
-   outputbranchsel="drop_all.txt",
+   outputbranchsel="keep_and_drop.txt",
    haddFileName="tree_%s.root" % str(options.jobNum),
    modules=modules_era,
    provenance=True,

@@ -75,6 +75,8 @@ class MonoZProducer(Module):
         self.out.branch("trans_mass{}".format(self.syst_suffix), "F")
         self.out.branch("remll_mass{}".format(self.syst_suffix), "F")
         self.out.branch("pt_alllep{}".format(self.syst_suffix), "F")
+        
+        self.out.branch("MT{}".format(self.syst_suffix), "F")
 
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
@@ -315,7 +317,7 @@ class MonoZProducer(Module):
             muons_pts = getattr(event, "Muon_corrected_pt")
             for i, muon in enumerate(muons):
                 muon.pt = muons_pts[i]
-        
+
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
@@ -328,7 +330,7 @@ class MonoZProducer(Module):
         good_muons = []
         good_electrons = []
         lep_category = -1
-        
+
 	muons.sort(key=lambda muon: muon.pt, reverse=True)
         electrons.sort(key=lambda el: el.pt, reverse=True)
         # Choose tight-quality e/mu for event categorization
@@ -348,7 +350,7 @@ class MonoZProducer(Module):
         # let sort the muons in pt
         good_muons.sort(key=lambda x: x.pt, reverse=True)
         good_electrons.sort(key=lambda x: x.pt, reverse=True)
-        
+
         # Find any remaining e/mu that pass looser selection
         extra_leptons = []
         for mu in muons:
@@ -532,6 +534,8 @@ class MonoZProducer(Module):
         self.out.fillBranch("mass_alllep{}".format(self.syst_suffix), all_lepton_p4.M())
         self.out.fillBranch("pt_alllep{}".format(self.syst_suffix), all_lepton_p4.Pt())
         self.out.fillBranch("remll_mass{}".format(self.syst_suffix), rem_lepton_p4.M())
+        
+        self.out.fillBranch("MT{}".format(self.syst_suffix), np.sqrt(2*zcand_p4.Pt()*var_met_pt*(1 - np.cos(_delta_phi_zmet))))
         # checking the transverse mass
         _rem_p4 = ROOT.TLorentzVector()
         _rem_p4.SetPtEtaPhiM(rem_lepton_p4.Pt(), 0, rem_lepton_p4.Phi(), 0)

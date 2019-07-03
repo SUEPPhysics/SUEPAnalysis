@@ -136,7 +136,7 @@ def main():
                 os.system("eos mkdir -p {}".format(eosoutdir.replace('root://eoscms.cern.ch/','')))
             else:
                 raise NameError(eosoutdir)
-                
+
             with open(os.path.join(jobs_dir, "script.sh"), "w") as scriptfile:
                 script = script_TEMPLATE.format(
                     proxy=proxy_copy,
@@ -153,8 +153,7 @@ def main():
                     transfer_file= ",".join([
                         "../condor_Run2_proc.py",
                         "../combineHLT_Run2.yaml",
-                        "../../data/keep_and_drop.txt",
-                        "../../data/drop_all.txt",
+                        "../keep_and_drop.txt",
                         "../haddnano.py"
                     ]),
                     jobdir=jobs_dir,

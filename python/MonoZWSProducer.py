@@ -230,10 +230,13 @@ class MonoZWSProducer(Module):
                 pass
             # PDF uncertainty
             if "PDF" in self.syst_suffix:
-                if "Up" in self.syst_suffix:
-                    weight *= event.pdfw_Up
-                else:
-                    weight *= event.pdfw_Down
+                try:
+                    if "Up" in self.syst_suffix:
+                        weight *= event.pdfw_Up
+                    else:
+                        weight *= event.pdfw_Down
+                except:
+                    pass
             # QCD Scale weights
             # TODO: add various variations
             if "QCDScale" in self.syst_suffix:

@@ -37,7 +37,7 @@ DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8:
 TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
   kr: 1.0
-  xsec: 687.099999999999909
+  xsec: 88.29
 WZTo3LNu_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
   kr: 1.0
@@ -57,7 +57,7 @@ WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8:
 GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8: 
   br: 1.0
   kr: 1.0
-  xsec: 3.288673429394388
+  xsec: 0.0031942
 GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8: 
   br: 1.0
   kr: 1.0

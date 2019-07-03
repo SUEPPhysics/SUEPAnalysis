@@ -273,8 +273,8 @@ print "Selection : ", pre_selection
 p = PostProcessor(
    ".", [options.infile],
    cut=pre_selection,
-   #branchsel="keep_and_drop.txt",
-   #outputbranchsel="drop_all.txt",
+   branchsel="keep_and_drop.txt",
+   outputbranchsel="drop_all.txt",
    haddFileName="tree_%s.root" % str(options.jobNum),
    modules=modules_era,
    provenance=True,

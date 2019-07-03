@@ -1,0 +1,6 @@
+drop *
+
+keep event
+keep genWeight
+keep luminosityBlock
+keep run

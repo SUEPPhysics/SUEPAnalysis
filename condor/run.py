@@ -133,7 +133,10 @@ def main():
             # crete a directory on eos
             if '/eos/cms' in eosoutdir:
                 eosoutdir = eosoutdir.replace('/eos/cms', 'root://eoscms.cern.ch/')
-            os.system("eos mkdir -p {}".format(eosoutdir.replace('root://eoscms.cern.ch/','')))
+                os.system("eos mkdir -p {}".format(eosoutdir.replace('root://eoscms.cern.ch/','')))
+            else:
+                raise NameError(eosoutdir)
+                
             with open(os.path.join(jobs_dir, "script.sh"), "w") as scriptfile:
                 script = script_TEMPLATE.format(
                     proxy=proxy_copy,
@@ -149,9 +152,9 @@ def main():
                 condor = condor_TEMPLATE.format(
                     transfer_file= ",".join([
                         "../condor_Run2_proc.py",
-                        "../combineHLT_2017.yaml",
-                        "../keep_and_drop.txt",
-                        "../drop_all.txt",
+                        "../combineHLT_Run2.yaml",
+                        "../../data/keep_and_drop.txt",
+                        "../../data/drop_all.txt",
                         "../haddnano.py"
                     ]),
                     jobdir=jobs_dir,

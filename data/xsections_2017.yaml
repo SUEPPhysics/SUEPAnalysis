@@ -422,6 +422,186 @@ Unpart_ZToEEAndMuMu_SU_0_dU_2p20_LU_15_TuneCP5_13TeV_pythia8:
   br: 1.0
   kr: 1.0
   xsec: 2.135e-06
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1000_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001619154054189
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1000_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001415546462456
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1000_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001169362069359
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1000_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000812647798021
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1000_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000562058677454
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1200_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000831451988747
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1200_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000715267394235
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1200_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000584413034502
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1200_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000418827294196
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1200_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000311092860338
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1400_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000520083749011
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1400_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000432543048011
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1400_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000338503439713
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1400_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000232700300396
+Pseudoscalar2HDM_MonoZLL_mScan_mH-1400_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000173174358124
+Pseudoscalar2HDM_MonoZLL_mScan_mH-200_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.171283441155192
+Pseudoscalar2HDM_MonoZLL_mScan_mH-300_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.176190838393298
+Pseudoscalar2HDM_MonoZLL_mScan_mH-300_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.108227787586240
+Pseudoscalar2HDM_MonoZLL_mScan_mH-400_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.066023160657861
+Pseudoscalar2HDM_MonoZLL_mScan_mH-400_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.033879983152524
+Pseudoscalar2HDM_MonoZLL_mScan_mH-400_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001503643738392
+Pseudoscalar2HDM_MonoZLL_mScan_mH-500_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.024139711238673
+Pseudoscalar2HDM_MonoZLL_mScan_mH-500_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.016330149675640
+Pseudoscalar2HDM_MonoZLL_mScan_mH-500_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.006438583642845
+Pseudoscalar2HDM_MonoZLL_mScan_mH-500_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000307988225796
+Pseudoscalar2HDM_MonoZLL_mScan_mH-600_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.011872760752733
+Pseudoscalar2HDM_MonoZLL_mScan_mH-600_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.009213055500603
+Pseudoscalar2HDM_MonoZLL_mScan_mH-600_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.005509485720256
+Pseudoscalar2HDM_MonoZLL_mScan_mH-600_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001750003504946
+Pseudoscalar2HDM_MonoZLL_mScan_mH-600_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000112703781727
+Pseudoscalar2HDM_MonoZLL_mScan_mH-700_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.006544931629110
+Pseudoscalar2HDM_MonoZLL_mScan_mH-700_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.005415309525285
+Pseudoscalar2HDM_MonoZLL_mScan_mH-700_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.003859675514136
+Pseudoscalar2HDM_MonoZLL_mScan_mH-700_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001936170263667
+Pseudoscalar2HDM_MonoZLL_mScan_mH-700_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000612657942287
+Pseudoscalar2HDM_MonoZLL_mScan_mH-800_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.003886068585747
+Pseudoscalar2HDM_MonoZLL_mScan_mH-800_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.003320161741203
+Pseudoscalar2HDM_MonoZLL_mScan_mH-800_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.002577158972098
+Pseudoscalar2HDM_MonoZLL_mScan_mH-800_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001564716758929
+Pseudoscalar2HDM_MonoZLL_mScan_mH-800_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000791354923797
+Pseudoscalar2HDM_MonoZLL_mScan_mH-900_ma-100: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.002443575944930
+Pseudoscalar2HDM_MonoZLL_mScan_mH-900_ma-200: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.002128827607342
+Pseudoscalar2HDM_MonoZLL_mScan_mH-900_ma-300: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001713706261624
+Pseudoscalar2HDM_MonoZLL_mScan_mH-900_ma-400: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.001145885902706
+Pseudoscalar2HDM_MonoZLL_mScan_mH-900_ma-500: 
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000713802959316
 ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8:
   br: 1.0
   kr: 1.0

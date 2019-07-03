@@ -28,7 +28,7 @@ echo "+ CMSSW_BASE  = $CMSSW_BASE"
 echo "+ PYTHON_PATH = $PYTHON_PATH"
 echo "+ PWD         = $PWD"
 echo "----- Found Proxy in: $X509_USER_PROXY"
-python condor_proc.py --jobNum=$1 --isMC={ismc} --era=2017 --infile=$2
+python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --infile=$2
 echo "----- transfert output to eos :"
 xrdcp -s -f tree_$1.root {eosdir}
 echo "----- directory after running :"
@@ -60,6 +60,7 @@ def main():
     parser.add_argument("-t"   , "--tag"   , type=str, default="IronMan"  , help="production tag", required=True)
     parser.add_argument("-isMC", "--isMC"  , type=int, default=1          , help="")
     parser.add_argument("-q"   , "--queue" , type=str, default="testmatch", help="")
+    parser.add_argument("-e"   , "--era"   , type=str, default="2017"     , help="")
     parser.add_argument("-f"   , "--force" , action="store_true"          , help="recreate files and jobs")
     parser.add_argument("-s"   , "--submit", action="store_true"          , help="submit only")
     parser.add_argument("-dry" , "--dryrun", action="store_true"          , help="running without submission")
@@ -138,6 +139,7 @@ def main():
                     proxy=proxy_copy,
                     cmssw_base=cmssw_base,
                     ismc=options.isMC,
+                    era=options.era,
                     eosdir=eosoutdir
                 )
                 scriptfile.write(script)
@@ -146,7 +148,7 @@ def main():
             with open(os.path.join(jobs_dir, "condor.sub"), "w") as condorfile:
                 condor = condor_TEMPLATE.format(
                     transfer_file= ",".join([
-                        "../condor_proc.py",
+                        "../condor_Run2_proc.py",
                         "../combineHLT_2017.yaml",
                         "../keep_and_drop.txt",
                         "../drop_all.txt",

@@ -80,7 +80,7 @@ nevents = 1
 if options.isMC:
    if options.era=="2016":
       from PhysicsTools.MonoZ.catalog_2016 import catalog
-   if options.era=="2017":
+   elif options.era=="2017":
       from PhysicsTools.MonoZ.catalog_2017 import catalog
    else:#for 2018
       from PhysicsTools.MonoZ.catalog_2018 import catalog
@@ -90,7 +90,11 @@ if options.isMC:
       options.dataset = options.dataset.split('/store')[1].split("/")
       condtag_ = options.dataset[5]
       options.dataset = options.dataset[3]
+   print "[check] condtag_ == ", condtag_
+   print "[check] dataset  == ", options.dataset
    for ds, m in catalog.items():
+      if options.dataset[:5] in m.get("sample", ""):
+         print "    --- ", m.get("sample", ""), " -- ds:", ds
       if options.dataset in m.get("sample", "") and condtag_ in ds:
          # -----
          xsection  = 1000.0 * m.get("xsec")
@@ -262,8 +266,8 @@ else:
    if options.era=="2017":
 	options.json = "Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
    if options.era=="2018":
-	options.json = "Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
-   print options.json
+       options.json = "Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
+   print "---- JSON used is : ", options.json
 
 for i in modules_era:
    print "modules : ", i
@@ -282,4 +286,4 @@ p = PostProcessor(
    fwkJobReport=True,
    jsonInput=options.json
 )
-p.run()
+#p.run()

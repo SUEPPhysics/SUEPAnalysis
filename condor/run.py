@@ -33,8 +33,6 @@ echo "----- transfert output to eos :"
 xrdcp -s -f tree_$1.root {eosdir}
 echo "----- directory after running :"
 ls -lR .
-echo "----- checking if eos is mounted : "
-ls -lR  {eosdir}
 echo " ------ THE END (everyone dies !) ----- "
 """
 
@@ -103,6 +101,19 @@ def main():
     with open(options.input, 'r') as stream:
         for sample in stream.read().split('\n'):
             if '#' in sample: continue
+            # check if dataset in catalog
+            if options.isMC:
+                if options.era=="2016":
+                    from PhysicsTools.MonoZ.catalog_2016 import catalog
+                elif options.era=="2017":
+                    from PhysicsTools.MonoZ.catalog_2017 import catalog
+                elif options.era=="2017":
+                    from PhysicsTools.MonoZ.catalog_2018 import catalog
+                else:
+                    raise "Era not reconised! only 2016, 2017 and 2018 are supported."
+                if not any(sample in s for s in catalog.keys()):
+                    print '[WARKING] Dataset: {} not in the catalog! skipping dataset...'.format(sample)
+                    continue
             if len(sample.split('/')) <= 1: continue
             sample_name = sample.split("/")[1] if options.isMC else '_'.join(sample.split("/")[1:3])
             jobs_dir = '_'.join(['jobs', options.tag, sample_name])
@@ -154,6 +165,9 @@ def main():
                         "../condor_Run2_proc.py",
                         "../combineHLT_Run2.yaml",
                         "../keep_and_drop.txt",
+                        "../Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt",
+                        "../Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt",
+                        "../Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
                         "../haddnano.py"
                     ]),
                     jobdir=jobs_dir,

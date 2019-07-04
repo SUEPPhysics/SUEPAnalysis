@@ -37,7 +37,7 @@ DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8:
 TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
   kr: 1.0
-  xsec: 687.099999999999909
+  xsec: 88.29
 WZTo3LNu_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
   kr: 1.0
@@ -57,7 +57,7 @@ WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8:
 GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8: 
   br: 1.0
   kr: 1.0
-  xsec: 3.288673429394388
+  xsec: 0.0031942
 GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8: 
   br: 1.0
   kr: 1.0
@@ -161,7 +161,7 @@ DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-300:
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-350: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.001383
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-400: 
   br: 1.0
   kr: 1.0
@@ -173,7 +173,7 @@ DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-450:
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-490: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 8.9e-05
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50: 
   br: 1.0
   kr: 1.0
@@ -181,7 +181,7 @@ DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50:
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-510: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 3.36e-05
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-600: 
   br: 1.0
   kr: 1.0
@@ -193,11 +193,11 @@ DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-100_MXd-1:
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-10_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.8224
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1250_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.001261
 DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1500_MXd-1: 
   br: 1.0
   kr: 1.0
@@ -225,15 +225,7 @@ DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-750_MXd-1:
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100: 
-  br: 1.0
-  kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100: 
-  br: 1.0
-  kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.002678
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-200: 
   br: 1.0
   kr: 1.0
@@ -241,15 +233,15 @@ DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-200:
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-300: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.002525
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-350: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.002405
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-400: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.002195
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-450: 
   br: 1.0
   kr: 1.0
@@ -265,7 +257,7 @@ DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50:
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-510: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.0003113
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-600: 
   br: 1.0
   kr: 1.0
@@ -281,23 +273,23 @@ DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-10_MXd-1:
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1250_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.001244
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1500_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.0006193
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1750_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.0003233
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-2000_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.0001746
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-250_MXd-1: 
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.08156
 DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-500_MXd-1: 
   br: 1.0
   kr: 1.0

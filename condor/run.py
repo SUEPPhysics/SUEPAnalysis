@@ -5,6 +5,7 @@ import pwd
 import subprocess
 import shutil
 import time
+from termcolor import colored
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -112,7 +113,7 @@ def main():
                 else:
                     raise "Era not reconised! only 2016, 2017 and 2018 are supported."
                 if not any(sample in s for s in catalog.keys()):
-                    print '[WARKING] Dataset: {} not in the catalog! skipping dataset...'.format(sample)
+                    logging.warning(colored('dataset not found: {}, skipped...'.format(sample), "red"))
                     continue
             if len(sample.split('/')) <= 1: continue
             sample_name = sample.split("/")[1] if options.isMC else '_'.join(sample.split("/")[1:3])

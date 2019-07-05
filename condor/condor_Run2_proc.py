@@ -286,4 +286,4 @@ p = PostProcessor(
    fwkJobReport=True,
    jsonInput=options.json
 )
-#p.run()
+p.run()

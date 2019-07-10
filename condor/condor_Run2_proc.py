@@ -95,9 +95,7 @@ if options.isMC:
    for ds, m in catalog.items():
       if options.dataset[:5] in m.get("sample", ""):
          print "    --- ", m.get("sample", ""), " -- ds:", ds
-	 print "I am here but can I make the next step?"
       if options.dataset in m.get("sample", "") and condtag_ in ds:
-	 print "I have made it here!!!"
          # -----
          xsection  = 1000.0 * m.get("xsec")
          xsection *= m.get("br", 1.0)

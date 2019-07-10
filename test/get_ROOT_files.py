@@ -9,14 +9,15 @@ from ROOT import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dir", type=str, 
-   default='/eos/cms/store/group/phys_exotica/monoZ/MonoZAnalysis_BladeRunner_MonoZ_2017/', 
+   default='/eos/cms/store/group/phys_exotica/monoZ/LionKing2018/', 
    help="top directory containing all the datasets")
 options = parser.parse_args()
 
 gROOT.SetBatch(1)
 dir_monoZ = options.dir if options.dir[-1] == '/' else options.dir + '/'
-data_samples = ['SingleElectron', 'SingleMuon', 'DoubleEG', 'DoubleMuon', 'MuonEG']
+#data_samples = ['SingleElectron', 'SingleMuon', 'DoubleEG', 'DoubleMuon', 'MuonEG']
 
+data_samples= ['WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8']
 
 def MergeFiles(file_list, name):
    str_files = " ".join(file_list)
@@ -45,10 +46,12 @@ def main():
    dict_files = {}
    print 'Walking through directory:', dir_monoZ
    for path, subdirs, files in os.walk(dir_monoZ): 
+      #print  subdirs
       sub_path_splited = path.split(dir_monoZ)[1].split('/')
-      if len(sub_path_splited) != 4:
-         continue
+      #if len(sub_path_splited) != 4:
+      #   continue
       dataset = sub_path_splited[0]
+      print dataset
       if dataset not in dict_files:
          dict_files[dataset] = {'files':[]}
       for name in files:

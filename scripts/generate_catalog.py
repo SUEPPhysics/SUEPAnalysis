@@ -7,11 +7,11 @@ import os.path
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-c", "--config", type=str, default='configs/sample_mc_2017.dat',help="directory config")
+parser.add_argument("-c", "--config", type=str, default='../configs/samples_2018_MC.dat',help="directory config")
 parser.add_argument("-d", "--dir"   , type=str, default='/eos/cms/', help="scan this directory")
 parser.add_argument("-p", "--use_parent", type=str, default='True',
                     help="use MiniAOD parent instead of NanoAOD")
-parser.add_argument("-x", "--xsec"  , type=str, default='configs/xsections.yaml', help="scan this directory")
+parser.add_argument("-x", "--xsec"  , type=str, default='../data/xsections_2018.yaml', help="scan this directory")
 parser.add_argument("--include_files", "--include_files", type=bool, default=True, help="")
 parser.add_argument("--otype", "--otype", type=str, default="python", help="[python,yaml]")
 
@@ -94,7 +94,7 @@ elif options.otype == "python":
     import os
     dataset = {}
     """
-    with open("catalog_2017.py", "w") as outfile:
+    with open("catalog_2018.py", "w") as outfile:
         outfile.write("# auto-generated \n")
         outfile.write("catalog={} \n")
         for name, c in catalog.items():

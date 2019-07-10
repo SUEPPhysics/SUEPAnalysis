@@ -314,9 +314,12 @@ class MonoZProducer(Module):
                 for i, muon in enumerate(muons):
                     muon.pt = muons_pts[i]
         else:
-            muons_pts = getattr(event, "Muon_corrected_pt")
-            for i, muon in enumerate(muons):
-                muon.pt = muons_pts[i]
+            try:
+                muons_pts = getattr(event, "Muon_corrected_pt")
+                for i, muon in enumerate(muons):
+                    muon.pt = muons_pts[i]
+            except:
+                pass
 
         # met_pt, met_phi = self.met(met, self.isMC)
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)

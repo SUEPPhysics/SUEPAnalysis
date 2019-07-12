@@ -19,7 +19,7 @@ drop GenDressedLepton*
 drop GenJetAK8*
 drop GenMET*
 drop GenJet*
-drop GenPart*
+# drop GenPart*
 drop GenVisTau*
 drop Generator*
 drop HTXS*

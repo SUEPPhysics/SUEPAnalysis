@@ -22,18 +22,20 @@ def main():
             if len(sample.split('/')) <= 1: continue
             sample_name = sample.split("/")[1] if options.isMC else '_'.join(sample.split("/")[1:3])
             jobs_dir = '_'.join(['jobs', options.tag, sample_name])
-            job_status = 0
-            njobs = 0
-            for file in list(glob.glob(jobs_dir + '/*.log')):
-                jobid = os.path.basename(file).split('.log')
-                if os.path.getsize(file.replace('.log', '.out')) == 0:
-                    job_status += 1
-                njobs += 1
+
+            njobs = len(open(jobs_dir + "/" + "inputfiles.dat").readlines())
+            nfile = len(list(glob.glob("/eos/cms/store/group/phys_exotica/monoZ/{}/{}/*.root".format(options.tag, sample_name))))
+
+            #for file in list(glob.glob(jobs_dir + '/*.log')):
+            #    jobid = os.path.basename(file).split('.log')
+            #    if os.path.getsize(file.replace('.log', '.out')) == 0:
+            #        job_status += 1
+            #    njobs += 1
             logging.info(
                 "-- {:62s}".format((sample_name[:60] + '..') if len(sample_name)>60 else sample_name) +
                 (
-                    colored(" --> completed", "green") if job_status==0 else colored(
-                        " --> ({}/{}) running".format(job_status,njobs), 'red'
+                    colored(" --> completed", "green") if njobs==nfile else colored(
+                        " --> ({}/{}) running".format(nfile,njobs), 'red'
                     )
                 )
             )

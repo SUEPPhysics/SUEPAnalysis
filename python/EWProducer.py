@@ -113,7 +113,7 @@ class EWProducer(Module):
             self.out.fillBranch("kEWDown", 1)
             self.out.fillBranch("kNNLO"  , 1)
             return True
-            
+
 
         if ( (fq2>=1 and fq2<=6) or fq2==21 ):
             q2 = ROOT.TLorentzVector( 0, 0, -100., 100. )
@@ -232,7 +232,15 @@ class EWProducer(Module):
                 # b
                 jtab = 4
             else:
-                raise Exception("monoZ/EWKcorrection, Unknown quark type.")
+                jtab = -1
+                #raise Exception("monoZ/EWKcorrection, Unknown quark type.")
+
+        if jtab == -1:
+            self.out.fillBranch("kEW"    , 1.0)
+            self.out.fillBranch("kEWUp"  , 1.0)
+            self.out.fillBranch("kEWDown", 1.0)
+            self.out.fillBranch("kNNLO"  , 1.0)
+            return True
 
         kEW = 1. + self.table[itab][jtab]
         kEW_up = kEW

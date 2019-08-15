@@ -15,9 +15,9 @@ WWTo2L2Nu_DoubleScattering_13TeV-pythia8:
   br  : 1.0
   kr  : 1.0
 WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8:
-  xsec: 5.052
+  xsec: 4.42965
   br  : 1.0
-  kr  : 1.0
+  kr  : 1.109
 ZZTo2L2Nu_13TeV_powheg_pythia8:
   xsec: 0.5644
   br  : 1.0
@@ -47,7 +47,7 @@ ZZTo4L_13TeV_powheg_pythia8:
   br  : 1.0
   kr  : 1.0
 ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8:
-  xsec: 3.688
+  xsec: 3.22
   br  : 1.0
   kr  : 1.0
 ZZTo2L2Nu_13TeV_powheg_pythia8:
@@ -62,16 +62,20 @@ TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8:
   xsec: 0.2432
   br  : 1.0
   kr  : 1.0
+TTZToLLNuNu_M-10_TuneCP5_PSweights_13TeV-amcatnlo-pythia8:
+  xsec: 0.2432
+  br  : 1.0 
+  kr  : 1.0
 TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8:
-  xsec: 0.2149
+  xsec: 0.2043
   br  : 1.0
   kr  : 1.0
 TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8:
-  xsec: 0.4316
+  xsec: 0.4062
   br  : 1.0
   kr  : 1.0
 WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8:
-  xsec: 6.331
+  xsec: 5.595
   br  : 1.0
   kr  : 1.0
 DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8:
@@ -104,56 +108,72 @@ DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8:
   kr  : 1.0
 DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8:
   xsec: 2.737
-  br  : 1.0
+  br  : 0.0
   kr  : 1.0
 DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8:
   xsec: 0.4477
   br  : 1.0
   kr  : 1.0
 DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCP5_PSweights_13TeV-amcatnloFXFX-pythia8:
-  xsec: 6505.0
+  xsec: 1921.8
   br  : 1.0
   kr  : 1.0
 ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8:
-  xsec: 34.97
+  xsec: 34.91
   br  : 1.0 
   kr  : 1.0
 ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8:
   xsec: 34.91
   br  : 1.0 
   kr  : 1.0
+ST_tW_antitop_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8:
+  xsec: 34.91
+  br  : 1.0
+  kr  : 1.0 
+ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8:
+  xsec: 34.91 
+  br  : 1.0 
+  kr  : 1.0
+ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8:
+  xsec: 113.3
+  br  : 1.0
+  kr  : 1.0
+ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8:
+  xsec: 67.91
+  br  : 1.0
+  kr  : 1.0
 GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8:
-  xsec: 0.0031942
+  xsec: 0.00319
   br  : 1.0
   kr  : 1.0
 GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8:
-  xsec: 17.72
+  xsec: 0.00172
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8:
-  xsec: 3.29
+  xsec: 0.00319
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8:
-  xsec: 17.72
+  xsec: 0.00172
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8:
-  xsec: 3.289
+  xsec: 0.00319
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8:
-  xsec: 1.405
+  xsec: 0.001586
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8:
-  xsec: 1.402
+  xsec: 0.001586
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8:
-  xsec: 1.407
+  xsec: 0.001586
   br  : 1.0
-  kr  : 0.001
+  kr  : 1.0
 WZTo3LNu_0Jets_MLL-50_TuneCP5_13TeV-madgraphMLM-pythia8:
   xsec: 0.63820
   br  : 1.109
@@ -187,7 +207,7 @@ WZTo3LNu_3Jets_MLL-4to50_TuneCP5_13TeV-madgraphMLM-pythia8:
   br  : 1.0
   kr  : 1.0
 WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8:
-  xsec: 12.17766469464
+  xsec: 12.178
   br  : 1.0
   kr  : 1.0
 ADDMonoZ2017_MD_1_d_2:

@@ -244,7 +244,7 @@ else:
       else:
          pre_selection = pre_selection + " && (" + combineHLT.get("Run2017CF.%s" % options.dataset, "") + ")"
    if options.era=="2018":
-      if ('Run2017A' in condtag_) or ('Run2017B' in condtag_):
+      if ('Run2018A' in condtag_) or ('Run2018B' in condtag_):
          pre_selection = pre_selection + " && (" + combineHLT.get("Run2018AB.%s" % options.dataset, "") + ")"
       else:
          pre_selection = pre_selection + " && (" + combineHLT.get("Run2018CD.%s" % options.dataset, "") + ")"

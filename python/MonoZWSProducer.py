@@ -92,8 +92,6 @@ class MonoZWSProducer(Module):
                 "event.met_pt{sys}      >  30"
             ]
         }
-        self.h_met  = {}
-        self.h_mT   = {}
         self.h_bal = ROOT.TH1F(
             'balance{}{}'.format("_" + self.sample, self.syst_suffix),
             'balance{}{}'.format("_" + self.sample, self.syst_suffix),
@@ -109,18 +107,13 @@ class MonoZWSProducer(Module):
             'njet{}{}'.format("_" + self.sample, self.syst_suffix),
             6, 0, 6
         )
-
-        self.h_mll = {}
+        self.h_met = {}
+        self.h_mT = {}
         for i,cat in self.cats.items():
-            self.h_mll[i] = ROOT.TH1F(
-                'mll{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                'mll{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                50, 50, 150
-            )
-            self.h_mT[i] = ROOT.TH1F(
+	    self.h_mT[i] = ROOT.TH1F(
                 'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                 'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                100, 0, 200
+                200, 0, 400
             )
             # different binning for different regions
             if cat == 'catNRB' or cat=="catTOP" or cat=="catDY":
@@ -139,9 +132,6 @@ class MonoZWSProducer(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
         outputFile.cd()
-        #if not outputFile.Get("Shapes"):
-        #    outputFile.mkdir("Shapes")
-        #outputFile.cd("Shapes")
         for i,cat in self.cats.items():
             self.h_met[i].Write()
             self.h_mll[i].Write()
@@ -220,7 +210,7 @@ class MonoZWSProducer(Module):
                     else:
                         weight *= event.kEWDown
                 else:
-                    weight *= kEW
+                    weight *= event.kEW
             except:
                 pass
             # NNLO crrection
@@ -295,15 +285,15 @@ class MonoZWSProducer(Module):
 
         # NJETS: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "ngood_jets", "signal") ):
-            self.h_njet.Fill(meas_Njet)
+            self.h_njet.Fill(meas_Njet, weight)
 
         # Balance: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "sca_balance", "signal") ):
-            self.h_bal.Fill(meas_BAL)
+            self.h_bal.Fill(meas_BAL, weight)
 
         # ZMET-Phi : Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "MET_phi", "signal") ):
-            self.h_phi.Fill(meas_ZMETPHI)
+            self.h_phi.Fill(meas_ZMETPHI, weight)
 
         # MET: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "met_pt", "signal") ):
@@ -325,22 +315,22 @@ class MonoZWSProducer(Module):
 
 
         # Mass: Signal region
-        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "Z_mass", "signal") ):
-            self.h_mll[int(new_lepcat)].Fill(meas_MET, weight)
-            self.h_mll[8].Fill(meas_Mll, weight)
+        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, cat="signal") ):
+            self.h_mT[int(new_lepcat)].Fill(meas_MET, weight)
+            self.h_mT[8].Fill(meas_Mll, weight)
         # Mass: CatNRB
-        if ( (new_lepcat == 2) and self.passbut(event, "Z_mass", "catNRB") ):
-            self.h_mll[6].Fill(meas_Mll, weight)
-            self.h_mll[2].Fill(meas_Mll, weight)
+        if ( (new_lepcat == 2) and self.passbut(event, cat="catNRB") ):
+            self.h_mT[6].Fill(meas_Mll, weight)
+            self.h_mT[2].Fill(meas_Mll, weight)
         # Mass: CatTOP
-        if ( (new_lepcat == 2) and self.passbut(event, "Z_mass", "catTOP") ):
-            self.h_mll[7].Fill(meas_Mll, weight)
+        if ( (new_lepcat == 2) and self.passbut(event, cat="catTOP") ):
+            self.h_mT[7].Fill(meas_Mll, weight)
         # Mass: Cat3L
-        if ( (new_lepcat == 4) and self.passbut(event, "Z_mass", "cat3L") ):
-            self.h_mll[4].Fill(meas_Mll, weight)
+        if ( (new_lepcat == 4) and self.passbut(event, cat="cat3L") ):
+            self.h_mT[4].Fill(meas_Mll, weight)
         # Mass: Cat4L
-        if ( (new_lepcat == 5) and self.passbut(event, "Z_mass", "cat4L") ):
-            self.h_mll[5].Fill(meas_Mll, weight)
+        if ( (new_lepcat == 5) and self.passbut(event, cat="cat4L") ):
+            self.h_mT[5].Fill(meas_Mll, weight)
 
 
 

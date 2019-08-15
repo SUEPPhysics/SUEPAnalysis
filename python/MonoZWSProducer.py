@@ -128,7 +128,7 @@ class MonoZWSProducer(Module):
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     11, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600])
                 )
-                
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
         outputFile.cd()
@@ -150,7 +150,7 @@ class MonoZWSProducer(Module):
         meas_ZMETPHI = -1
         meas_BAL     = -1
         lep_category = 0
-        
+
         try:
             lep_category = getattr(event, "lep_category{}".format(self.syst_suffix))
         except:
@@ -191,7 +191,7 @@ class MonoZWSProducer(Module):
             weight = getattr(event, "xsecscale")
         except:
             return "ERROR: weight branch doesn't exist"
-        
+
         # pu uncertainty
         if self.isMC:
             # weight *= event.genWeight
@@ -231,7 +231,7 @@ class MonoZWSProducer(Module):
             # TODO: add various variations
             if "QCDScale" in self.syst_suffix:
                 weight *= 1.0
-            
+
             if "MuonSF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.w_muon_SFUp

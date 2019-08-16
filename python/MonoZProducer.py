@@ -77,7 +77,8 @@ class MonoZProducer(Module):
         self.out.branch("pt_alllep{}".format(self.syst_suffix), "F")
         
         self.out.branch("MT{}".format(self.syst_suffix), "F")
-
+        self.out.branch("altMT{}".format(self.syst_suffix), "F")
+	
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
 
@@ -538,7 +539,13 @@ class MonoZProducer(Module):
         self.out.fillBranch("pt_alllep{}".format(self.syst_suffix), all_lepton_p4.Pt())
         self.out.fillBranch("remll_mass{}".format(self.syst_suffix), rem_lepton_p4.M())
         
-        self.out.fillBranch("MT{}".format(self.syst_suffix), np.sqrt(2*zcand_p4.Pt()*var_met_pt*(1 - np.cos(_delta_phi_zmet))))
+        self.out.fillBranch("MT{}".format(self.syst_suffix), 
+			    np.sqrt(2*zcand_p4.Pt()*var_met_pt*(1 - np.cos(_delta_phi_zmet))))
+	# defined as from https://arxiv.org/pdf/1808.09054.pdf
+	Ell = np.sqrt(zcand_p4.Mag2() + zcand_p4.M2())
+	self.out.fillBranch("altMT{}".format(self.syst_suffix),
+			    np.sqrt(np.pow(Ell + met_p4.Pt(),2) + (met_p4 + zcand_p4).Mag2()) 
+			    )
         # checking the transverse mass
         _rem_p4 = ROOT.TLorentzVector()
         _rem_p4.SetPtEtaPhiM(rem_lepton_p4.Pt(), 0, rem_lepton_p4.Phi(), 0)

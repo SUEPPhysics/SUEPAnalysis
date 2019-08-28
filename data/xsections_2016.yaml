@@ -818,3 +818,7 @@ ggZH_HToInv_ZToLL_M125_13TeV_powheg_pythia8:
   br: 1.0
   kr: 1.0
   xsec: 0.012401289
+ZZJJ_ZZTo2L2Nu_EWK_13TeV-madgraph-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.002998

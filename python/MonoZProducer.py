@@ -544,7 +544,7 @@ class MonoZProducer(Module):
 	# defined as from https://arxiv.org/pdf/1808.09054.pdf
 	Ell = np.sqrt(zcand_p4.Mag2() + zcand_p4.M2())
 	self.out.fillBranch("altMT{}".format(self.syst_suffix),
-			    np.sqrt(np.pow(Ell + met_p4.Pt(),2) + (met_p4 + zcand_p4).Mag2()) 
+			    np.sqrt(np.power(Ell + met_p4.Pt(),2) + (met_p4 + zcand_p4).Mag2()) 
 			    )
         # checking the transverse mass
         _rem_p4 = ROOT.TLorentzVector()

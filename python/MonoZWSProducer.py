@@ -134,7 +134,7 @@ class MonoZWSProducer(Module):
         outputFile.cd()
         for i,cat in self.cats.items():
             self.h_met[i].Write()
-            self.h_mll[i].Write()
+            self.h_mT[i].Write()
         self.h_bal.Write()
         self.h_phi.Write()
         self.h_njet.Write()

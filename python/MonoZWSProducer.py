@@ -5,7 +5,6 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 import array as ar
 
-
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 class MonoZWSProducer(Module):
@@ -56,10 +55,10 @@ class MonoZWSProducer(Module):
                 "event.ngood_bjets{sys} ==  0" ,
                 "event.nhad_taus{sys}   ==  0" ,
                 "event.met_pt{sys}      >  50" ,
-                "abs(event.MET_phi - event.Z_phi{sys}) > 2.6",
-                "abs(event.sca_balance{sys}    ) < 1.5",
+                "abs(event.delta_phi_ZMet{sys} ) > 2.6",
+                "abs(1 - event.sca_balance{sys}) < 0.4",
                 "abs(event.delta_phi_j_met{sys}) > 0.5",
-                "event.delta_R_ll{sys} < 1.8"
+                "event.delta_R_ll{sys}           < 1.8"
             ],
             "cat3L": [
                 "event.Z_pt{sys}        >  60" ,
@@ -68,14 +67,14 @@ class MonoZWSProducer(Module):
                 "event.ngood_bjets{sys} ==  0" ,
                 "event.met_pt{sys}      >  30" ,
                 "event.mass_alllep{sys} > 100" ,
-                "abs(event.sca_balance{sys})     < 1.5",
-                "abs(event.MET_phi - event.Z_phi{sys}) > 2.6",
+                "abs(1 -event.sca_balance{sys}) < 0.4",
+                "abs(event.delta_phi_ZMet{sys}) > 2.6",
             ],
             "cat4L": [
                 "event.Z_pt{sys}        >  60" ,
                 "abs(event.Z_mass{sys} - 91.1876) < 35",
                 "event.ngood_jets{sys}  <=  1" ,
-                "abs(event.MET_phi - event.Z_phi{sys}) > 2.6",
+                "abs(event.delta_phi_ZMet{sys}) > 2.6",
             ],
             "catNRB": [
                 "event.Z_pt{sys}        >  60" ,
@@ -120,13 +119,13 @@ class MonoZWSProducer(Module):
                 self.h_met[i] = ROOT.TH1F(
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    10, ar.array('d', [50,55,60,65,70,75,80,85,90,95,100])
+                    5, ar.array('d', [50,60,70,80,90,100])
                 )
             else:
                 self.h_met[i] = ROOT.TH1F(
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    11, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600])
+                    12, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600,10000])
                 )
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -144,7 +143,7 @@ class MonoZWSProducer(Module):
         # only valid in the MC samples
 
         meas_MET     = 0
-        meas_Mll     = 0
+        meas_MT      = 0
         emul_MET     = 0
         meas_Njet    = -1
         meas_ZMETPHI = -1
@@ -159,14 +158,14 @@ class MonoZWSProducer(Module):
         if self.weight_syst:
             meas_MET = getattr(event, "met_pt")
             emul_MET = getattr(event, "emulatedMET")
-            meas_Mll = getattr(event, "Z_mass")
+            meas_MT = getattr(event, "MT")
             meas_Njet= getattr(event, "ngood_jets")
             meas_BAL = getattr(event, "sca_balance")
             meas_ZMETPHI = getattr(event, "delta_phi_ZMet")
         else:
             meas_MET = getattr(event, "met_pt{}".format(self.syst_suffix))
             emul_MET = getattr(event, "emulatedMET{}".format(self.syst_suffix))
-            meas_Mll = getattr(event, "Z_mass{}".format(self.syst_suffix))
+            meas_MT  = getattr(event, "MT{}".format(self.syst_suffix))
             meas_Njet= getattr(event, "ngood_jets{}".format(self.syst_suffix))
             meas_BAL = getattr(event, "sca_balance{}".format(self.syst_suffix))
             meas_ZMETPHI = getattr(event, "delta_phi_ZMet{}".format(self.syst_suffix))
@@ -292,7 +291,7 @@ class MonoZWSProducer(Module):
             self.h_bal.Fill(meas_BAL, weight)
 
         # ZMET-Phi : Signal region
-        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "MET_phi", "signal") ):
+        if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "delta_phi_ZMet", "signal") ):
             self.h_phi.Fill(meas_ZMETPHI, weight)
 
         # MET: Signal region
@@ -317,20 +316,20 @@ class MonoZWSProducer(Module):
         # Mass: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, cat="signal") ):
             self.h_mT[int(new_lepcat)].Fill(meas_MET, weight)
-            self.h_mT[8].Fill(meas_Mll, weight)
+            self.h_mT[8].Fill(meas_MT, weight)
         # Mass: CatNRB
         if ( (new_lepcat == 2) and self.passbut(event, cat="catNRB") ):
-            self.h_mT[6].Fill(meas_Mll, weight)
-            self.h_mT[2].Fill(meas_Mll, weight)
+            self.h_mT[6].Fill(meas_MT, weight)
+            self.h_mT[2].Fill(meas_MT, weight)
         # Mass: CatTOP
         if ( (new_lepcat == 2) and self.passbut(event, cat="catTOP") ):
-            self.h_mT[7].Fill(meas_Mll, weight)
+            self.h_mT[7].Fill(meas_MT, weight)
         # Mass: Cat3L
         if ( (new_lepcat == 4) and self.passbut(event, cat="cat3L") ):
-            self.h_mT[4].Fill(meas_Mll, weight)
+            self.h_mT[4].Fill(meas_MT, weight)
         # Mass: Cat4L
         if ( (new_lepcat == 5) and self.passbut(event, cat="cat4L") ):
-            self.h_mT[5].Fill(meas_Mll, weight)
+            self.h_mT[5].Fill(meas_MT, weight)
 
 
 

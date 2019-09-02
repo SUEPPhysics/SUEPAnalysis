@@ -315,14 +315,10 @@ class MonoZProducer(Module):
                 for i, muon in enumerate(muons):
                     muon.pt = muons_pts[i]
         else:
-            try:
-                muons_pts = getattr(event, "Muon_corrected_pt")
-                for i, muon in enumerate(muons):
-                    muon.pt = muons_pts[i]
-            except:
-                pass
-
-        # met_pt, met_phi = self.met(met, self.isMC)
+            muons_pts = getattr(event, "Muon_corrected_pt")
+            for i, muon in enumerate(muons):
+                muon.pt = muons_pts[i]
+            
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
 
@@ -412,7 +408,7 @@ class MonoZProducer(Module):
 
         # Leptons efficiency/Trigger/Isolation Scale factors
         # These are applied only of the first 2 leading leptons
-        if self.isMC and len(self.syst_suffix)==0:
+        if self.isMC:
             w_muon_SF     = w_electron_SF     = 1.0
             w_muon_SFUp   = w_electron_SFUp   = 1.0
             w_muon_SFDown = w_electron_SFDown = 1.0
@@ -600,7 +596,3 @@ class MonoZProducer(Module):
         else:
             return False
 
-#MonoZ_2016_mc   = lambda: MonoZProducer(True , "2016")
-#MonoZ_2017_mc   = lambda: MonoZProducer(True , "2017")
-#MonoZ_2016_data = lambda: MonoZProducer(False, "2016")
-#MonoZ_2017_data = lambda: MonoZProducer(False, "2017")

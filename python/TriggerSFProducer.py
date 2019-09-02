@@ -3,7 +3,7 @@ import os
 import numpy as np
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class TriggerSFProducer(Module):
@@ -20,39 +20,41 @@ class TriggerSFProducer(Module):
         tf.Close()
         return hist
     def beginJob(self):
-	pass
+	    pass
+
     def endJob(self):
         pass
+
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-	self.out = wrappedOutputTree
+        self.out = wrappedOutputTree
         self.out.branch(self.name, "F")
         self.out.branch(self.name+"Up", "F")
-	self.out.branch(self.name+"Down", "F")
+        self.out.branch(self.name+"Down", "F")
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-        lep_cat = 0 
+        lep_cat = 0
         if hasattr(event,"lep_category"):
             lep_cat = int(getattr(event,"lep_category"))
         if lep_cat < 1 :
-		l1_pt = 0
-		l1_eta = 0
-                l2_pt = 0
-                l2_eta = 0
-		l1_flavor = 0
-	else:
-	    	l1_pt = float(getattr(event,"leading_lep_pt"))
-            	l1_eta = abs(float(getattr(event,"leading_lep_eta")))
-            	l2_pt = float(getattr(event,"trailing_lep_pt"))
-            	l2_eta = abs(float(getattr(event,"trailing_lep_eta")))
-		l1_flavor = int(getattr(event,"leading_lep_flavor"))
+            l1_pt = 0
+            l1_eta = 0
+            l2_pt = 0
+            l2_eta = 0
+            l1_flavor = 0
+        else:
+            l1_pt = float(getattr(event,"leading_lep_pt"))
+            l1_eta = abs(float(getattr(event,"leading_lep_eta")))
+            l2_pt = float(getattr(event,"trailing_lep_pt"))
+            l2_eta = abs(float(getattr(event,"trailing_lep_eta")))
+            l1_flavor = int(getattr(event,"leading_lep_flavor"))
         weight = 1
         weightError = 0
         if lep_cat==3 or lep_cat==5 or lep_cat==7 : #these are MM. MML and MMLL lepton categories
 	    if l1_eta <= 1.5 and l2_eta <= 1.5:
-	    	hist = self.loadHisto(self.targetfile,"trgSFMMBB") 
+	    	hist = self.loadHisto(self.targetfile,"trgSFMMBB")
             elif l1_eta >= 1.5 and l2_eta <= 1.5:
                 hist = self.loadHisto(self.targetfile,"trgSFMMEB")
             elif l1_eta <= 1.5 and l2_eta >= 1.5:
@@ -92,25 +94,25 @@ class TriggerSFProducer(Module):
 	searchbinx = -1
 	searchbiny = -1
         for xbin in range(1,nxBins+1):
-		if l1_pt > hist.GetXaxis().GetBinLowEdge(nxBins) + hist.GetXaxis().GetBinWidth(nxBins):
-                        searchbinx = 7
-			break
-		if l1_pt > hist.GetXaxis().GetBinLowEdge(xbin) and l1_pt < hist.GetXaxis().GetBinLowEdge(xbin) + hist.GetXaxis().GetBinWidth(xbin) :
-			searchbinx = xbin
+            if l1_pt > hist.GetXaxis().GetBinLowEdge(nxBins) + hist.GetXaxis().GetBinWidth(nxBins):
+                searchbinx = 7
+                break
+            if l1_pt > hist.GetXaxis().GetBinLowEdge(xbin) and l1_pt < hist.GetXaxis().GetBinLowEdge(xbin) + hist.GetXaxis().GetBinWidth(xbin) :
+                searchbinx = xbin
         for ybin in range(1,nyBins+1):
-                if l2_pt > hist.GetYaxis().GetBinLowEdge(nyBins) + hist.GetYaxis().GetBinWidth(nyBins):
-                        searchbiny = 7
-			break
-		if l2_pt > hist.GetYaxis().GetBinLowEdge(ybin) and l2_pt < hist.GetYaxis().GetBinLowEdge(ybin) + hist.GetYaxis().GetBinWidth(ybin) :
-			searchbiny = ybin
+            if l2_pt > hist.GetYaxis().GetBinLowEdge(nyBins) + hist.GetYaxis().GetBinWidth(nyBins):
+                searchbiny = 7
+                break
+            if l2_pt > hist.GetYaxis().GetBinLowEdge(ybin) and l2_pt < hist.GetYaxis().GetBinLowEdge(ybin) + hist.GetYaxis().GetBinWidth(ybin) :
+                searchbiny = ybin
 
         weight = hist.GetBinContent(searchbinx,searchbiny)
         self.out.fillBranch(self.name, weight)
         if self.doSysVar:
-		weightError = hist.GetBinErrorUp(searchbinx,searchbiny)
-        	self.out.fillBranch(self.name+"Up", weight+weightError)
-		weightError = hist.GetBinErrorLow(searchbinx,searchbiny)
-		self.out.fillBranch(self.name+"Down", weight-weightError)
+            weightError = hist.GetBinErrorUp(searchbinx,searchbiny)
+            self.out.fillBranch(self.name+"Up", weight+weightError)
+            weightError = hist.GetBinErrorLow(searchbinx,searchbiny)
+            self.out.fillBranch(self.name+"Down", weight-weightError)
         return True
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed

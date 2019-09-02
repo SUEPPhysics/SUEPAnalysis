@@ -10,12 +10,13 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
 class GenWeightProducer(Module):
-    def __init__(self, isMC, xsec=1.0, nevt=1, dopdf=True):
+    def __init__(self, isMC, xsec=1.0, nevt=1, dopdf=True, do_xsecscale=False):
         # lumi and cross sections should be in femptobarn
         self.isMC = isMC
         self.nevt = nevt
         self.xsec = xsec
         self.dopdf = dopdf
+        self.do_xsecscale = do_xsecscale
         # pdf's
         self.pset = None
         self.pdfs = None
@@ -78,7 +79,14 @@ class GenWeightProducer(Module):
         self.out.branch("xsecscale" , "F") # , title=infostr)
         self.out.branch("pdfw_Up"   , "F") # , title="PDF Weight uncertainty up")
         self.out.branch("pdfw_Down" , "F") # , title="PDF Weight uncertainty down")
-
+        self.out.branch("QCDScale0wUp"  ,   "F")
+        self.out.branch("QCDScale0wDown",   "F")
+        self.out.branch("QCDScale1wUp"  ,   "F")
+        self.out.branch("QCDScale1wDown",   "F")
+        self.out.branch("QCDScale2wUp"  ,   "F")
+        self.out.branch("QCDScale2wDown",   "F")
+        
+        
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -92,16 +100,19 @@ class GenWeightProducer(Module):
 
     def analyze(self, event):
         # only valid in the MC samples
-        signs = 1
+        weight = 1.0
         if self.isMC:
-            initw = getattr(event, "genWeight")
-            signs = 1 if initw > 0 else -1
+            weight = getattr(event, "genWeight")
+            if self.do_xsecscale:
+                weight = self.xsec/self.nevt * weight
+            #signs = 1 if initw > 0 else -1
 
-        weight = self.xsec/self.nevt * signs
         self.out.fillBranch("weight"   , weight )
-        self.out.fillBranch("xsecscale", weight * self.nevt)
+        self.out.fillBranch("xsecscale", weight * self.nevt if self.do_xsecscale else weight )
 
-        # -------
+        # -----------------
+        # PDF uncertainties
+        # -----------------
         mean = 1.0
         werr = 0.0
         if not self.isMC:
@@ -111,7 +122,8 @@ class GenWeightProducer(Module):
 
         w_pdf = self.getobject(event, "LHEPdfWeight" )
         n_pdf = self.getobject(event, "nLHEPdfWeight" )
-
+        qcd_scale = self.getobject(event, "LHEPdfWeight" ) 
+        
         if self.isfirst:
              w_pdf = getattr(event, "LHEPdfWeight" )
              n_pdf = getattr(event, "nLHEPdfWeight")
@@ -135,5 +147,14 @@ class GenWeightProducer(Module):
 
         self.out.fillBranch("pdfw_Up",   1 + werr/mean)
         self.out.fillBranch("pdfw_Down", 1 - werr/mean)
-
+        # -----------------------
+        # QCD scale uncertainties
+        # -----------------------
+        self.out.fillBranch("QCDScale0wUp"  ,   qcd_scale[1]/qcd_scale[0])
+        self.out.fillBranch("QCDScale0wDown",   qcd_scale[2]/qcd_scale[0])
+        self.out.fillBranch("QCDScale1wUp"  ,   qcd_scale[3]/qcd_scale[0])
+        self.out.fillBranch("QCDScale1wDown",   qcd_scale[6]/qcd_scale[0])
+        self.out.fillBranch("QCDScale2wUp"  ,   qcd_scale[4]/qcd_scale[0])
+        self.out.fillBranch("QCDScale2wDown",   qcd_scale[8]/qcd_scale[0])
+        
         return True

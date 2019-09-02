@@ -124,7 +124,7 @@ from PhysicsTools.MonoZ.HLT_NotIn_2017 import HLT_paths, HLT_not_in
 if options.dataset in HLT_not_in:
    HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
 
-pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=1)"
+pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=2)"
 pre_selection += "&& Flag_METFilters"
 
 if float(options.nevt) > 0:
@@ -136,55 +136,52 @@ modules_era   = [
        isMC = options.isMC,
        xsec = xsection,
        nevt = nevents,
-       dopdf = False if ("ADDMonoZ" in options.dataset or
-                         "Unpart"          in options.dataset or
-                         "DMSimp"          in options.dataset ) else True
+       dopdf = True
     )
 ]
-print "start simple"
-pro_syst = [ "ElectronEn", "MuonEn", "jesTotal", "jer", "unclustEn"]
-ext_syst = [ "puWeight", "PDF", "MuonSF", "ElecronSF", "EWK", "nvtxWeight","TriggerSFWeight","btagEventWeight"]
+
+pro_syst = [ "ElectronEn", "MuonEn", "jesTotal", "jer"]
+ext_syst = [ "puWeight", "PDF", "MuonSF", "ElecronSF", "EWK", "nvtxWeight","TriggerSFWeight","btagEventWeight", "QCDScale0w", "QCDScale1w", "QCDScale2w"]
 
 if options.isMC:
    if options.era=="2016":
-        modules_era.append(puAutoWeight_2016())
-        modules_era.append(PrefCorr())
-        modules_era.append(jetmetUncertainties2016All())
-        modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
-        modules_era.append(muonScaleRes2016())
-        modules_era.append(lepSF_2016())
-	modules_era.append(nvtxWeight_2016())
-        modules_era.append(BtagEventWeight_2016())
-        ext_syst.append("PrefireWeight")
+      modules_era.append(puAutoWeight_2016())
+      modules_era.append(PrefCorr())
+      modules_era.append(jetmetUncertainties2016All())
+      modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
+      modules_era.append(muonScaleRes2016())
+      modules_era.append(lepSF_2016())
+      modules_era.append(nvtxWeight_2016())
+      modules_era.append(BtagEventWeight_2016())
+      ext_syst.append("PrefireWeight")
    if options.era=="2017":
-   	modules_era.append(puAutoWeight_2017())
-        modules_era.append(PrefCorr())
-   	modules_era.append(jetmetUncertainties2017All())
-   	modules_era.append(btagSFProducer("2017", "deepcsv"))
-   	modules_era.append(muonScaleRes2017())
-   	modules_era.append(lepSF_2017())
-        modules_era.append(nvtxWeight_2017())
-        modules_era.append(BtagEventWeight_2017())
-        ext_syst.append("PrefireWeight")
+      modules_era.append(puAutoWeight_2017())
+      modules_era.append(PrefCorr())
+      modules_era.append(jetmetUncertainties2017All())
+      modules_era.append(btagSFProducer("2017", "deepcsv"))
+      modules_era.append(muonScaleRes2017())
+      modules_era.append(lepSF_2017())
+      modules_era.append(nvtxWeight_2017())
+      modules_era.append(BtagEventWeight_2017())
+      ext_syst.append("PrefireWeight")
    if options.era=="2018":
-        modules_era.append(puAutoWeight_2018())
-        modules_era.append(jetmetUncertainties2018All())
-        modules_era.append(btagSFProducer("2018", "deepcsv"))
-        modules_era.append(muonScaleRes2018())
-        modules_era.append(lepSF_2018())
-        modules_era.append(nvtxWeight_2018())
-        modules_era.append(BtagEventWeight_2018())
+      modules_era.append(puAutoWeight_2018())
+      modules_era.append(jetmetUncertainties2018All())
+      modules_era.append(btagSFProducer("2018", "deepcsv"))
+      modules_era.append(muonScaleRes2018())
+      modules_era.append(lepSF_2018())
+      modules_era.append(nvtxWeight_2018())
+      modules_era.append(BtagEventWeight_2018())
+
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
-   #modules_era.append(MonoZWSProducer(
-   #   isMC=options.isMC, era=str(options.era),
-   #   do_syst=1, syst_var='', sample=m.get("sample", "")
-   #))
+
    if options.era=="2016":
-        modules_era.append(TriggerSF_2016())
+      modules_era.append(TriggerSF_2016())
    if options.era=="2017":
-        modules_era.append(TriggerSF_2017())
+      modules_era.append(TriggerSF_2017())
    if options.era=="2018":
-        modules_era.append(TriggerSF_2018())
+      modules_era.append(TriggerSF_2018())
+
    modules_era.append(MonoZWSProducer(
       isMC=options.isMC, era=int(options.era),
       do_syst=1, syst_var='', sample=m.get("sample", "")
@@ -196,26 +193,24 @@ if options.isMC:
       modules_era.append(EWProducer(1, True))
    if "WZTo" in m.get("sample", ""):
       modules_era.append(EWProducer(2, False))
-   # for variation-based systematics
+
+   # for shift-based systematics
    for sys in pro_syst:
       for var in ["Up", "Down"]:
-           modules_era.append(MonoZProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var))
-           modules_era.append(MonoZWSProducer(options.isMC, str(options.era), do_syst=1,
-                                               syst_var=sys+var, sample=m.get("sample", "")))
+         modules_era.append(MonoZProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var))
+         modules_era.append(MonoZWSProducer(options.isMC, str(options.era), do_syst=1,
+                                            syst_var=sys+var, sample=m.get("sample", "")))
    # for weight-based systematics
    for sys in ext_syst:
-      if ("ADDMonoZ" in options.dataset or
-          "Unpart"          in options.dataset  ) and "PDF" in sys:
-         continue
       for var in ["Up", "Down"]:
-          modules_era.append(
-              MonoZWSProducer(
-                 options.isMC, str(options.era),
-                 do_syst=1, syst_var=sys+var,
-                 weight_syst=True,
-                 sample=m.get("sample", "")
-              )
-           )
+         modules_era.append(
+            MonoZWSProducer(
+               options.isMC, str(options.era),
+               do_syst=1, syst_var=sys+var,
+               weight_syst=True,
+               sample=m.get("sample", "")
+            )
+         )
 
 else:
    print "sample : ", options.dataset, " candtag : ", condtag_
@@ -223,16 +218,6 @@ else:
       combineHLT = yaml.load(open("combineHLT_Run2.yaml"))
    except yaml.YAMLError as exc:
       print(exc)
-
-   ##specifically for private NanoAOD production!!
-   #options.dataset2 = options.infile
-   #options.dataset2 = options.dataset2.split('/store')[1].split("/")
-   #condtag_ = options.dataset2[6]
-   #options.dataset = options.dataset2[5]
-   #print options.dataset
-   #print condtag_
-   ##specifically for private NanoAOD production!!
-
    if options.era=="2016":
         pre_selection = pre_selection + " && (" + combineHLT.get("Run2016All.%s" % options.dataset, "") + ")"
 	print "still need to add 2016 HLT"
@@ -256,10 +241,10 @@ else:
       modules_era.append(getattr(jetRecalib, 'jetRecalib2017%s' % condtag_.split(options.era)[1])() )
    if options.era=="2018":
       modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
+
    modules_era.append(MonoZProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
    modules_era.append(MonoZWSProducer(isMC=options.isMC, era=str(options.era),
-                                       do_syst=1, syst_var='', sample="data"))
-
+                                      do_syst=1, syst_var='', sample="data"))
 
    if options.era=="2016":
 	#options.json = "Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"

@@ -55,11 +55,11 @@ class nvtxWeightProducer(Module):
         return True
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
-nvtx_2016 = "%s/src/PhysicsTools/MonoZ/data/npvWeights_2016.root" % os.environ['CMSSW_BASE']
+nvtx_2016 = "%s/src/PhysicsTools/MonoZ/data/Nvtx/npvWeights_2016.root" % os.environ['CMSSW_BASE']
 nvtxWeight_2016 = lambda : nvtxWeightProducer(nvtx_2016,verbose=False)
 
-nvtx_2017 = "%s/src/PhysicsTools/MonoZ/data/npvWeights_2017.root" % os.environ['CMSSW_BASE']
+nvtx_2017 = "%s/src/PhysicsTools/MonoZ/data/Nvtx/npvWeights_2017.root" % os.environ['CMSSW_BASE']
 nvtxWeight_2017 = lambda : nvtxWeightProducer(nvtx_2017,verbose=False)
 
-nvtx_2018 = "%s/src/PhysicsTools/MonoZ/data/npvWeights_2018.root" % os.environ['CMSSW_BASE']
+nvtx_2018 = "%s/src/PhysicsTools/MonoZ/data/Nvtx/npvWeights_2018.root" % os.environ['CMSSW_BASE']
 nvtxWeight_2018 = lambda : nvtxWeightProducer(nvtx_2018,verbose=False)

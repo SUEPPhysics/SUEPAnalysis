@@ -1,38 +1,42 @@
+WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8:
+  br: 1.0
+  kr: 1.20
+  xsec: 4.658000000000000
 DY1JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 9.480238706703638
 DY1JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 1.092796793620117
 DY1JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 0.120689583175169
 DY1JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 313.608562849390125
 DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 15.683493299980881
 DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 2.741273678370510
 DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 0.446062646660613
 DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 169.646518824308913
 DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.741
   xsec: 6545.062778193921076
 TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
@@ -40,7 +44,7 @@ TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8:
   xsec: 88.29
 WZTo3LNu_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 1.1
   xsec: 4.658000000000000
 ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8: 
   br: 1.0
@@ -56,35 +60,35 @@ WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8:
   xsec: 11.080000000000004
 GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 0.0031942
 GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 17.723399006136571
 GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 3.287763101653022
 GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 17.725335790940576
 GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 3.289473207009740
 GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 1.397460298310003
 GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 1.399213095028897
 GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 1.394319612255764
 WZZ_TuneCP5_13TeV-amcatnlo-pythia8: 
   br: 1.0
@@ -124,11 +128,11 @@ ZZTo4L_TuneCP5_13TeV_powheg_pythia8:
   xsec: 1.325000000000000
 ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 34.969999999999999
 ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 0.001
   xsec: 34.910000000000004
 ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8: 
   br: 1.0
@@ -136,160 +140,176 @@ ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8:
   xsec: 3.702752518362292
 WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8: 
   br: 1.0
-  kr: 1.0
+  kr: 1.20
   xsec: 6.411065047615857
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100: 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-100_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-200: 
+  xsec: 0.2939
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-510:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-300: 
+  xsec: 0.00003348 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-300:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-350: 
+  xsec: 0.001756 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100:
   br: 1.0
   kr: 1.0
-  xsec: 0.001383
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-400: 
+  xsec: 0.002612 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-450:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-450: 
+  xsec: 0.0004108 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1500_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-490: 
+  xsec: 0.0006194 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50:
   br: 1.0
   kr: 1.0
-  xsec: 8.9e-05
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50: 
+  xsec: 0.002685 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-2000_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-510: 
+  xsec: 0.0001751 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 3.36e-05
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-600: 
+  xsec: 0.002708 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-10_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-100_MXd-1: 
+  xsec: 0.8192 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-750_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-10_MXd-1: 
+  xsec: 0.006565 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-250_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.8224
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1250_MXd-1: 
+  xsec: 0.0815 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1750_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.001261
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1500_MXd-1: 
+  xsec: 0.0003225 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-200:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1750_MXd-1: 
+  xsec: 0.002297 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-10:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-2000_MXd-1: 
+  xsec: 0.002705 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1250_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-250_MXd-1: 
+  xsec: 0.001257 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-350:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-500_MXd-1: 
+  xsec: 0.001377 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-600:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-750_MXd-1: 
+  xsec: 0.000006785 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-400:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100: 
+  xsec: 0.0009139 
+DMSimp_MonoZLL_NLO_Axial_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-490:
   br: 1.0
   kr: 1.0
-  xsec: 0.002678
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-200: 
+  xsec: 0.00008869
+DMSimp_MonoZLL_NLO_Axial_TuneCP6_GQ0p25_GDM1p0_MY1-500_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-300: 
+  xsec: 0.01927
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1750_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002525
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-350: 
+  xsec: 0.0003222
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-750_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002405
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-400: 
+  xsec: 0.006436
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-450:
   br: 1.0
   kr: 1.0
-  xsec: 0.002195
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-450: 
+  xsec: 0.001818
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-200:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-490: 
+  xsec: 0.002632
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-100_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50: 
+  xsec: 0.02948
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-400:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-510: 
+  xsec: 0.00219
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-2000_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.0003113
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-600: 
+  xsec: 0.0001743
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-50:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-100_MXd-1: 
+  xsec: 0.002669
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-500_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-10_MXd-1: 
+  xsec: 0.01838
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-490:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1250_MXd-1: 
+  xsec: 0.001053
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1500_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.001244
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1500_MXd-1: 
+  xsec: 0.0006182
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-300:
   br: 1.0
   kr: 1.0
-  xsec: 0.0006193
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1750_MXd-1: 
+  xsec: 0.00252
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-10:
   br: 1.0
   kr: 1.0
-  xsec: 0.0003233
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-2000_MXd-1: 
+  xsec: 0.002684
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-10_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.0001746
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-250_MXd-1: 
+  xsec: 0.8406
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-100:
   br: 1.0
   kr: 1.0
-  xsec: 0.08156
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-500_MXd-1: 
+  xsec: 0.002671
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-1:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
-DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-750_MXd-1: 
+  xsec: 0.002689
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-350:
   br: 1.0
   kr: 1.0
-  xsec: 0.002718000000000
+  xsec: 0.002399
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-250_MXd-1:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.08151
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1250_MXd-1:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.00124
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-510:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.0003101
+DMSimp_MonoZLL_NLO_Vector_TuneCP3_GQ0p25_GDM1p0_MY1-1000_MXd-600:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.00003208
 DMSimp_MonoZLL_Pseudo_TuneCP5_GQ1p0_GDM1p0_MY0-1000_mxd-1: 
   br: 1.0
   kr: 1.0

@@ -115,6 +115,25 @@ class GenWeightProducer(Module):
         # -----------------
         mean = 1.0
         werr = 0.0
+
+        # -----------------------
+        # QCD scale uncertainties
+        # -----------------------
+        try :
+                self.out.fillBranch("QCDScale0wUp"  ,   qcd_scale[1]/qcd_scale[0])
+                self.out.fillBranch("QCDScale0wDown",   qcd_scale[2]/qcd_scale[0])
+                self.out.fillBranch("QCDScale1wUp"  ,   qcd_scale[3]/qcd_scale[0])
+                self.out.fillBranch("QCDScale1wDown",   qcd_scale[6]/qcd_scale[0])
+                self.out.fillBranch("QCDScale2wUp"  ,   qcd_scale[4]/qcd_scale[0])
+                self.out.fillBranch("QCDScale2wDown",   qcd_scale[8]/qcd_scale[0])
+        except:
+                self.out.fillBranch("QCDScale0wUp"  ,   1.0)
+                self.out.fillBranch("QCDScale0wDown",   1.0)
+                self.out.fillBranch("QCDScale1wUp"  ,   1.0)
+                self.out.fillBranch("QCDScale1wDown",   1.0)
+                self.out.fillBranch("QCDScale2wUp"  ,   1.0)
+                self.out.fillBranch("QCDScale2wDown",   1.0)
+
         if not self.isMC:
             return True
         if not self.dopdf:
@@ -147,22 +166,5 @@ class GenWeightProducer(Module):
 
         self.out.fillBranch("pdfw_Up",   1 + werr/mean)
         self.out.fillBranch("pdfw_Down", 1 - werr/mean)
-        # -----------------------
-        # QCD scale uncertainties
-        # -----------------------
-	try :
-        	self.out.fillBranch("QCDScale0wUp"  ,   qcd_scale[1]/qcd_scale[0])
-        	self.out.fillBranch("QCDScale0wDown",   qcd_scale[2]/qcd_scale[0])
-        	self.out.fillBranch("QCDScale1wUp"  ,   qcd_scale[3]/qcd_scale[0])
-        	self.out.fillBranch("QCDScale1wDown",   qcd_scale[6]/qcd_scale[0])
-        	self.out.fillBranch("QCDScale2wUp"  ,   qcd_scale[4]/qcd_scale[0])
-        	self.out.fillBranch("QCDScale2wDown",   qcd_scale[8]/qcd_scale[0])
-	except:
-                self.out.fillBranch("QCDScale0wUp"  ,   1.0)
-                self.out.fillBranch("QCDScale0wDown",   1.0)
-                self.out.fillBranch("QCDScale1wUp"  ,   1.0)
-                self.out.fillBranch("QCDScale1wDown",   1.0)
-                self.out.fillBranch("QCDScale2wUp"  ,   1.0)
-                self.out.fillBranch("QCDScale2wDown",   1.0)    
 
         return True

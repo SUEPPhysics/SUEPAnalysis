@@ -49,14 +49,10 @@ class BtagEventWeightProducer(Module):
             SFdown = j.btagSF_down	
             if flavor == 5: #this is for the actual bottom events
                 hist = self.loadHisto(self.targetfile,"bottom_eff")
-		#print "Bottom quark"
-		#print "the scale factor is:", SF, "the eta is:", j.eta, "the pT is:", j.pt
             elif flavor == 4: #this is for the charm events
                 hist = self.loadHisto(self.targetfile,"charm_eff")
-                #print "Charm quark"
             elif flavor == 0: #this is for the light flavored jets
                 hist = self.loadHisto(self.targetfile,"light_eff")
-                #print "Light quark"
             else:
                 print "The jet flavor does not make sense!!!!!!"
                 continue
@@ -79,12 +75,10 @@ class BtagEventWeightProducer(Module):
                     searchbiny = ybin
 	    
             eff = hist.GetBinContent(searchbinx,searchbiny)                
-	    #print "the efficiency is:", eff
             err = np.sqrt(eff*(1-eff)/5000.)
             test = hist.GetBinError(searchbinx,searchbiny)
 
             weight *= (1.0 - SF * eff)
-            #print "The weight is:", weight
             weight_up *= (1.0 - SFup * (eff + err))
             weight_down *= (1.0 - SFdown * (eff - err))
 

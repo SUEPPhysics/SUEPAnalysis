@@ -41,7 +41,6 @@ class BtagEventWeightProducer(Module):
 	weight_up = 1.0
 	weight_down = 1.0
 	jets = list(Collection(event, "Jet"))
-	print "Event Starts here=========================================================================================="
         for i,j in enumerate(jets):
             flavor =  j.hadronFlavour
             SF = j.btagSF # lets see if this works

@@ -40,6 +40,8 @@ class VBSProducer(Module):
         self.out.branch( "dijet_Mjj{}".format(self.syst_suffix), "F" )
         self.out.branch( "dijet_Zep{}".format(self.syst_suffix), "F" )
         self.out.branch( "dijet_centrality_gg{}".format(self.syst_suffix), "F" )
+        self.out.branch( "S_T_hard{}".format(self.syst_suffix), "F" )
+        self.out.branch( "S_T_jets{}".format(self.syst_suffix), "F" )
 
         self.out.branch( "x_Z{}".format(self.syst_suffix), "F" )
         self.out.branch( "x_jet20{}".format(self.syst_suffix), "F" )
@@ -160,9 +162,31 @@ class VBSProducer(Module):
         muons = list(Collection(event, "Muon"))
         jets = list(Collection(event, "Jet"))
 
+        # in case of systematic take the shifted values are default
+        # For the central values, need to include jetMetTool all the time
+        # Jet systematics
+        if self.syst_var == "":
+            syst_var = "nom"
+        else:
+            syst_var = self.syst_var
+        # checking something
+        try:
+            var_jet_pts = getattr(event,  "Jet_pt_{}".format(syst_var), None)
+            if var_jet_pts:
+                for i,jet in enumerate(jets):
+                    jet.pt = var_jet_pts[i]
+            else:
+                print 'WARNING: jet pts with variation {}'
+                'not available, using the nominal value'.format(syst_var)
+        except:
+            var_jet_pts = getattr(event,  "Jet_pt_nom", None)
+            for i,jet in enumerate(jets):
+                jet.pt = var_jet_pts[i]
+
         # Get variables from event tree
         Z_pt = event.Z_pt
         Z_eta = event.Z_eta
+        Z_phi = event.Z_phi
         met_pt = event.met_pt
         met_phi = event.met_phi
 
@@ -219,8 +243,10 @@ class VBSProducer(Module):
         ngood_jets = len(good_jets)
         if ngood_jets!=event.ngood_jets:
             print 'ngood_jets: {} in VBSProducer, {} in MonoZProducer'.format(ngood_jets, event.ngood_jets)
+        lead_jet_p4 = good_jets[0].p4() if len(good_jets) else 0.0
         lead_jet_pt = good_jets[0].pt if len(good_jets) else 0.0
         lead_jet_eta = good_jets[0].eta if len(good_jets) else -99.0
+        trail_jet_p4 = good_jets[1].p4() if len(good_jets)>1 else 0.0
         trail_jet_pt = good_jets[1].pt if len(good_jets)>1 else 0.0
         trail_jet_eta = good_jets[1].eta if len(good_jets)>1 else -99.0
 
@@ -236,6 +262,12 @@ class VBSProducer(Module):
         zeppenfeld = Z_eta - (lead_jet_eta + trail_jet_eta) / 2
         H_T = sum( [jet.pt for jet in good_jets] )
         HT_F = (lead_jet_pt +trail_jet_pt) / H_T if H_T != 0 else 0.0
+
+        Z_fake_p4 = ROOT.TLorentzVector()
+        Z_fake_p4.SetPtEtaPhiM(Z_pt, 0.0, Z_phi, 0.0)
+        S_T_hard = (lead_jet_p4+trail_jet_p4+Z_fake_p4).Pt() / (lead_jet_pt+trail_jet_pt+Z_pt) if ngood_leptons >=2 and ngood_jets >=2 else -99.0
+        S_T_jets = (lead_jet_p4+trail_jet_p4).Pt() / (lead_jet_pt+trail_jet_pt) if ngood_leptons >=2 and ngood_jets >=2 else -99.0
+
         Jet_pt_Ratio = trail_jet_pt / lead_jet_pt if ngood_jets >=2 else -99.0
         R_pt = lead_lep_pt * trail_lep_pt / (lead_jet_pt * trail_jet_pt) if ngood_leptons >=2 and ngood_jets >=2 else -99.0
         Jet_etas_multiplied = lead_jet_eta * trail_jet_eta
@@ -274,6 +306,8 @@ class VBSProducer(Module):
         self.out.fillBranch( "dijet_Mjj{}".format(self.syst_suffix), dijet_Mjj )
         self.out.fillBranch( "dijet_Zep{}".format(self.syst_suffix), dijet_Zep )
         self.out.fillBranch( "dijet_centrality_gg{}".format(self.syst_suffix), dijet_centrality_gg )
+        self.out.fillBranch( "S_T_hard{}".format(self.syst_suffix), S_T_hard )
+        self.out.fillBranch( "S_T_jets{}".format(self.syst_suffix), S_T_jets )
 
         self.out.fillBranch( "x_Z{}".format(self.syst_suffix), x_Z )
         self.out.fillBranch( "x_jet20{}".format(self.syst_suffix), x_jet20 )

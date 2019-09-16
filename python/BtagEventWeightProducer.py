@@ -72,15 +72,19 @@ class BtagEventWeightProducer(Module):
                     break
                 if j.eta > hist.GetYaxis().GetBinLowEdge(ybin) and j.eta < hist.GetYaxis().GetBinLowEdge(ybin) + hist.GetYaxis().GetBinWidth(ybin) :
                     searchbiny = ybin
-	
+	    
             eff = hist.GetBinContent(searchbinx,searchbiny)                
             err = np.sqrt(eff*(1-eff)/5000.)
             test = hist.GetBinError(searchbinx,searchbiny)
-		
+
             weight *= (1.0 - SF * eff)
             weight_up *= (1.0 - SFup * (eff + err))
             weight_down *= (1.0 - SFdown * (eff - err))
-	  	
+
+        if int(getattr(event,"ngood_bjets")) > 0:
+		weight = 1.0 - weight
+	  	weight_up = 1.0 - weight_up
+		weight_down = 1.0 - weight_down
         self.out.fillBranch(self.name, weight)
         if self.doSysVar:
             self.out.fillBranch(self.name+"Up", weight_up)
@@ -88,11 +92,11 @@ class BtagEventWeightProducer(Module):
         return True
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
-BtagEff_2016 = "%s/src/PhysicsTools/MonoZ/data/BTagEff_2016.root" % os.environ['CMSSW_BASE']
+BtagEff_2016 = "%s/src/PhysicsTools/MonoZ/data/BTagEff/BTagEff_2016.root" % os.environ['CMSSW_BASE']
 BtagEventWeight_2016 = lambda : BtagEventWeightProducer(BtagEff_2016,verbose=False, doSysVar=True)
 
-BtagEff_2017 = "%s/src/PhysicsTools/MonoZ/data/BTagEff_2017.root" % os.environ['CMSSW_BASE']
+BtagEff_2017 = "%s/src/PhysicsTools/MonoZ/data/BTagEff/BTagEff_2017.root" % os.environ['CMSSW_BASE']
 BtagEventWeight_2017 = lambda : BtagEventWeightProducer(BtagEff_2017,verbose=False, doSysVar=True)
 
-BtagEff_2018 = "%s/src/PhysicsTools/MonoZ/data/BTagEff_2018.root" % os.environ['CMSSW_BASE']
+BtagEff_2018 = "%s/src/PhysicsTools/MonoZ/data/BTagEff/BTagEff_2018.root" % os.environ['CMSSW_BASE']
 BtagEventWeight_2018 = lambda : BtagEventWeightProducer(BtagEff_2018,verbose=False, doSysVar=True)

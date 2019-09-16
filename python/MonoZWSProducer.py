@@ -112,7 +112,7 @@ class MonoZWSProducer(Module):
 	    self.h_mT[i] = ROOT.TH1F(
                 'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                 'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                200, 0, 400
+                500, 0, 2000
             )
             # different binning for different regions
             if cat == 'catNRB' or cat=="catTOP" or cat=="catDY":

@@ -152,7 +152,7 @@ if options.isMC:
       modules_era.append(muonScaleRes2016())
       modules_era.append(lepSF_2016())
       modules_era.append(nvtxWeight_2016())
-      modules_era.append(BtagEventWeight_2016())
+      #modules_era.append(BtagEventWeight_2016())
       ext_syst.append("PrefireWeight")
    if options.era=="2017":
       modules_era.append(puAutoWeight_2017())
@@ -162,7 +162,7 @@ if options.isMC:
       modules_era.append(muonScaleRes2017())
       modules_era.append(lepSF_2017())
       modules_era.append(nvtxWeight_2017())
-      modules_era.append(BtagEventWeight_2017())
+      #modules_era.append(BtagEventWeight_2017())
       ext_syst.append("PrefireWeight")
    if options.era=="2018":
       modules_era.append(puAutoWeight_2018())
@@ -171,16 +171,19 @@ if options.isMC:
       modules_era.append(muonScaleRes2018())
       modules_era.append(lepSF_2018())
       modules_era.append(nvtxWeight_2018())
-      modules_era.append(BtagEventWeight_2018())
+      #modules_era.append(BtagEventWeight_2018())
 
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    if options.era=="2016":
       modules_era.append(TriggerSF_2016())
+      modules_era.append(BtagEventWeight_2016())
    if options.era=="2017":
       modules_era.append(TriggerSF_2017())
+      modules_era.append(BtagEventWeight_2017())
    if options.era=="2018":
       modules_era.append(TriggerSF_2018())
+      modules_era.append(BtagEventWeight_2018())
 
    modules_era.append(MonoZWSProducer(
       isMC=options.isMC, era=int(options.era),

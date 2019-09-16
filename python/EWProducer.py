@@ -16,12 +16,12 @@ class EWProducer(Module):
         if self.process==1:
             # self.table = np.loadtxt('../data/data_ZZ_EwkCorrections.dat')
             self.table = np.loadtxt(
-                '{}/src/PhysicsTools/MonoZ/data/data_ZZ_EwkCorrections.dat'.format(os.environ['CMSSW_BASE'])
+                '{}/src/PhysicsTools/MonoZ/data/EWKCorr/data_ZZ_EwkCorrections.dat'.format(os.environ['CMSSW_BASE'])
             )
         elif self.process==2:
             # self.table = np.loadtxt('../data/data_WZ_EwkCorrections.dat')
             self.table = np.loadtxt(
-                '{}/src/PhysicsTools/MonoZ/data/data_WZ_EwkCorrections.dat'.format(os.environ['CMSSW_BASE'])
+                '{}/src/PhysicsTools/MonoZ/data/EWKCorr/data_WZ_EwkCorrections.dat'.format(os.environ['CMSSW_BASE'])
             )
 
         self.do_syst = do_syst

@@ -305,19 +305,22 @@ class MonoZProducer(Module):
                 self.lorentz_shift(elec, elec.energyErr, "Up" in self.syst_var)
 
         # Muons Energy
-        if "MuonEn" in self.syst_var:
-            if "Up" in self.syst_var:
-                muons_pts = getattr(event, "Muon_correctedUp_pt")
-                for i, muon in enumerate(muons):
-                    muon.pt = muons_pts[i]
-            else:
-                muons_pts = getattr(event, "Muon_correctedDown_pt")
-                for i, muon in enumerate(muons):
-                    muon.pt = muons_pts[i]
-        else:
-            muons_pts = getattr(event, "Muon_corrected_pt")
-            for i, muon in enumerate(muons):
-                muon.pt = muons_pts[i]
+		try:
+			if "MuonEn" in self.syst_var:
+				if "Up" in self.syst_var:
+					muons_pts = getattr(event, "Muon_correctedUp_pt")
+					for i, muon in enumerate(muons):
+						muon.pt = muons_pts[i]
+				else:
+					muons_pts = getattr(event, "Muon_correctedDown_pt")
+					for i, muon in enumerate(muons):
+						muon.pt = muons_pts[i]
+			else:
+				muons_pts = getattr(event, "Muon_corrected_pt")
+				for i, muon in enumerate(muons):
+					muon.pt = muons_pts[i]
+		except:
+			pass
             
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)

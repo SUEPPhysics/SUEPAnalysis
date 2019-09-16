@@ -78,12 +78,6 @@ print "---------------------------"
 xsection = 1.0
 nevents = 1
 if options.isMC:
-   if options.era=="2016":
-      from PhysicsTools.MonoZ.catalog_2016 import catalog
-   elif options.era=="2017":
-      from PhysicsTools.MonoZ.catalog_2017 import catalog
-   else:#for 2018
-      from PhysicsTools.MonoZ.catalog_2018 import catalog
    condtag_ = "NANOAODSIM"
    if options.dataset == "X":
       options.dataset = options.infile
@@ -92,22 +86,6 @@ if options.isMC:
       options.dataset = options.dataset[3]
    print "[check] condtag_ == ", condtag_
    print "[check] dataset  == ", options.dataset
-   for ds, m in catalog.items():
-      if options.dataset[:5] in m.get("sample", ""):
-         print "    --- ", m.get("sample", ""), " -- ds:", ds
-      if options.dataset in m.get("sample", "") and condtag_ in ds:
-         # -----
-         xsection  = 1000.0 * m.get("xsec")
-         xsection *= m.get("br", 1.0)
-         xsection *= m.get("kf", 1.0)
-         nevents = m.get("nevents", 1)
-         print "---------------------------"
-         print "sample     == ", m.get("sample", "")
-         print "dataset    == ", ds
-         print "xsection   == ", m.get("xsec"), " [pb]"
-         print "nevents    == ", m.get("nevents", 1)
-         print "new xsec   == ", xsection
-         break
 else:
    if options.dataset == "X":
       options.dataset = options.infile
@@ -134,8 +112,8 @@ if float(options.nevt) > 0:
 modules_era   = [
     GenWeightProducer(
        isMC = options.isMC,
-       xsec = xsection,
-       nevt = nevents,
+       #xsec = xsection,
+       #nevt = nevents,
        dopdf = True
     )
 ]
@@ -152,7 +130,6 @@ if options.isMC:
       modules_era.append(muonScaleRes2016())
       modules_era.append(lepSF_2016())
       modules_era.append(nvtxWeight_2016())
-      #modules_era.append(BtagEventWeight_2016())
       ext_syst.append("PrefireWeight")
    if options.era=="2017":
       modules_era.append(puAutoWeight_2017())
@@ -162,7 +139,6 @@ if options.isMC:
       modules_era.append(muonScaleRes2017())
       modules_era.append(lepSF_2017())
       modules_era.append(nvtxWeight_2017())
-      #modules_era.append(BtagEventWeight_2017())
       ext_syst.append("PrefireWeight")
    if options.era=="2018":
       modules_era.append(puAutoWeight_2018())
@@ -171,7 +147,6 @@ if options.isMC:
       modules_era.append(muonScaleRes2018())
       modules_era.append(lepSF_2018())
       modules_era.append(nvtxWeight_2018())
-      #modules_era.append(BtagEventWeight_2018())
 
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
@@ -187,14 +162,14 @@ if options.isMC:
 
    modules_era.append(MonoZWSProducer(
       isMC=options.isMC, era=int(options.era),
-      do_syst=1, syst_var='', sample=m.get("sample", "")
+      do_syst=1, syst_var='', sample=options.dataset
    ))
 
 
    # WW or ZZ sample
-   if "ZZTo" in m.get("sample", "") and "GluGluToContin" not in m.get("sample", ""):
+   if "ZZTo" in options.dataset and "GluGluToContin" not in options.dataset:
       modules_era.append(EWProducer(1, True))
-   if "WZTo" in m.get("sample", ""):
+   if "WZTo" in options.dataset:
       modules_era.append(EWProducer(2, False))
 
    # for shift-based systematics
@@ -202,7 +177,7 @@ if options.isMC:
       for var in ["Up", "Down"]:
          modules_era.append(MonoZProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var))
          modules_era.append(MonoZWSProducer(options.isMC, str(options.era), do_syst=1,
-                                            syst_var=sys+var, sample=m.get("sample", "")))
+                                            syst_var=sys+var, sample=options.dataset))
    # for weight-based systematics
    for sys in ext_syst:
       for var in ["Up", "Down"]:
@@ -211,7 +186,7 @@ if options.isMC:
                options.isMC, str(options.era),
                do_syst=1, syst_var=sys+var,
                weight_syst=True,
-               sample=m.get("sample", "")
+               sample=options.dataset
             )
          )
 
@@ -250,14 +225,13 @@ else:
                                       do_syst=1, syst_var='', sample="data"))
 
    if options.era=="2016":
-	#options.json = "Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
-        options.json = "Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt"
+       options.json = "Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt"
    if options.era=="2017":
-	#options.json = "Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
-	options.json = "Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt"
+       options.json = "Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt"
    if options.era=="2018":
        options.json = "Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
    print "---- JSON used is : ", options.json
+
 
 for i in modules_era:
    print "modules : ", i

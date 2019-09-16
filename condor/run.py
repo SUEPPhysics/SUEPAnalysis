@@ -103,18 +103,18 @@ def main():
         for sample in stream.read().split('\n'):
             if '#' in sample: continue
             # check if dataset in catalog
-            if options.isMC:
-                if options.era=="2016":
-                    from PhysicsTools.MonoZ.catalog_2016 import catalog
-                elif options.era=="2017":
-                    from PhysicsTools.MonoZ.catalog_2017 import catalog
-                elif options.era=="2017":
-                    from PhysicsTools.MonoZ.catalog_2018 import catalog
-                else:
-                    raise "Era not reconised! only 2016, 2017 and 2018 are supported."
-                if not any(sample in s for s in catalog.keys()):
-                    logging.warning(colored('dataset not found: {}, skipped...'.format(sample), "red"))
-                    continue
+            #if options.isMC:
+            #    if options.era=="2016":
+            #        from PhysicsTools.MonoZ.catalog_2016 import catalog
+            #    elif options.era=="2017":
+            #        from PhysicsTools.MonoZ.catalog_2017 import catalog
+            #    elif options.era=="2017":
+            #        from PhysicsTools.MonoZ.catalog_2018 import catalog
+            #    else:
+            #        raise "Era not reconised! only 2016, 2017 and 2018 are supported."
+            #    if not any(sample in s for s in catalog.keys()):
+            #        logging.warning(colored('dataset not found: {}, skipped...'.format(sample), "red"))
+            #        continue
             if len(sample.split('/')) <= 1: continue
             sample_name = sample.split("/")[1] if options.isMC else '_'.join(sample.split("/")[1:3])
             jobs_dir = '_'.join(['jobs', options.tag, sample_name])

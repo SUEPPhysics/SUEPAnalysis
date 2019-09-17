@@ -114,7 +114,7 @@ modules_era   = [
        isMC = options.isMC,
        #xsec = xsection,
        #nevt = nevents,
-       dopdf = True
+       dopdf = False if ("ADD" in options.dataset or "Unpart" in options.dataset) else True
     )
 ]
 

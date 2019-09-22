@@ -229,7 +229,7 @@ class MonoZWSProducer(Module):
             # QCD Scale weights
             # TODO: add various variations
             if "QCDScale" in self.syst_suffix:
-                weight *= 1.0
+                weight *= getattr(event, self.syst_suffix, 1.0)
 
             if "MuonSF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:

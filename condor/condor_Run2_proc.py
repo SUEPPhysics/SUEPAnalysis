@@ -160,17 +160,18 @@ if options.isMC:
       modules_era.append(TriggerSF_2018())
       modules_era.append(BtagEventWeight_2018())
 
-   modules_era.append(MonoZWSProducer(
-      isMC=options.isMC, era=int(options.era),
-      do_syst=1, syst_var='', sample=options.dataset
-   ))
-
 
    # WW or ZZ sample
    if "ZZTo" in options.dataset and "GluGluToContin" not in options.dataset:
       modules_era.append(EWProducer(1, True))
    if "WZTo" in options.dataset:
       modules_era.append(EWProducer(2, False))
+
+
+   modules_era.append(MonoZWSProducer(
+       isMC=options.isMC, era=int(options.era),
+       do_syst=1, syst_var='', sample=options.dataset
+   ))
 
    # for shift-based systematics
    for sys in pro_syst:

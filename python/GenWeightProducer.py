@@ -120,8 +120,7 @@ class GenWeightProducer(Module):
         # QCD scale uncertainties
         # -----------------------
         try:
-            qcd_scale = self.getobject(event, "LHEScaleWeight" ) 
-            
+            qcd_scale = self.getobject(event, "LHEScaleWeight")
             self.out.fillBranch("QCDScale0wUp"  ,   qcd_scale[1]/qcd_scale[0])
             self.out.fillBranch("QCDScale0wDown",   qcd_scale[2]/qcd_scale[0])
             self.out.fillBranch("QCDScale1wUp"  ,   qcd_scale[3]/qcd_scale[0])

@@ -227,10 +227,9 @@ class MonoZWSProducer(Module):
                 except:
                     pass
             # QCD Scale weights
-            # TODO: add various variations
             if "QCDScale" in self.syst_suffix:
-                weight *= getattr(event, self.syst_suffix, 1.0)
-
+                weight *= getattr(event, self.syst_suffix.replace("_sys_",""))
+                
             if "MuonSF" in self.syst_suffix:
                 if "Up" in self.syst_suffix:
                     weight *= event.w_muon_SFUp
@@ -282,6 +281,7 @@ class MonoZWSProducer(Module):
             else:
                 weight *= event.btagEventWeight
 
+        # print " met_pt : ",self.syst_suffix," :", meas_MET,  " weight  : ", weight
         # NJETS: Signal region
         if ( (new_lepcat == 1 or new_lepcat == 3) and self.passbut(event, "ngood_jets", "signal") ):
             self.h_njet.Fill(meas_Njet, weight)

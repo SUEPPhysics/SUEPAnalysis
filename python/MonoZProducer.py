@@ -1,6 +1,7 @@
 import ROOT
 import sys, os
 import numpy as np
+import math
 from importlib import import_module
 import itertools
 from copy import deepcopy
@@ -207,19 +208,6 @@ class MonoZProducer(Module):
         elif (self.era == "2018" and wp == "tight"):
             return 0.7527
 
-    def lorentz_shift(self, obj, p4err, shiftUp=True):
-        p4vec = obj.p4()
-        relErr = p4err/p4vec.Pt() if p4vec.Pt()>0 else 0.0
-        if shiftUp:
-            p4vec *= (1. + relErr)
-        else:
-            p4vec *= 1/(1. + relErr)
-        obj.pt = p4vec.Pt()
-        obj.eta = p4vec.Eta()
-        obj.phi = p4vec.Phi()
-        obj.mass = p4vec.M()
-        return p4vec
-
     def met_filter(self, flag, filter_mask=True):
         return filter_mask and (
               (flag.HBHENoiseFilter)
@@ -301,27 +289,44 @@ class MonoZProducer(Module):
 
         # Electrons Energy
         if "ElectronEn" in self.syst_var:
-            for i,elec in enumerate(electrons):
-                self.lorentz_shift(elec, elec.energyErr, "Up" in self.syst_var)
+            (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
+            if "Up" in self.syst_var:
+                for i, elec in enumerate(electrons):
+                    met_px = met_px + (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
+                    met_py = met_py + (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
+                    elec.pt = elec.pt + elec.energyErr/math.cosh(elec.eta)
+            else:
+                for i, elec in enumerate(electrons):
+                    met_px = met_px - (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
+                    met_py = met_py - (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
+                    elec.pt = elec.pt - elec.energyErr/math.cosh(elec.eta)
+            met.pt  = math.sqrt(met_px**2 + met_py**2)
+            met.phi = math.atan2(met_py, met_px)
 
         # Muons Energy
-		try:
-			if "MuonEn" in self.syst_var:
-				if "Up" in self.syst_var:
-					muons_pts = getattr(event, "Muon_correctedUp_pt")
-					for i, muon in enumerate(muons):
-						muon.pt = muons_pts[i]
-				else:
-					muons_pts = getattr(event, "Muon_correctedDown_pt")
-					for i, muon in enumerate(muons):
-						muon.pt = muons_pts[i]
-			else:
-				muons_pts = getattr(event, "Muon_corrected_pt")
-				for i, muon in enumerate(muons):
-					muon.pt = muons_pts[i]
-		except:
-			pass
+        if self.isMC:
+            muons_pts = getattr(event, "Muon_corrected_pt")
+            for i, muon in enumerate(muons):
+                muon.pt = muons_pts[i]
+
+        if "MuonEn" in self.syst_var:
+            (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
+            if "Up" in self.syst_var:
+                muons_pts = getattr(event, "Muon_correctedUp_pt")
+                for i, muon in enumerate(muons):
+                    met_px = met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
+                    met_py = met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
+                    muon.pt = muons_pts[i]
+            else:
+                muons_pts = getattr(event, "Muon_correctedDown_pt")
+                for i, muon in enumerate(muons):
+                    met_px =met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
+                    met_py =met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
+                    muon.pt = muons_pts[i]
+            met.pt  = math.sqrt(met_px**2 + met_py**2)
+            met.phi = math.atan2(met_py, met_px)
             
+        # filling and contructing the event categorisation
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
         self.out.fillBranch("met_phi{}".format(self.syst_suffix), met.phi)
 

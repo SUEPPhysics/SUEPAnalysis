@@ -5,8 +5,8 @@ MonoZ analysis using NanoAOD
 ## Quick start
 
 ```bash
-cmsrel CMSSW_10_6_0_pre4
-cd CMSSW_10_6_0_pre4/src
+cmsrel CMSSW_10_6_4
+cd CMSSW_10_6_4/src
 cmsenv
 
 

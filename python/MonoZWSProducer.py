@@ -68,13 +68,13 @@ class MonoZWSProducer(Module):
                 "event.met_pt{sys}      >  30" ,
                 "event.mass_alllep{sys} > 100" ,
                 "abs(1 -event.sca_balance{sys}) < 0.4",
-                "abs(event.delta_phi_ZMet{sys}) > 2.6",
+                "abs(event.emulatedMET_phi{sys} - event.Z_phi{sys}) > 2.6"
             ],
             "cat4L": [
                 "event.Z_pt{sys}        >  60" ,
                 "abs(event.Z_mass{sys} - 91.1876) < 35",
                 "event.ngood_jets{sys}  <=  1" ,
-                "abs(event.delta_phi_ZMet{sys}) > 2.6",
+		"abs(event.emulatedMET_phi{sys} - event.Z_phi{sys}) > 2.6"
             ],
             "catNRB": [
                 "event.Z_pt{sys}        >  60" ,
@@ -112,7 +112,7 @@ class MonoZWSProducer(Module):
 	    self.h_mT[i] = ROOT.TH1F(
                 'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                 'MT{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                500, 0, 2000
+		13, ar.array('d', [0,100,200,250,300,350,400,500,600,700,800,1000,1200,2000])
             )
             # different binning for different regions
             if cat == 'catNRB' or cat=="catTOP" or cat=="catDY":
@@ -125,7 +125,7 @@ class MonoZWSProducer(Module):
                 self.h_met[i] = ROOT.TH1F(
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
                     'measMET{}{}{}'.format("_" + self.sample, "_" + cat, self.syst_suffix),
-                    12, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600,10000])
+                    12, ar.array('d', [50,100,125,150,175,200,250,300,350,400,500,600,1000])
                 )
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):

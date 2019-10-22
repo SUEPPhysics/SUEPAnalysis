@@ -67,7 +67,7 @@ class MonoZWSProducer(Module):
                 "event.ngood_bjets{sys} ==  0" ,
                 "event.met_pt{sys}      >  30" ,
                 "event.mass_alllep{sys} > 100" ,
-                "abs(1 -event.sca_balance{sys}) < 0.4",
+                "abs(1 -event.emulatedMET{sys}/event.Z_pt{sys}) < 0.4",
                 "abs(event.emulatedMET_phi{sys} - event.Z_phi{sys}) > 2.6"
             ],
             "cat4L": [

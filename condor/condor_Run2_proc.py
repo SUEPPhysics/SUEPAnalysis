@@ -97,11 +97,6 @@ else:
       condtag_ = options.dataset[2]
       options.dataset = options.dataset[1]
 
-# This has only been tested on 2017 samples
-from PhysicsTools.MonoZ.HLT_NotIn_2017 import HLT_paths, HLT_not_in
-if options.dataset in HLT_not_in:
-   HLT_paths = [ HLT for HLT in HLT_paths if HLT not in HLT_not_in[options.dataset] ]
-
 pre_selection  = "((Sum$(Electron_pt>20 & &abs(Electron_eta)<2.5) + Sum$(Muon_pt>20 && abs(Muon_eta)<2.5) )>=2)"
 pre_selection += "&& Flag_METFilters"
 
@@ -112,8 +107,6 @@ if float(options.nevt) > 0:
 modules_era   = [
     GenWeightProducer(
        isMC = options.isMC,
-       #xsec = xsection,
-       #nevt = nevents,
        dopdf = False if ("ADD" in options.dataset or "Unpart" in options.dataset) else True
     )
 ]
@@ -161,7 +154,7 @@ if options.isMC:
       modules_era.append(BtagEventWeight_2018())
 
 
-   # WW or ZZ sample
+   # WZ or ZZ sample
    if "ZZTo" in options.dataset and "GluGluToContin" not in options.dataset:
       modules_era.append(EWProducer(1, True))
    if "WZTo" in options.dataset:

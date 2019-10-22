@@ -599,7 +599,7 @@ class MonoZProducer(Module):
 
         # Let remove the negative categories with no obvious meaning meaning
         # This will reduce the size of most of the bacground and data
-        if (lep_category > 0 and zcand_p4.Pt()>60 and zcand_p4.M() > 60 and zcand_p4.M() < 120):
+        if (lep_category > 0 and zcand_p4.Pt()>60 and zcand_p4.M() > 55 and zcand_p4.M() < 127):
             return True
         else:
             return False

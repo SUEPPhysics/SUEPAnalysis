@@ -734,6 +734,22 @@ WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8:
   br: 1.0
   kr: 1.0
   xsec: 4.91248185
+WZTo3LNu_0Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.6959826
+WZTo3LNu_1Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.4155876
+WZTo3LNu_2Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.0947916
+WZTo3LNu_3Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.1341072
 WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8:
   br: 1.0
   kr: 1.0
@@ -822,3 +838,11 @@ ZZJJ_ZZTo2L2Nu_EWK_13TeV-madgraph-pythia8:
   br: 1.0
   kr: 1.0
   xsec: 0.002998
+WLLJJ_WToLNu_EWK_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.0176
+WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.2086

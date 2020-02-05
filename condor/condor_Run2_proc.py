@@ -19,10 +19,11 @@ from PhysicsTools.MonoZ.MonoZProducer import *
 from PhysicsTools.MonoZ.MonoZWSProducer import *
 from PhysicsTools.MonoZ.GenWeightProducer import *
 from PhysicsTools.MonoZ.EWProducer import *
+from PhysicsTools.MonoZ.ADDProducer import *
 from PhysicsTools.MonoZ.NvtxPUreweight import *
 from PhysicsTools.MonoZ.BtagEventWeightProducer import *
 from PhysicsTools.MonoZ.TriggerSFProducer import *
-
+from PhysicsTools.MonoZ.GenMonoZProducer import *
 import argparse
 
 parser = argparse.ArgumentParser("")
@@ -153,13 +154,28 @@ if options.isMC:
       modules_era.append(TriggerSF_2018())
       modules_era.append(BtagEventWeight_2018())
 
-
-   # WZ or ZZ sample
+   modules_era.append(GenMonoZProducer())
+   # WZ or ZZ sample for ewk corrections and ADD for EFT weights
    if "ZZTo" in options.dataset and "GluGluToContin" not in options.dataset:
       modules_era.append(EWProducer(1, True))
    if "WZTo" in options.dataset:
       modules_era.append(EWProducer(2, False))
+   dim = 0
+   if "ADD" in options.dataset:
+      if "d_2" in options.dataset or "d-2" in options.dataset: dim = 2
+      elif "d_3" in options.dataset or "d-3" in options.dataset: dim = 3
+      elif "d_4" in options.dataset or "d-4" in options.dataset: dim = 4
+      elif "d_5" in options.dataset or "d-5" in options.dataset: dim = 5
+      elif "d_6" in options.dataset or "d-6" in options.dataset: dim = 6
+      elif "d_7" in options.dataset or "d-7" in options.dataset: dim = 7
+      else: sys.exit('ADD model dimensions does not make sense') 
 
+      if "MD_1" in options.dataset or "MD-1" in options.dataset: MD = 1
+      elif "MD_2" in options.dataset or "MD-2" in options.dataset:MD = 2
+      elif "MD_3" in options.dataset or "MD-3" in options.dataset: MD = 3
+      else: MD=100#number large enough the ADDWeight will be 1
+
+      modules_era.append(ADDProducer(MD,dim,options.era))
 
    modules_era.append(MonoZWSProducer(
        isMC=options.isMC, era=int(options.era),

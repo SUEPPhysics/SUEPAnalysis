@@ -46,7 +46,7 @@ class GenMonoZProducer(Module):
 	print " -----------------------"
 	print " puWeight : ", event.puWeight
         #print " monoz_ngood_jet : ", getattr(event, "ngood_jets", None)
-	print " lumiWeight      : ", getattr(event, "lumiWeight", None)
+	#print " lumiWeight      : ", getattr(event, "lumiWeight", None)
 	print "+++++++++++++++++++++++++"
 	n_leptons = 0
         for part in gen_part:

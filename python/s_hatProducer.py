@@ -9,7 +9,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
-class ADDProducer(Module):
+class ADDWeightProducer(Module):
     def __init__(self, MD=100, do_syst=False, syst_var=''):
         self.do_syst = do_syst
         self.syst_var = syst_var

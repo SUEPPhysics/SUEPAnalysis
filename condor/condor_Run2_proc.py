@@ -16,7 +16,6 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer impor
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
 #Import the MonoZ analysis tools
 from PhysicsTools.MonoZ.MonoZProducer import *
-from PhysicsTools.MonoZ.MonoZWSProducer import *
 from PhysicsTools.MonoZ.GenWeightProducer import *
 from PhysicsTools.MonoZ.EWProducer import *
 from PhysicsTools.MonoZ.ADDProducer import *
@@ -177,28 +176,11 @@ if options.isMC:
 
       modules_era.append(ADDProducer(MD,dim,options.era))
 
-   modules_era.append(MonoZWSProducer(
-       isMC=options.isMC, era=int(options.era),
-       do_syst=1, syst_var='', sample=options.dataset
-   ))
 
    # for shift-based systematics
    for sys in pro_syst:
       for var in ["Up", "Down"]:
          modules_era.append(MonoZProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var))
-         modules_era.append(MonoZWSProducer(options.isMC, str(options.era), do_syst=1,
-                                            syst_var=sys+var, sample=options.dataset))
-   # for weight-based systematics
-   for sys in ext_syst:
-      for var in ["Up", "Down"]:
-         modules_era.append(
-            MonoZWSProducer(
-               options.isMC, str(options.era),
-               do_syst=1, syst_var=sys+var,
-               weight_syst=True,
-               sample=options.dataset
-            )
-         )
 
 else:
    print "sample : ", options.dataset, " candtag : ", condtag_
@@ -231,8 +213,6 @@ else:
       modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
 
    modules_era.append(MonoZProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
-   modules_era.append(MonoZWSProducer(isMC=options.isMC, era=str(options.era),
-                                      do_syst=1, syst_var='', sample="data"))
 
    if options.era=="2016":
        options.json = "Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt"

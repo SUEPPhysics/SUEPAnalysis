@@ -313,13 +313,13 @@ class MonoZWSProducer(Module):
             except:
                 pass
             #nvtx Weight
-            if "nvtxWeight" in self.syst_suffix:
-                if "Up" in self.syst_suffix:
-                    weight *= event.nvtxWeightUp
-                else:
-                    weight *= event.nvtxWeightDown
-            else:
-                weight *= event.nvtxWeight
+            #if "nvtxWeight" in self.syst_suffix:
+            #    if "Up" in self.syst_suffix:
+            #        weight *= event.nvtxWeightUp
+            #    else:
+            #        weight *= event.nvtxWeightDown
+            #else:
+            #    weight *= event.nvtxWeight
             #TriggerSFWeight
             if "TriggerSFWeight" in self.syst_suffix:
                 if "Up" in self.syst_suffix:

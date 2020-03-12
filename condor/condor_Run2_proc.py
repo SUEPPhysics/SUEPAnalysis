@@ -20,6 +20,7 @@ from PhysicsTools.MonoZ.GenWeightProducer import *
 from PhysicsTools.MonoZ.EWProducer import *
 from PhysicsTools.MonoZ.ADDProducer import *
 from PhysicsTools.MonoZ.NvtxPUreweight import *
+from PhysicsTools.MonoZ.PhiXYCorrection import *
 from PhysicsTools.MonoZ.BtagEventWeightProducer import *
 from PhysicsTools.MonoZ.TriggerSFProducer import *
 from PhysicsTools.MonoZ.GenMonoZProducer import *
@@ -141,6 +142,7 @@ if options.isMC:
       modules_era.append(lepSF_2018())
       modules_era.append(nvtxWeight_2018())
 
+   modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    if options.era=="2016":
@@ -180,6 +182,8 @@ if options.isMC:
    # for shift-based systematics
    for sys in pro_syst:
       for var in ["Up", "Down"]:
+	 if "jesTotal" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
+	 if "jer" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
          modules_era.append(MonoZProducer(options.isMC, str(options.era), do_syst=1, syst_var=sys+var))
 
 else:
@@ -189,8 +193,10 @@ else:
    except yaml.YAMLError as exc:
       print(exc)
    if options.era=="2016":
+      if 'Run2016H' in condtag_:
+	pre_selection = pre_selection + " && (" + combineHLT.get("Run2016H.%s" % options.dataset, "") + ")"
+      else:
         pre_selection = pre_selection + " && (" + combineHLT.get("Run2016All.%s" % options.dataset, "") + ")"
-	print "still need to add 2016 HLT"
    if options.era=="2017":
       if 'Run2017B' in condtag_:
          pre_selection = pre_selection + " && (" + combineHLT.get("Run2017B.%s" % options.dataset, "") + ")"
@@ -212,6 +218,7 @@ else:
    if options.era=="2018":
       modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
 
+   modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
    modules_era.append(MonoZProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    if options.era=="2016":

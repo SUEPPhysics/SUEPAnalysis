@@ -124,7 +124,7 @@ if options.isMC:
       modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
       modules_era.append(muonScaleRes2016())
       modules_era.append(lepSF_2016())
-      #modules_era.append(nvtxWeight_2016())
+      modules_era.append(nvtxWeight_2016())
       ext_syst.append("PrefireWeight")
    if options.era=="2017":
       modules_era.append(puAutoWeight_2017())
@@ -133,7 +133,7 @@ if options.isMC:
       modules_era.append(btagSFProducer("2017", "deepcsv"))
       modules_era.append(muonScaleRes2017())
       modules_era.append(lepSF_2017())
-      #modules_era.append(nvtxWeight_2017())
+      modules_era.append(nvtxWeight_2017())
       ext_syst.append("PrefireWeight")
    if options.era=="2018":
       modules_era.append(puAutoWeight_2018())
@@ -141,7 +141,7 @@ if options.isMC:
       modules_era.append(btagSFProducer("2018", "deepcsv"))
       modules_era.append(muonScaleRes2018())
       modules_era.append(lepSF_2018())
-      #modules_era.append(nvtxWeight_2018())
+      modules_era.append(nvtxWeight_2018())
 
    modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
    modules_era.append(MonoZProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))

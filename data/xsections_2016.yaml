@@ -1,3 +1,4 @@
+# xsec in pico 1p = 1000f
 ADDMonoZ_ZtoLL_MD-1_d-2_TuneCUETP8M1_13TeV-pythia8:
   br: 1.0
   kr: 1.0
@@ -86,6 +87,38 @@ DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8:
   br: 1.0
   kr: 1.0
   xsec: 0.03711876759851802
+DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 175.3
+DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 147.4
+DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 41.04
+DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 5.674
+DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 1.358
+DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 0.6229
+DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 0.1512
+DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8:
+  br: 1.0
+  kr: 1.23
+  xsec: 0.003659
 DYJetsToTauTau_ForcedMuEleDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8:
   br: 1.0
   kr: 1.0
@@ -826,6 +859,22 @@ ZZTo4L_13TeV_powheg_pythia8_ext1:
   br: 1.0
   kr: 1.0
   xsec: 1.256
+ZZJJTo4L_EWK_13TeV-madgraph-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.000418
+ZZTo2Tau2Nu_0Jets_ZZOnShell_13TeV-amcatnloFXFX-madspin-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.1246
+ZZTo2Tau2Nu_1Jets_ZZOnShell_13TeV-amcatnloFXFX-madspin-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.05053
+ZZTo2Tau2Nu_2Jets_ZZOnShell_13TeV-amcatnloFXFX-madspin-pythia8:
+  br: 1.0
+  kr: 1.0
+  xsec: 0.02376
 ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8:
   br: 1.0
   kr: 1.0

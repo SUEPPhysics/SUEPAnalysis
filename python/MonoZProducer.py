@@ -211,13 +211,13 @@ class MonoZProducer(Module):
     def met_filter(self, flag, filter_mask=True):
         return filter_mask and (
               (flag.HBHENoiseFilter)
-           or (flag.HBHENoiseIsoFilter)
-           or (flag.EcalDeadCellTriggerPrimitiveFilter)
-           or (flag.goodVertices)
-           or (flag.eeBadScFilter)
-           or (flag.globalTightHalo2016Filter)
-           or (flag.BadChargedCandidateFilter)
-           or (flag.BadPFMuonFilter)
+           and (flag.HBHENoiseIsoFilter)
+           and (flag.EcalDeadCellTriggerPrimitiveFilter)
+           and (flag.goodVertices)
+           and (flag.eeBadScFilter)
+           and (flag.globalTightHalo2016Filter)
+           and (flag.BadChargedCandidateFilter)
+           and (flag.BadPFMuonFilter)
         )
 
     def duplicate_removal(self):

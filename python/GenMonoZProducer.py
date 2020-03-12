@@ -41,13 +41,13 @@ class GenMonoZProducer(Module):
         p4Gen_ms = ROOT.TLorentzVector()
         p4Gen_ll = ROOT.TLorentzVector()
 	# trying to get the weights from the GlobalWeight producer
-	print "+++++++++++++++++++++++++"
+	#print "+++++++++++++++++++++++++"
 	#print " dir event : ", dir(event)
-	print " -----------------------"
-	print " puWeight : ", event.puWeight
+	#print " -----------------------"
+	#print " puWeight : ", event.puWeight
         #print " monoz_ngood_jet : ", getattr(event, "ngood_jets", None)
 	#print " lumiWeight      : ", getattr(event, "lumiWeight", None)
-	print "+++++++++++++++++++++++++"
+	#print "+++++++++++++++++++++++++"
 	n_leptons = 0
         for part in gen_part:
             if (part.statusFlags & 128) == 0:

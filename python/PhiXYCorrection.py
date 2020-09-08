@@ -36,7 +36,6 @@ class PhiXYCorrection(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 	#Get the variables we need.
-	print "the systematic is:   ", self.sys
         if hasattr(event,"PV_npvs")	: npv = 	int(getattr(event,"PV_npvs"))
 	if hasattr(event,"run")		: runnb = 	int(getattr(event,"run")) 
 	if hasattr(event,"MET_pt"+self.sys)	: uncormet = 	float(getattr(event,"MET_pt"+self.sys))
@@ -73,8 +72,6 @@ class PhiXYCorrection(Module):
         elif(not isMC and runnb >=320394 and runnb<=325273 ): runera = 'y2018D'
 	#Couldn't find data/MC era => no correction applied
         else: return 
-	print "!!!!!!!the runera is:    ", runera        
-	print "the npv is:    ", npv
  	METxcorr = 0.
 	METycorr = 0.
         if not usemetv2:#Current recommendation for 2016 and 2018

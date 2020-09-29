@@ -29,7 +29,7 @@ echo "+ CMSSW_BASE  = $CMSSW_BASE"
 echo "+ PYTHON_PATH = $PYTHON_PATH"
 echo "+ PWD         = $PWD"
 echo "----- Found Proxy in: $X509_USER_PROXY"
-python condor_all_proc.py --jobNum=$1 --isMC={ismc} --era={era} --infile=$2
+python condor_VBS_proc.py --jobNum=$1 --isMC={ismc} --era={era} --infile=$2
 echo "----- transfert output to eos :"
 xrdcp -s -f tree_$1.root {eosdir}
 echo "----- directory after running :"
@@ -72,7 +72,7 @@ def main():
     home_base  = os.environ['HOME']
     proxy_copy = os.path.join(home_base,proxy_base)
     cmssw_base = os.environ['CMSSW_BASE']
-    eosbase = "/eos/cms/store/user/biwang/monoZ/{tag}/{sample}/"
+    eosbase = "/eos/cms/store/group/phys_smp/ZZTo2L2Nu/VBS/{tag}/{sample}/"
 
     regenerate_proxy = False
     if not os.path.isfile(proxy_copy):
@@ -164,7 +164,7 @@ def main():
             with open(os.path.join(jobs_dir, "condor.sub"), "w") as condorfile:
                 condor = condor_TEMPLATE.format(
                     transfer_file= ",".join([
-                        "../condor_all_proc.py",
+                        "../condor_VBS_proc.py",
                         "../combineHLT_Run2.yaml",
                         "../keep_and_drop.txt",
                         "../Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt",

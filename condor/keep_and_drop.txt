@@ -1,20 +1,20 @@
-
-
 # HLT paths
 drop HLT_*
 keep HLT_Mu*
+keep HLT_PFHT*
+keep HLT_PFJet*
 keep HLT_Ele*
 keep HLT_DiMu*
 keep HLT_DiEle*
-keep HLT_Photon*
-keep HLT_TripleMu*
+drop HLT_Photon*
+drop HLT_TripleMu*
 keep HLT_IsoMu*
 keep HLT_DoubleEle*
-keep HLT_Photon*
 
-drop CaloMET*
+
+keep CaloMET*
 drop ChsMET*
-drop FatJet*
+keep FatJet*
 drop GenDressedLepton*
 drop GenJetAK8*
 drop GenMET*
@@ -22,15 +22,15 @@ drop GenJet*
 drop GenVisTau*
 drop Generator*
 drop HTXS*
-drop IsoTrack*
+keep IsoTrack*
 drop L1*
 drop LHEPart*
 drop Photon*
 drop Puppi*
-drop SV*
+keep SV*
 drop SoftActivity*
 drop SubGenJetAK8*
 drop SubJet*
 drop fixedGridRhoFastjet*
 drop genTtbarId*
-drop TkMET*
+keep TkMET*

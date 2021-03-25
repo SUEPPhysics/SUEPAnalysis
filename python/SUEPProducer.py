@@ -73,19 +73,6 @@ class SUEPProducer(Module):
         self.out.branch("SUEP_mult_pt_ave{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_mult_girth{}".format(self.syst_suffix), "F")
 
-        self.out.branch("ngood_fatjets{}".format(self.syst_suffix), "I")
-        #self.out.branch("SUEP_pt_pt{}".format(self.syst_suffix), "F")
-        #self.out.branch("SUEP_pt_eta{}".format(self.syst_suffix), "F")
-        #self.out.branch("SUEP_pt_phi{}".format(self.syst_suffix), "F")
-        #self.out.branch("SUEP_pt_m{}".format(self.syst_suffix), "F")
-        self.out.branch("delta_phi_fatjet_met{}".format(self.syst_suffix), "F")
-
-        self.out.branch("leading_lep_pt{}".format(self.syst_suffix), "F")
-        self.out.branch("leading_lep_eta{}".format(self.syst_suffix), "F")
-        self.out.branch("trailing_lep_pt{}".format(self.syst_suffix), "F")
-        self.out.branch("trailing_lep_eta{}".format(self.syst_suffix), "F")
-        self.out.branch("leading_lep_flavor{}".format(self.syst_suffix), "I")
-
         self.out.branch("met_filter{}".format(self.syst_suffix), "I")
 
         self.out.branch("ngood_jets{}".format(self.syst_suffix), "I")
@@ -382,32 +369,8 @@ class SUEPProducer(Module):
         good_leptons = good_electrons + good_muons
         good_leptons.sort(key=lambda x: x.pt, reverse=True)
 
-        _lead_lep_pt = good_leptons[0].pt if len(good_leptons) else 0.0
-        _lead_lep_eta = good_leptons[0].eta if len(good_leptons) else 0.0
-        _trail_lep_pt = good_leptons[1].pt if len(good_leptons) >= 2 else 0.0
-        _trail_lep_eta = good_leptons[1].eta if len(good_leptons) >= 2 else 0.0
-	_leading_lep_flavor = 0
-	if len(good_muons) and len(good_electrons):
-		if good_muons[0].pt > good_electrons[0].pt: _leading_lep_flavor = 1
-
-        self.out.fillBranch("leading_lep_pt{}".format(self.syst_suffix), _lead_lep_pt)
-        self.out.fillBranch("leading_lep_eta{}".format(self.syst_suffix), _lead_lep_eta)
-        self.out.fillBranch("trailing_lep_pt{}".format(self.syst_suffix), _trail_lep_pt)
-        self.out.fillBranch("trailing_lep_eta{}".format(self.syst_suffix), _trail_lep_eta)
-        self.out.fillBranch("leading_lep_flavor{}".format(self.syst_suffix), _leading_lep_flavor)
-
-        ngood_leptons = len(good_leptons)
-        nextra_leptons = len(extra_leptons)
-
-        if False:
-            print "number of leptons [all, good, extra]: ", ngood_leptons, " : ", nextra_leptons
-            print "        CBId electrons : ", [e.cutBased for e in good_electrons]
-            print "        WP90 electrons : ", [e.mvaFall17Iso_WP90 for e in good_electrons]
-            print "             muons     : ", [e.tightId for e in good_muons]
-            print "        lepton pts     : ", [e.pt for e in good_leptons]
-
-        self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), ngood_leptons)
-        self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), nextra_leptons)
+        self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), len(good_leptons))
+        self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), len(extra_leptons))
 
         # Leptons efficiency/Trigger/Isolation Scale factors
         # These are applied only of the first 2 leading leptons
@@ -562,23 +525,6 @@ class SUEPProducer(Module):
         self.out.fillBranch("lead_jet_pt{}".format(self.syst_suffix), _lead_jet_pt)
         self.out.fillBranch("lead_bjet_pt{}".format(self.syst_suffix), _lead_bjet_pt)
         self.out.fillBranch("delta_phi_j_met{}".format(self.syst_suffix), _dphi_j_met)
-
-        # process fatjet
-        good_fatjets  = []
-        for fatjet in fatjets:
-            if fatjet.pt < 30.0 or abs(fatjet.eta) > 4.7:
-                continue
-            if not fatjet.jetId:
-                continue
-            if tk.closest(fatjet, good_leptons)[1] < 0.4:
-                continue
-            good_fatjets.append(fatjet)
-        good_fatjets.sort(key=lambda fatjet: fatjet.pt, reverse=True)
-
-        _dphi_fatjet_met = tk.deltaPhi(good_fatjets[0], met.phi) if len(good_fatjets) else -99.0
-
-        self.out.fillBranch("ngood_fatjets{}".format(self.syst_suffix), len(good_fatjets))
-        self.out.fillBranch("delta_phi_fatjet_met{}".format(self.syst_suffix), _dphi_fatjet_met)
 
         # process taus
         had_taus = []

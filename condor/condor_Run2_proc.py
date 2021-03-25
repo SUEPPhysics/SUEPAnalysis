@@ -15,13 +15,10 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProduce
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
 
-#Import the MonoZ analysis tools
+#Import the SUEP analysis tools
 from PhysicsTools.SUEP.SUEPProducer import *
 from PhysicsTools.SUEP.GenWeightProducer import *
 from PhysicsTools.SUEP.PhiXYCorrection import *
-#from PhysicsTools.SUEP.BtagEventWeightProducer import *
-#from PhysicsTools.SUEP.TriggerSFProducer import *
-#from PhysicsTools.SUEP.GenMonoZProducer import *
 import argparse
 
 parser = argparse.ArgumentParser("")
@@ -92,8 +89,6 @@ modules_era   = [
     )
 ]
 
-#pro_syst = [ "ElectronEn", "MuonEn", "jesTotal", "jer"]
-#ext_syst = [ "puWeight", "PDF", "MuonSF", "ElecronSF", "EWK", "nvtxWeight","TriggerSFWeight","btagEventWeight", "QCDScale0w", "QCDScale1w", "QCDScale2w"]
 pro_syst = []
 ext_syst = []
 
@@ -124,19 +119,6 @@ if options.isMC:
 
    modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
    modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
-
-   #if options.era=="2016":
-   #   modules_era.append(TriggerSF_2016())
-   #   modules_era.append(BtagEventWeight_2016())
-   #if options.era=="2017":
-   #   modules_era.append(TriggerSF_2017())
-   #   modules_era.append(BtagEventWeight_2017())
-   #if options.era=="2018":
-   #   modules_era.append(TriggerSF_2018())
-   #   modules_era.append(BtagEventWeight_2018())
-
-   #modules_era.append(GenMonoZProducer())
-
 
    # for shift-based systematics
    for sys in pro_syst:

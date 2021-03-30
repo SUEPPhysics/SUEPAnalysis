@@ -1,5 +1,5 @@
-# MonoZNanoAOD
-MonoZ analysis using NanoAOD
+# SUEP NanoAOD
+SUEP analysis using NanoAOD
 
 
 ## Quick start
@@ -12,28 +12,15 @@ cmsenv
 
 mkdir PhysicsTools/
 git clone https://github.com/yhaddad/nanoAOD-tools.git PhysicsTools/NanoAODTools
-git clone git@github.com:yhaddad/MonoZNanoAOD.git PhysicsTools/MonoZ
+git clone git@github.com:yhaddad/MonoZNanoAOD.git PhysicsTools/SUEP
 
 cd $CMSSW_BASE/src/PhysicsTools/NanoAODTools
 git checkout remotes/origin/topic-Run2-Lepton-SF
 cd $CMSSW_BASE/src
 scram b -j 10
 
-cd $CMSSW_BASE/src/PhysicsTools/MonoZ/scripts/
-python postproc_test.py
-```
-
-## submitting crab jobs
-
-```bash
-voms-proxy-init -voms cms --valid 168:00
-source /cvmfs/cms.cern.ch/crab3/crab.sh
-
-cd $CMSSW_BASE/src/PhysicsTools/MonoZ/crab/
-
-echo "/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM" > simple_test.dat
-
-python submit_all.py -i simple_test.dat --isMC=1
+cd $CMSSW_BASE/src/PhysicsTools/SUEP/condor
+python condor_Run2_proc.py --isMC=1 --era=2018 --infile=<file>
 ```
 
 ## Running combine

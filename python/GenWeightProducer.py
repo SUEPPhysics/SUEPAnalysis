@@ -10,7 +10,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
 class GenWeightProducer(Module):
-    def __init__(self, isMC, xsec=1.0, nevt=1, dopdf=True, do_xsecscale=False):
+    def __init__(self, isMC, xsec, nevt=1, dopdf=True, do_xsecscale=True):
         # lumi and cross sections should be in femptobarn
         self.isMC = isMC
         self.nevt = nevt
@@ -77,6 +77,7 @@ class GenWeightProducer(Module):
             infostr = "Storing Lumi={}".format(self.xsec)
         self.out.branch("weight"    , "F") # , title=infostr)
         self.out.branch("xsecscale" , "F") # , title=infostr)
+        self.out.branch("xsecscale_nEvt" , "F") # , title=infostr)
         self.out.branch("pdfw_Up"   , "F") # , title="PDF Weight uncertainty up")
         self.out.branch("pdfw_Down" , "F") # , title="PDF Weight uncertainty down")
         self.out.branch("QCDScale0wUp"  ,   "F")
@@ -108,6 +109,7 @@ class GenWeightProducer(Module):
             #signs = 1 if initw > 0 else -1
 
         self.out.fillBranch("weight"   , weight )
+        self.out.fillBranch("xsecscale_nEvt", weight if self.do_xsecscale else weight )
         self.out.fillBranch("xsecscale", weight * self.nevt if self.do_xsecscale else weight )
 
         # -----------------

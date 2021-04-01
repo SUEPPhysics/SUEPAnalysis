@@ -20,11 +20,13 @@ drop SubJet*
 drop fixedGridRhoFastjet*
 drop genTtbarId*
 keep TkMET*
-drop MET*
+drop MET_pt*
+drop MET_phi*
 drop Tau*
 drop Muon*
 drop Electron*
-drop Jet*
+drop Jet_pt*
+drop Jet_mass*
 drop HLT*
 drop Fsr*
 drop Raw*

@@ -438,7 +438,7 @@ class SUEPProducer(Module):
              fastjet_prep = (cand.trkPt,cand.trkEta ,cand.trkPhi ,cand.mass)
              fastjet_list.append(fastjet_prep)
         nCands = len(good_cands)
-        ave_cand_pt = sum_cand_pt / nCands
+        ave_cand_pt = sum_cand_pt / nCands if nCands >= 1 else 0.0 
 
         #fill out the basics
         self.out.fillBranch("nCleaned_Cands{}".format(self.syst_suffix), nCands)

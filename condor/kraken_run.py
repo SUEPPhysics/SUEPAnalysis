@@ -11,25 +11,33 @@ logging.basicConfig(level=logging.DEBUG)
 
 script_TEMPLATE = """#!/bin/bash
 
+export X509_USER_PROXY={proxy}
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-export SCRAM_ARCH=slc6_amd64_gcc630
+export SCRAM_ARCH=slc7_amd64_gcc820
 
-cd {cmssw_base}/src/
-eval `scramv1 runtime -sh`
-echo
-echo $_CONDOR_SCRATCH_DIR
-cd   $_CONDOR_SCRATCH_DIR
-echo
+wget http://t3serv001.mit.edu/~freerc/CMSSW_10_6_4.tgz
+tar -xf CMSSW_10_6_4.tgz
+rm CMSSW_10_6_4.tgz
+cd CMSSW_10_6_4/src/
+scramv1 b ProjectRename
+eval `scramv1 runtime -sh` 
+export PYTHONPATH=/cvmfs/cms.cern.ch/slc7_amd64_gcc820/cms/cmssw/CMSSW_10_6_4/external/slc7_amd64_gcc820/bin/python
+echo 
+echo $_CONDOR_SCRATCH_DIR 
+cd   $_CONDOR_SCRATCH_DIR 
+echo 
 echo "... start job at" `date "+%Y-%m-%d %H:%M:%S"`
 echo "----- directory before running:"
+pwd
 ls -lR .
 echo "----- CMSSW BASE, python path, pwd:"
 echo "+ CMSSW_BASE  = $CMSSW_BASE"
 echo "+ PYTHON_PATH = $PYTHON_PATH"
 echo "+ PWD         = $PWD"
-python condor_WSProducer.py --jobNum=$1 --isMC={ismc} --era={era} --infile=$2
-echo "----- transfer output to eos :"
-xrdcp -s -f tree_$1.root {eosdir}
+echo "----- Found Proxy in: $X509_USER_PROXY"
+python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --dataset={dataset} --infile=$2
+echo "----- transfering output to scratch :"
+mv tree_$1.root {final_outdir}
 echo "----- directory after running :"
 ls -lR .
 echo " ------ THE END (everyone dies !) ----- "
@@ -37,7 +45,8 @@ echo " ------ THE END (everyone dies !) ----- "
 
 
 condor_TEMPLATE = """
-request_disk          = 1000000
+universe              = standard
+request_disk          = 10240
 executable            = {jobdir}/script.sh
 arguments             = $(ProcId) $(jobid)
 transfer_input_files  = {transfer_file}
@@ -54,27 +63,54 @@ queue jobid from {jobdir}/inputfiles.dat
 def main():
     parser = argparse.ArgumentParser(description='Famous Submitter')
     parser.add_argument("-i"   , "--input" , type=str, default="data.txt" , help="input datasets", required=True)
-    parser.add_argument("-t"   , "--tag"   , type=str, default="Exorcism"  , help="production tag", required=True)
+    parser.add_argument("-t"   , "--tag"   , type=str, default="IronMan"  , help="production tag", required=True)
     parser.add_argument("-isMC", "--isMC"  , type=int, default=1          , help="")
     parser.add_argument("-q"   , "--queue" , type=str, default="testmatch", help="")
     parser.add_argument("-e"   , "--era"   , type=str, default="2017"     , help="")
     parser.add_argument("-f"   , "--force" , action="store_true"          , help="recreate files and jobs")
     parser.add_argument("-s"   , "--submit", action="store_true"          , help="submit only")
     parser.add_argument("-dry" , "--dryrun", action="store_true"          , help="running without submission")
+    parser.add_argument("--redo-proxy"     , action="store_true"          , help="redo the voms proxy")
 
     options = parser.parse_args()
 
     # Making sure that the proxy is good
+    proxy_base = 'x509up_u{}'.format(os.getuid())
+    home_base  = os.environ['HOME']
+    proxy_copy = os.path.join(home_base,proxy_base)
     cmssw_base = os.environ['CMSSW_BASE']
-    eosbase = "/eos/cms/store/group/phys_exotica/monoZ/{tag}/{sample}/"
-    group_base = "group/phys_exotica"
-    my_base = "user/cfreer"
+    CMSSW = 'CMSSW_10_6_4'
+    outdir = '/mnt/hadoop/scratch/freerc/SUEP'
+
+    regenerate_proxy = False
+    if not os.path.isfile(proxy_copy):
+        logging.warning('--- proxy file does not exist')
+        regenerate_proxy = True
+    else:
+        lifetime = subprocess.check_output(
+            ['voms-proxy-info', '--file', proxy_copy, '--timeleft']
+        )
+        print lifetime
+        lifetime = float(lifetime)
+        lifetime = lifetime / (60*60)
+        logging.info("--- proxy lifetime is {} hours".format(lifetime))
+        if lifetime < 10.0: # we want at least 10 hours
+            logging.warning("--- proxy has expired !")
+            regenerate_proxy = True
+
+    if regenerate_proxy:
+        redone_proxy = False
+        while not redone_proxy:
+            status = os.system('voms-proxy-init -voms cms')
+            if os.WEXITSTATUS(status) == 0:
+                redone_proxy = True
+        shutil.copyfile('/tmp/'+proxy_base,  proxy_copy)
 
     with open(options.input, 'r') as stream:
         for sample in stream.read().split('\n'):
             if '#' in sample: continue
             if len(sample.split('/')) <= 1: continue
-            sample_name = sample.split("/")[1] if options.isMC else '_'.join(sample.split("/")[1:3])
+            sample_name = sample.split("/")[-1]
             jobs_dir = '_'.join(['jobs', options.tag, sample_name])
             logging.info("-- sample_name : " + sample)
 
@@ -89,30 +125,28 @@ def main():
             else:
                 os.mkdir(jobs_dir)
 
-            eosindir = eosbase.format(tag=options.tag,sample=sample_name)
             if not options.submit:
                 # ---- getting the list of file for the dataset
+                sample_files = subprocess.check_output(['xrdfs', 'xrootd.cmsaf.mit.edu', 'ls', '/store/user/paus/nanosu/A00/{}'.format(sample_name)])
+                time.sleep(3)
                 with open(os.path.join(jobs_dir, "inputfiles.dat"), 'w') as infiles:
-                    for _f in os.listdir(eosindir):
-                        infiles.write(os.path.join(eosindir,_f))
-                        infiles.write('\n')
+                    infiles.write(sample_files)
                     infiles.close()
             time.sleep(10)
-            #eosoutdir = eosbase.format(tag=options.tag,sample=sample_name).replace(group_base,my_base)
-            eosoutdir = eosbase.format(tag=options.tag+"_WS",sample=sample_name)
-            # crete a directory on eos
-            if '/eos/cms' in eosoutdir:
-                eosoutdir = eosoutdir.replace('/eos/cms', 'root://eoscms.cern.ch/')
-                os.system("eos mkdir -p {}".format(eosoutdir.replace('root://eoscms.cern.ch/','')))
-            else:
-                raise NameError(eosoutdir)
+            fin_outdir =  outdir.format(tag=options.tag,sample=sample_name)
+            os.system("mkdir -p {}".format(fin_outdir))
 
             with open(os.path.join(jobs_dir, "script.sh"), "w") as scriptfile:
                 script = script_TEMPLATE.format(
-                    cmssw_base=cmssw_base,
+                    home_base=home_base,
+                    proxy=proxy_copy,
+                    CMSSW=CMSSW,
+                    #cmssw_base=cmssw_base,
                     ismc=options.isMC,
                     era=options.era,
-                    eosdir=eosoutdir
+                    final_outdir=fin_outdir,          
+                    dataset=sample_name
+                    #eosdir=eosoutdir
                 )
                 scriptfile.write(script)
                 scriptfile.close()
@@ -120,9 +154,12 @@ def main():
             with open(os.path.join(jobs_dir, "condor.sub"), "w") as condorfile:
                 condor = condor_TEMPLATE.format(
                     transfer_file= ",".join([
-                        "../condor_WSProducer.py",
-                        "../combineHLT_Run2.yaml",
-                        "../keep_and_drop_WS.txt",
+                        "../condor_Run2_proc.py",
+                        "../keep_and_drop.txt",
+                        "../keep_and_drop_post.txt",
+                        "../Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt",
+                        "../Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt",
+                        "../Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
                         "../haddnano.py"
                     ]),
                     jobdir=jobs_dir,
@@ -147,4 +184,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

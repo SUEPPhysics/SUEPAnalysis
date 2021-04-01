@@ -1,6 +1,4 @@
 import os, sys, re
-import ROOT
-ROOT.PyConfig.IgnoreCommandLineOptions = True
 import yaml
 
 #Import the NanoAOD-tools that we will need
@@ -33,35 +31,6 @@ parser.add_argument('-json'   , '--json'   , type=str, default=None  , help="")
 
 options  = parser.parse_args()
 
-def inputfile(nanofile):
-   tested   = False
-   forceaaa = False
-   pfn=os.popen("edmFileUtil -d %s"%(nanofile)).read()
-   pfn=re.sub("\n","",pfn)
-   print (nanofile," -> ",pfn)
-   if (os.getenv("GLIDECLIENT_Group","") != "overflow" and
-       os.getenv("GLIDECLIENT_Group","") != "overflow_conservative" and not
-       forceaaa ):
-      if not tested:
-         print ("Testing file open")
-         testfile=ROOT.TFile.Open(pfn)
-         if testfile and testfile.IsOpen() :
-            print ("Test OK")
-            nanofile=pfn
-            testfile.Close()
-         else:
-            if "root://cms-xrd-global.cern.ch/" not in nanofile:
-               nanofile = "root://cms-xrd-global.cern.ch/" + nanofile
-            forceaaa=True
-      else:
-         nanofile = pfn
-   else:
-       if "root://cms-xrd-global.cern.ch/" not in nanofile:
-          nanofile = "root://cms-xrd-global.cern.ch/" + nanofile
-   return nanofile
-
-options.infile = inputfile(options.infile)
-
 print ("---------------------------")
 print (" -- options  = ", options)
 print (" -- is MC    = ", options.isMC)
@@ -72,7 +41,7 @@ print (" -- dataset  = ", options.dataset)
 print ("---------------------------")
 
 xsection = 1.0
-dataset = "QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8+RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1+MINIAODSIM"
+dataset = options.dataset 
 condtag_ = "SUEP_QCD"
 
 if options.isMC:

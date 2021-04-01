@@ -24,7 +24,6 @@ drop Generator*
 drop HTXS*
 keep IsoTrack*
 drop L1*
-drop LHEPart*
 drop Photon*
 drop Puppi*
 keep SV*

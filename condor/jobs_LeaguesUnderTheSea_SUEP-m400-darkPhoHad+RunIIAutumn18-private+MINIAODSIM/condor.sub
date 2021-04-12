@@ -1,0 +1,16 @@
+
+universe              = vanilla
+request_disk          = 1024
+executable            = jobs_LeaguesUnderTheSea_SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM/script.sh
+Environment           = "PYTHONPATH=/usr/lib64/python2.7/site-packages"
+arguments             = $(ProcId) $(jobid)
+transfer_input_files  = ../condor_Run2_proc.py,../keep_and_drop.txt,../keep_and_drop_post.txt,../Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt,../Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt,../Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt,../../data/xsections_2018.yaml,../tmp.root,../hello.py,../haddnano.py
+output                = $(ClusterId).$(ProcId).out
+error                 = $(ClusterId).$(ProcId).err
+log                   = $(ClusterId).$(ProcId).log
+initialdir            = jobs_LeaguesUnderTheSea_SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM
+transfer_output_files = ""
++SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
++JobFlavour           = "testmatch"
+
+queue jobid from jobs_LeaguesUnderTheSea_SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM/inputfiles.dat

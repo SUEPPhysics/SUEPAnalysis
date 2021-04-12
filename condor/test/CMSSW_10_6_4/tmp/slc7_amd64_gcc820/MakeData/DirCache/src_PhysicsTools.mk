@@ -1,0 +1,2 @@
+ALL_SUBSYSTEMS+=PhysicsTools
+subdirs_src_PhysicsTools = src_PhysicsTools_SUEP src_PhysicsTools_NanoAODTools

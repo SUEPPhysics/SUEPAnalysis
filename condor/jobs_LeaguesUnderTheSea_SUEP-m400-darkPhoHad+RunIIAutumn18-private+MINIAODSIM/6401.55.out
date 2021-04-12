@@ -1,0 +1,11 @@
+Reading cached build data
+Done: ProjectRename
+/tmp/tmp.t1F8fytMSt/execute.10.1.2.72-108649/dir_108747
+/cvmfs/cms.cern.ch/slc7_amd64_gcc820/cms/cmssw/CMSSW_10_6_4/external/slc7_amd64_gcc820/bin/python
+/cvmfs/cms.cern.ch/slc7_amd64_gcc820/cms/cmssw/CMSSW_10_6_4/external/slc7_amd64_gcc820/bin/python
+/tmp/tmp.t1F8fytMSt/execute.10.1.2.72-108649/dir_108747
+----- Found Proxy in: /home/freerc/x509up_u516
+python condor_Run2_proc.py --jobNum=55 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-59.root
+----- transferring output to scratch :
+----- directory after running :
+ ------ THE END (everyone dies !) ----- 

@@ -1,0 +1,3 @@
+-include .SCRAM/slc7_amd64_gcc820/MakeData/variables.mk
+-include config/SCRAM/GMake/Makefile
+-include config/SCRAM/GMake/Makefile.rules

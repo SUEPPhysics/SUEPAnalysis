@@ -111,10 +111,7 @@ class GenWeightProducer(Module):
         self.out.fillBranch("weight"   , weight )
         self.out.fillBranch("xsecscale_nEvt", weight if self.do_xsecscale else weight )
         self.out.fillBranch("xsecscale", weight * self.nevt if self.do_xsecscale else weight )
-
-        # -----------------
-        # PDF uncertainties
-        # -----------------
+        print("I am in the genweight producer", weight)
         mean = 1.0
         werr = 0.0
 
@@ -142,13 +139,17 @@ class GenWeightProducer(Module):
         if not self.dopdf:
             return True
 
+        # -----------------
+        # PDF uncertainties
+        # -----------------
+
         w_pdf = self.getobject(event, "LHEPdfWeight" )
         n_pdf = self.getobject(event, "nLHEPdfWeight" )
 
         if self.isfirst:
-             w_pdf = getattr(event, "LHEPdfWeight" )
-             n_pdf = getattr(event, "nLHEPdfWeight")
-             self.isfirst = False
+            w_pdf = getattr(event, "LHEPdfWeight" )
+            n_pdf = getattr(event, "nLHEPdfWeight")
+            self.isfirst = False
 
         if w_pdf == 0 or n_pdf is None:
             n_pdf, w_pdf = self.LHAPDFweight(Object(event,"Generator"))

@@ -1,0 +1,11 @@
+Reading cached build data
+SCRAM warning: You are trying to compile/build for architecture slc7_amd64_gcc820 on SLC6 OS which might not work.
+If you know this SCRAM_ARCH/OS combination works then please first run 'scram build --ignore-arch'.
+gmake: *** [There are compilation/build errors. Please see the detail log above.] Error 1
+/tmp/tmp.jzJEXLOWjL/execute.10.1.2.89-55032/dir_58099
+/tmp/tmp.jzJEXLOWjL/execute.10.1.2.89-55032/dir_58099
+----- Found Proxy in: /home/freerc/x509up_u516
+python condor_Run2_proc.py --jobNum=30 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-36.root
+----- transferring output to scratch :
+----- directory after running :
+ ------ THE END (everyone dies !) ----- 

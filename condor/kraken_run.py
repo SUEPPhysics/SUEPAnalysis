@@ -20,8 +20,10 @@ tar -xf CMSSW_10_6_4.tgz
 rm CMSSW_10_6_4.tgz
 cd CMSSW_10_6_4/src/
 scramv1 b ProjectRename
+
 eval `scramv1 runtime -sh` 
-export PYTHONPATH=/cvmfs/cms.cern.ch/slc7_amd64_gcc820/cms/cmssw/CMSSW_10_6_4/external/slc7_amd64_gcc820/bin/python
+export HOME=.
+export PTYHONPATH=$PYTHONPATH:/usr/lib64/python2.7/site-packages
 echo 
 echo $_CONDOR_SCRATCH_DIR 
 cd   $_CONDOR_SCRATCH_DIR 
@@ -29,32 +31,32 @@ echo
 echo "... start job at" `date "+%Y-%m-%d %H:%M:%S"`
 echo "----- directory before running:"
 pwd
-ls -lR .
 echo "----- CMSSW BASE, python path, pwd:"
 echo "+ CMSSW_BASE  = $CMSSW_BASE"
-echo "+ PYTHON_PATH = $PYTHON_PATH"
+echo "+ PYTHON_PATH = $PYTHONPATH"
 echo "+ PWD         = $PWD"
 echo "----- Found Proxy in: $X509_USER_PROXY"
 python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --dataset={dataset} --infile=$2
-echo "----- transfering output to scratch :"
+echo "----- transferring output to scratch :"
 mv tree_$1.root {final_outdir}
 echo "----- directory after running :"
-ls -lR .
 echo " ------ THE END (everyone dies !) ----- "
 """
 
 
 condor_TEMPLATE = """
-universe              = standard
-request_disk          = 10240
+universe              = vanilla
+request_disk          = 1024
 executable            = {jobdir}/script.sh
 arguments             = $(ProcId) $(jobid)
+Environment           = "PYTHONPATH=/usr/lib64/python2.7/site-packages"
 transfer_input_files  = {transfer_file}
 output                = $(ClusterId).$(ProcId).out
 error                 = $(ClusterId).$(ProcId).err
 log                   = $(ClusterId).$(ProcId).log
 initialdir            = {jobdir}
 transfer_output_files = ""
++SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
 +JobFlavour           = "{queue}"
 
 queue jobid from {jobdir}/inputfiles.dat
@@ -129,9 +131,14 @@ def main():
                 # ---- getting the list of file for the dataset
                 sample_files = subprocess.check_output(['xrdfs', 'xrootd.cmsaf.mit.edu', 'ls', '/store/user/paus/nanosu/A00/{}'.format(sample_name)])
                 time.sleep(3)
+                sample_line = sample_files.splitlines()
                 with open(os.path.join(jobs_dir, "inputfiles.dat"), 'w') as infiles:
-                    infiles.write(sample_files)
-                    infiles.close()
+                     for name in sample_line:
+                     #print(name)
+                         infiles.write("root://xrootd.cmsaf.mit.edu/"+name+"\n")
+                #with open(os.path.join(jobs_dir, "inputfiles.dat"), 'w') as infiles:
+                #    infiles.write(sample_files)
+                     infiles.close()
             time.sleep(10)
             fin_outdir =  outdir.format(tag=options.tag,sample=sample_name)
             os.system("mkdir -p {}".format(fin_outdir))
@@ -160,6 +167,8 @@ def main():
                         "../Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt",
                         "../Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt",
                         "../Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
+                        "../../data/xsections_2018.yaml",
+                        "../hello.py",
                         "../haddnano.py"
                     ]),
                     jobdir=jobs_dir,

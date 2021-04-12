@@ -1,0 +1,34 @@
+Reading cached build data
+Done: ProjectRename
+/export/data1/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935
+/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935
+----- Found Proxy in: /home/freerc/x509up_u516
+python condor_Run2_proc.py --jobNum=41 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-46.root
+---------------------------
+(' -- options  = ', Namespace(dataset='SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM', doSyst=1, era='2018', infile='root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-46.root', isMC=1, jobNum=41, json=None, nevt=-1))
+(' -- is MC    = ', 1)
+(' -- jobNum   = ', 41)
+(' -- era      = ', '2018')
+(' -- in file  = ', 'root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-46.root')
+(' -- dataset  = ', 'SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM')
+---------------------------
+('The dataset name: ', 'SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM')
+('The xsection: ', 1.0)
+Loading btagSF weights for deep-CSV (b) algorithm from file '/export/data1/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935/CMSSW_10_6_4/src/PhysicsTools/NanoAODTools/data/btagSF/DeepCSV_102XSF_V1.csv'
+Load Library 'CondFormatsBTauObjects'
+Load Library 'CondToolsBTau'
+Loading C++ helper from /export/data1/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935/CMSSW_10_6_4/src/PhysicsTools/NanoAODTools/python/postprocessing/data/roccor.Run2.v3/RoccoR.cc
+('modules : ', <PhysicsTools.SUEP.GenWeightProducer.GenWeightProducer object at 0x2af29d477b90>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer.puWeightProducer object at 0x2af29d477e50>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties.jetmetUncertaintiesProducer object at 0x2af29d4b1610>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer.btagSFProducer object at 0x2af2a0e20e10>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProducer.muonScaleResProducer object at 0x2af2a0e20e50>)
+('modules : ', <PhysicsTools.SUEP.PhiXYCorrection.PhiXYCorrection object at 0x2af2a0e2f8d0>)
+('Selection : ', '(HLT_PFHT1050 || HLT_PFJet500)')
+Will write selected trees to .
+Loading jet energy scale (JES) uncertainties from file '/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935/tmp6HsktR/Autumn18_V8_MC_UncertaintySources_AK4PFchs.txt'
+Loading jet energy resolutions (JER) from file '/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935/tmpxHUR4C/Fall17_V3_MC_PtResolution_AK4PFchs.txt'
+Loading JER scale factors and uncertainties from file '/condor/execute/dir_7797/tmp.tAypPomtyd/execute.18.12.8.88-8153/dir_12935/tmpxHUR4C/Fall17_V3_MC_SF_AK4PFchs.txt'
+----- transferring output to scratch :
+----- directory after running :
+ ------ THE END (everyone dies !) ----- 

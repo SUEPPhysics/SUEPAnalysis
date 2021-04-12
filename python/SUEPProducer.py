@@ -4,10 +4,12 @@ import numpy as np
 import scipy.linalg as la
 import math
 from importlib import import_module
+import imp
 import itertools
 from copy import deepcopy
-from pyjet import cluster
-from pyjet.testdata import get_event
+#from pyjet import cluster
+#from pyjet.testdata import get_event
+from numba import jit
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -15,6 +17,11 @@ import PhysicsTools.NanoAODTools.postprocessing.tools as tk
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
+local_path = ['/home/freerc/.local/lib/python2.7/site-packages/']
+def _get_module(name):
+    found = imp.find_module(name,local_path)
+    return imp.load_module(name,*found)
+pyjet = _get_module('pyjet')
 
 class SUEPProducer(Module):
     def __init__(self, isMC, era, do_syst=False, syst_var=''):
@@ -224,6 +231,7 @@ class SUEPProducer(Module):
            and (flag.BadPFMuonFilter)
         )
 
+    @jit #Use Numba for this function
     def sphericity(self, vector_list, r):
         pxx = pyy = pzz = pxy = pxz = pyz = p_sum = 0.0
         for vector in vector_list:
@@ -431,7 +439,7 @@ class SUEPProducer(Module):
         fastjet_list = []
         sum_cand_pt = 0.0
         for cand in PFCands:
-             if cand.trkPt < 1 or cand.fromPV >= 2 or cand.trkEta > 2.5:
+             if cand.trkPt < 1 or cand.fromPV < 2 or cand.trkEta > 2.5:
                  continue
              good_cands.append(cand)
              sum_cand_pt += cand.trkPt
@@ -447,7 +455,7 @@ class SUEPProducer(Module):
 
         #make new jet collection based on fastjet
         fastjet_in = np.array(fastjet_list[:], dtype=[('pT', 'f8'), ('eta', 'f8'), ('phi', 'f8'), ('mass', 'f8')])
-        sequence = cluster(fastjet_in, R=1.5, p=1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
+        sequence = pyjet.cluster(fastjet_in, R=1.5, p=1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
         fastjets = sequence.inclusive_jets(ptmin=3)
         self.out.fillBranch("ngood_fastjets".format(self.syst_suffix), len(fastjets))
 
@@ -486,7 +494,6 @@ class SUEPProducer(Module):
             girth_isr += dR * cand.trkPt / SUEP_isr.Pt()
             spher_tmp.SetPtEtaPhiM(cand.trkPt,cand.trkEta ,cand.trkPhi, cand.mass)
             spher_tmp.Boost(-boost)
-            #spher_isr.append(spher_tmp)
             spher_isr.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
         try:
             sorted_evals = self.sphericity(spher_isr,2.0)
@@ -528,7 +535,6 @@ class SUEPProducer(Module):
                 girth_pt += dR * const.pt / fastjets[0].pt
                 spher_tmp.SetPtEtaPhiM(const.pt, const.eta, const.phi, const.mass)
                 spher_tmp.Boost(-boost_pt)
-                #spher_pt.append(spher_tmp)
                 spher_pt.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
             try:
                 sorted_evals = self.sphericity(spher_pt,2.0)
@@ -558,18 +564,29 @@ class SUEPProducer(Module):
             SUEP_mult.SetPtEtaPhiM(fastjets[0].pt, fastjets[0].eta, fastjets[0].phi, fastjets[0].mass)
             boost_mult = SUEP_mult.BoostVector()
             spher_mult = []
+            unboost = []
+            #for const in fastjets[0]:
+            #    print(const.eta, const.phi, const.pt)
+            #print("now for boosted")
             for const in fastjets[0]:
                 sum_SUEP_mult += const.pt
                 dR = abs(tk.deltaR(const.eta, const.phi, fastjets[0].eta, fastjets[0].phi,))
                 girth_mult += dR * const.pt / fastjets[0].pt
                 spher_tmp.SetPtEtaPhiM(const.pt, const.eta, const.phi, const.mass)
+                unboost.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
                 spher_tmp.Boost(-boost_mult)
-                #spher_mult.append(spher_tmp)
+                #print(spher_tmp.Eta(), spher_tmp.Phi(), spher_tmp.Pt())
                 spher_mult.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+            try:
+                sorted_evals = self.sphericity(unboost,2.0)
+            except:
+                sorted_evals = [0.0, 0.0, 0.0]
+            #print(sorted_evals)
             try:
                 sorted_evals = self.sphericity(spher_mult,2.0)
             except:
                 sorted_evals = [0.0, 0.0, 0.0]
+            #print(sorted_evals)
             SUEP_mult_spher = 1.5 * (sorted_evals[1]+sorted_evals[0])
             SUEP_mult_aplan = 1.5 * sorted_evals[0]
             SUEP_mult_FW2M  = 1.0 - 3.0 * (sorted_evals[2]*sorted_evals[1] + sorted_evals[2]*sorted_evals[0] + sorted_evals[1]*sorted_evals[0])

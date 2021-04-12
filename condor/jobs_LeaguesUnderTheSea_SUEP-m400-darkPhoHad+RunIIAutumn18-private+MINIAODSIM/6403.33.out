@@ -1,0 +1,6 @@
+/condor/execute/dir_182520/tmp.469DdHmQUH/execute.18.12.4.131-183265/dir_185284
+----- Found Proxy in: /home/freerc/x509up_u516
+python condor_Run2_proc.py --jobNum=33 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-39.root
+----- transferring output to scratch :
+----- directory after running :
+ ------ THE END (everyone dies !) ----- 

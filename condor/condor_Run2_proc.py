@@ -1,4 +1,5 @@
 import os, sys, re
+import numpy as np
 import yaml
 
 #Import the NanoAOD-tools that we will need
@@ -14,7 +15,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer impor
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
 
 #Import the SUEP analysis tools
-from PhysicsTools.SUEP.SUEPProducer import *
+#from PhysicsTools.SUEP.SUEPProducer import *
 from PhysicsTools.SUEP.GenWeightProducer import *
 from PhysicsTools.SUEP.PhiXYCorrection import *
 import argparse
@@ -45,8 +46,10 @@ dataset = options.dataset
 condtag_ = "SUEP_QCD"
 
 if options.isMC:
-   with open(os.path.dirname(__file__) +'../data/xsections_{}.yaml'.format(options.era)) as file:
-       MC_xsecs = yaml.full_load(file)
+   #with open(os.path.dirname(__file__) +'../data/xsections_{}.yaml'.format(options.era)) as file:
+   with open(os.path.dirname(__file__) +'xsections_{}.yaml'.format(options.era)) as file:
+       #MC_xsecs = yaml.full_load(file)
+       MC_xsecs = yaml.safe_load(file)
    try:
        xsection *= MC_xsecs[dataset]["xsec"]
        xsection *= MC_xsecs[dataset]["kr"]
@@ -57,13 +60,16 @@ if options.isMC:
        print("WARNING: I did not find the xsection for that MC sample. Check the dataset name and the relevant yaml file")
 
 
-pre_selection = "(Sum$(Jet_pt>500) >= 1) && (HLT_PFHT1050 || HLT_PFJet500)"
+#pre_selection = "(Sum$(Jet_pt>500) >= 1) && (HLT_PFHT1050 || HLT_PFJet500)"
+pre_selection = "(HLT_PFHT1050 || HLT_PFJet500)"
 if float(options.nevt) > 0:
    print (" passing this cut and : ", options.nevt)
    pre_selection += ' && (Entry$ < {})'.format(options.nevt)
 
-modules_era = [ GenWeightProducer( isMC = options.isMC, xsec = xsection, dopdf =  True) ]
-
+if "SUEP" in dataset:
+    modules_era = [ GenWeightProducer( isMC = options.isMC, xsec = xsection, dopdf =  False) ]
+else:
+    modules_era = [ GenWeightProducer( isMC = options.isMC, xsec = xsection, dopdf =  True) ]
 pro_syst = []
 ext_syst = []
 
@@ -90,17 +96,17 @@ if options.isMC:
       modules_era.append(jetmetUncertainties2018All())
       modules_era.append(btagSFProducer("2018", "deepcsv"))
       modules_era.append(muonScaleRes2018())
-      modules_era.append(lepSF_2018())
+      #modules_era.append(lepSF_2018())
 
    modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
-   modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
+   #modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    # for shift-based systematics
    for sys in pro_syst:
       for var in ["Up", "Down"]:
           if "jesTotal" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
           if "jer" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
-          modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=sys+var))
+          #modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=sys+var))
 
 else:
    print ("sample : ", options.dataset, " candtag : ", condtag_)
@@ -114,7 +120,7 @@ else:
       modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
 
    modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
-   modules_era.append(SUEPProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
+   #modules_era.append(SUEPProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    if options.era=="2016":
        options.json = "Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt"

@@ -1,0 +1,90 @@
+/local/condor/execute/dir_9728/condor_exec.exe 47 root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-51.root
+SingularityImage:
+/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7
+Required_OS:
+
+OSVersion:
+el7
+HAS_GPU:
+HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true HAS_GPU = true
+Using singularity image
+#!/bin/bash
+
+export X509_USER_PROXY=/home/freerc/x509up_u516
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH=slc7_amd64_gcc820
+export HOME=.
+
+wget http://t3serv001.mit.edu/~freerc/CMSSW_10_6_4.tgz
+tar -xf CMSSW_10_6_4.tgz
+rm CMSSW_10_6_4.tgz
+cd CMSSW_10_6_4/src/
+scramv1 b ProjectRename
+eval `scramv1 runtime -sh` 
+cd -
+
+echo $_CONDOR_SCRATCH_DIR 
+cd   $_CONDOR_SCRATCH_DIR 
+
+echo "----- Found Proxy in: $X509_USER_PROXY"
+echo "python condor_Run2_proc.py --jobNum=$1 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=$2"
+python condor_Run2_proc.py --jobNum=$1 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=$2
+rm tmp.root
+
+echo "----- transferring output to scratch :"
+mv tree_$1.root /mnt/hadoop/scratch/freerc/SUEP/LeaguesUnderTheSea/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM/
+echo "----- directory after running :"
+echo " ------ THE END (everyone dies !) ----- "
+Reading cached build data
+Done: ProjectRename
+/local/condor/execute/dir_9728
+/local/condor/execute/dir_9728
+----- Found Proxy in: /home/freerc/x509up_u516
+python condor_Run2_proc.py --jobNum=47 --isMC=1 --era=2018 --dataset=SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM --infile=root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-51.root
+Adding file ./SUEP-m400-darkPhoHad-51_Skim.root
+Merging autoPU
+Merging Events
+Merging Runs
+Merging ParameterSets
+Merging LuminosityBlocks
+Merging MetaData
+Merging tag
+---------------------------
+(' -- options  = ', Namespace(dataset='SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM', doSyst=1, era='2018', infile='root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-51.root', isMC=1, jobNum=47, json=None, nevt=-1))
+(' -- is MC    = ', 1)
+(' -- jobNum   = ', 47)
+(' -- era      = ', '2018')
+(' -- in file  = ', 'root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-51.root')
+(' -- dataset  = ', 'SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM')
+---------------------------
+('The dataset name: ', 'SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM')
+('The xsection: ', 1.0)
+Loading btagSF weights for deep-CSV (b) algorithm from file '/local/condor/execute/dir_9728/CMSSW_10_6_4/src/PhysicsTools/NanoAODTools/data/btagSF/DeepCSV_102XSF_V1.csv'
+Load Library 'CondFormatsBTauObjects'
+Load Library 'CondToolsBTau'
+Loading C++ helper from /local/condor/execute/dir_9728/CMSSW_10_6_4/src/PhysicsTools/NanoAODTools/python/postprocessing/data/roccor.Run2.v3/RoccoR.cc
+('modules : ', <PhysicsTools.SUEP.GenWeightProducer.GenWeightProducer object at 0x2aee1a838810>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer.puWeightProducer object at 0x2aee1a838ad0>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties.jetmetUncertaintiesProducer object at 0x2aee1a86b310>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer.btagSFProducer object at 0x2aee1e268b10>)
+('modules : ', <PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProducer.muonScaleResProducer object at 0x2aee1e268b50>)
+('modules : ', <PhysicsTools.SUEP.PhiXYCorrection.PhiXYCorrection object at 0x2aee1e2745d0>)
+('Selection : ', '(HLT_PFHT1050 || HLT_PFJet500)')
+Will write selected trees to .
+Loading jet energy scale (JES) uncertainties from file '/local/condor/execute/dir_9728/tmpW3YyUY/Autumn18_V8_MC_UncertaintySources_AK4PFchs.txt'
+Loading jet energy resolutions (JER) from file '/local/condor/execute/dir_9728/tmpQB2Vbq/Fall17_V3_MC_PtResolution_AK4PFchs.txt'
+Loading JER scale factors and uncertainties from file '/local/condor/execute/dir_9728/tmpQB2Vbq/Fall17_V3_MC_SF_AK4PFchs.txt'
+Pre-select 3 entries out of 100 (3.00%)
+Computing PU profile for this file
+('I am in the genweight producer', 1.0)
+('the npv is:', 27)
+('I am in the genweight producer', 1.0)
+('the npv is:', 34)
+('I am in the genweight producer', 1.0)
+('the npv is:', 33)
+Processed 3 preselected entries from root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A00/SUEP-m400-darkPhoHad+RunIIAutumn18-private+MINIAODSIM//SUEP-m400-darkPhoHad-51.root (100 entries). Finally selected 3 entries
+Done ./SUEP-m400-darkPhoHad-51_Skim.root
+30.959752322 Hz
+----- transferring output to scratch :
+----- directory after running :
+ ------ THE END (everyone dies !) ----- 

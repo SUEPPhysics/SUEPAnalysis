@@ -111,7 +111,6 @@ class GenWeightProducer(Module):
         self.out.fillBranch("weight"   , weight )
         self.out.fillBranch("xsecscale_nEvt", weight if self.do_xsecscale else weight )
         self.out.fillBranch("xsecscale", weight * self.nevt if self.do_xsecscale else weight )
-        print("I am in the genweight producer", weight)
         mean = 1.0
         werr = 0.0
 

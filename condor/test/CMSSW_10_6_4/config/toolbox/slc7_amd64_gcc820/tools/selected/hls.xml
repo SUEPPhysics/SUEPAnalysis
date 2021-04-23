@@ -1,9 +1,0 @@
-<tool name="hls" version="2019.08">
-  <info url="https://github.com/Xilinx/HLS_arbitrary_Precision_Types"/>
-  <client>
-    <environment name="HLS_BASE" default="/cvmfs/cms.cern.ch/slc7_amd64_gcc820/external/hls/2019.08"/>
-    <environment name="INCLUDE" default="$HLS_BASE/include"/>
-  </client>
-  <runtime name="ROOT_INCLUDE_PATH" value="$INCLUDE" type="path"/>
-  <use name="root_cxxdefaults"/>
-</tool>

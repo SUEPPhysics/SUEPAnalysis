@@ -15,7 +15,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer impor
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
 
 #Import the SUEP analysis tools
-#from PhysicsTools.SUEP.SUEPProducer import *
+from PhysicsTools.SUEP.SUEPProducer import *
 from PhysicsTools.SUEP.GenWeightProducer import *
 from PhysicsTools.SUEP.PhiXYCorrection import *
 import argparse
@@ -78,35 +78,35 @@ if options.isMC:
    if options.era=="2016":
       modules_era.append(puAutoWeight_2016())
       modules_era.append(PrefCorr())
-      modules_era.append(jetmetUncertainties2016All())
-      modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
-      modules_era.append(muonScaleRes2016())
-      modules_era.append(lepSF_2016())
+      #modules_era.append(jetmetUncertainties2016All())
+      #modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
+      #modules_era.append(muonScaleRes2016())
+      #modules_era.append(lepSF_2016())
       ext_syst.append("PrefireWeight")
    if options.era=="2017":
       modules_era.append(puAutoWeight_2017())
       modules_era.append(PrefCorr())
-      modules_era.append(jetmetUncertainties2017All())
-      modules_era.append(btagSFProducer("2017", "deepcsv"))
-      modules_era.append(muonScaleRes2017())
-      modules_era.append(lepSF_2017())
+      #modules_era.append(jetmetUncertainties2017All())
+      #modules_era.append(btagSFProducer("2017", "deepcsv"))
+      #modules_era.append(muonScaleRes2017())
+      #modules_era.append(lepSF_2017())
       ext_syst.append("PrefireWeight")
    if options.era=="2018":
       modules_era.append(puAutoWeight_2018())
-      modules_era.append(jetmetUncertainties2018All())
-      modules_era.append(btagSFProducer("2018", "deepcsv"))
-      modules_era.append(muonScaleRes2018())
+      #modules_era.append(jetmetUncertainties2018All())
+      #modules_era.append(btagSFProducer("2018", "deepcsv"))
+      #modules_era.append(muonScaleRes2018())
       #modules_era.append(lepSF_2018())
 
-   modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
-   #modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
+   #modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
+   modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    # for shift-based systematics
    for sys in pro_syst:
       for var in ["Up", "Down"]:
-          if "jesTotal" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
-          if "jer" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
-          #modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=sys+var))
+          #if "jesTotal" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
+          #if "jer" in sys and options.doSyst==1: modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=sys+var))
+          modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=sys+var))
 
 else:
    print ("sample : ", options.dataset, " candtag : ", condtag_)
@@ -119,8 +119,8 @@ else:
    if options.era=="2018":
       modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
 
-   modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
-   #modules_era.append(SUEPProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
+   #modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
+   modules_era.append(SUEPProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
 
    if options.era=="2016":
        options.json = "Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt"

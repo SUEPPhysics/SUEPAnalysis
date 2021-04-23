@@ -32,3 +32,5 @@ drop SubGenJetAK8*
 drop SubJet*
 drop fixedGridRhoFastjet*
 drop genTtbarId*
+keep Electron*
+keep Muon*

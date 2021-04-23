@@ -1,1 +1,0 @@
-FATAL:   could not open image /cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7: failed to retrieve path for /cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7: lstat /cvmfs/singularity.opensciencegrid.org: no such file or directory

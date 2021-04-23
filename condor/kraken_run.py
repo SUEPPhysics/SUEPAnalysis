@@ -14,29 +14,27 @@ script_TEMPLATE = """#!/bin/bash
 export X509_USER_PROXY={proxy}
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc7_amd64_gcc820
+export HOME=.
 
 wget http://t3serv001.mit.edu/~freerc/CMSSW_10_6_4.tgz
 tar -xf CMSSW_10_6_4.tgz
 rm CMSSW_10_6_4.tgz
 cd CMSSW_10_6_4/src/
 scramv1 b ProjectRename
-
 eval `scramv1 runtime -sh` 
-export HOME=.
-export PTYHONPATH=$PYTHONPATH:/usr/lib64/python2.7/site-packages
-echo 
+cd -
+
 echo $_CONDOR_SCRATCH_DIR 
 cd   $_CONDOR_SCRATCH_DIR 
-echo 
-echo "... start job at" `date "+%Y-%m-%d %H:%M:%S"`
-echo "----- directory before running:"
-pwd
-echo "----- CMSSW BASE, python path, pwd:"
-echo "+ CMSSW_BASE  = $CMSSW_BASE"
-echo "+ PYTHON_PATH = $PYTHONPATH"
-echo "+ PWD         = $PWD"
+
+export PYTHONPATH=/home/freerc/.local/lib/python2.7/site-packages/
+echo PYTHONPATH
+
 echo "----- Found Proxy in: $X509_USER_PROXY"
+echo "python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --dataset={dataset} --infile=$2"
 python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --dataset={dataset} --infile=$2
+rm tmp.root
+
 echo "----- transferring output to scratch :"
 mv tree_$1.root {final_outdir}
 echo "----- directory after running :"
@@ -48,12 +46,13 @@ condor_TEMPLATE = """
 universe              = vanilla
 request_disk          = 1024
 executable            = {jobdir}/script.sh
-arguments             = $(ProcId) $(jobid)
 Environment           = "PYTHONPATH=/usr/lib64/python2.7/site-packages"
+arguments             = $(ProcId) $(jobid)
 transfer_input_files  = {transfer_file}
 output                = $(ClusterId).$(ProcId).out
 error                 = $(ClusterId).$(ProcId).err
 log                   = $(ClusterId).$(ProcId).log
+requirements          = (TARGET.machine == t3btch012.mit.edu)
 initialdir            = {jobdir}
 transfer_output_files = ""
 +SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
@@ -82,7 +81,7 @@ def main():
     proxy_copy = os.path.join(home_base,proxy_base)
     cmssw_base = os.environ['CMSSW_BASE']
     CMSSW = 'CMSSW_10_6_4'
-    outdir = '/mnt/hadoop/scratch/freerc/SUEP'
+    outdir = '/mnt/hadoop/scratch/freerc/SUEP/{tag}/{sample}/'
 
     regenerate_proxy = False
     if not os.path.isfile(proxy_copy):
@@ -115,7 +114,7 @@ def main():
             sample_name = sample.split("/")[-1]
             jobs_dir = '_'.join(['jobs', options.tag, sample_name])
             logging.info("-- sample_name : " + sample)
-
+            print(sample_name)
             if os.path.isdir(jobs_dir):
                 if not options.force:
                     logging.error(" " + jobs_dir + " already exist !")
@@ -168,7 +167,6 @@ def main():
                         "../Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt",
                         "../Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
                         "../../data/xsections_2018.yaml",
-                        "../hello.py",
                         "../haddnano.py"
                     ]),
                     jobdir=jobs_dir,

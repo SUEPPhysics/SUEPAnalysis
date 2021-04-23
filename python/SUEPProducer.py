@@ -100,13 +100,13 @@ class SUEPProducer(Module):
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
 
-        if self.isMC and len(self.syst_suffix)==0:
-            self.out.branch("w_muon_SF{}".format(self.syst_suffix), "F")
-            self.out.branch("w_muon_SFUp{}".format(self.syst_suffix), "F")
-            self.out.branch("w_muon_SFDown{}".format(self.syst_suffix), "F")
-            self.out.branch("w_electron_SF{}".format(self.syst_suffix), "F")
-            self.out.branch("w_electron_SFUp{}".format(self.syst_suffix), "F")
-            self.out.branch("w_electron_SFDown{}".format(self.syst_suffix), "F")
+        #if self.isMC and len(self.syst_suffix)==0:
+        #    self.out.branch("w_muon_SF{}".format(self.syst_suffix), "F")
+        #    self.out.branch("w_muon_SFUp{}".format(self.syst_suffix), "F")
+        #    self.out.branch("w_muon_SFDown{}".format(self.syst_suffix), "F")
+        #    self.out.branch("w_electron_SF{}".format(self.syst_suffix), "F")
+        #    self.out.branch("w_electron_SFUp{}".format(self.syst_suffix), "F")
+        #    self.out.branch("w_electron_SFDown{}".format(self.syst_suffix), "F")
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -265,87 +265,88 @@ class SUEPProducer(Module):
         # in case of systematic take the shifted values are default
         # For the central values, need to include jetMetTool all the time
         # Jet systematics
-        if self.syst_var == "":
-            syst_var = "nom"
-        else:
-            syst_var = self.syst_var
-        # checking something
-        try:
-            var_jet_pts = getattr(event,  "Jet_pt_{}".format(syst_var), None)
-            if var_jet_pts:
-                for i,jet in enumerate(jets):
-                    jet.pt = var_jet_pts[i]
-            else:
-                print 'WARNING: jet pts with variation {}'
-                'not available, using the nominal value'.format(syst_var)
-        except:
-            var_jet_pts = getattr(event,  "Jet_pt_nom", None)
-            for i,jet in enumerate(jets):
-                jet.pt = var_jet_pts[i]
+        #if self.syst_var == "":
+        #    syst_var = "nom"
+        #else:
+        #    syst_var = self.syst_var
+        ## checking something
+        #try:
+        #    var_jet_pts = getattr(event,  "Jet_pt_{}".format(syst_var), None)
+        #    if var_jet_pts:
+        #        for i,jet in enumerate(jets):
+        #            jet.pt = var_jet_pts[i]
+        #    else:
+        #        print 'WARNING: jet pts with variation {}'
+        #        'not available, using the nominal value'.format(syst_var)
+        #except:
+        #    var_jet_pts = getattr(event,  "Jet_pt_nom", None)
+        #    for i,jet in enumerate(jets):
+        #        jet.pt = var_jet_pts[i]
 
-        try:
-            var_met_pt  = getattr(event,  "MET_pt_{}".format(syst_var), None)
-            var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
-            if var_met_pt:
-                met.pt = var_met_pt
-            else:
-                print 'WARNING: MET pt with variation '
-                '{} not available, using the nominal value'.format(syst_var)
-            if var_met_phi:
-                met.phi = var_met_phi
-            else:
-                print 'WARNING: MET phi with variation {}'
-                'not available, using the nominal value'.format(syst_var)
-        except:
-            var_met_pt  = getattr(event,  "MET_pt_nom", None)
-            var_met_phi = getattr(event, "MET_phi_nom", None)
-            if var_met_pt:
-                met.pt = var_met_pt
-            if var_met_phi:
-                met.phi = var_met_phi
+        #try:
+        #    var_met_pt  = getattr(event,  "MET_pt_{}".format(syst_var), None)
+        #    var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
+        #    if var_met_pt:
+        #        met.pt = var_met_pt
+        #    else:
+        #        print 'WARNING: MET pt with variation '
+        #        '{} not available, using the nominal value'.format(syst_var)
+        #    if var_met_phi:
+        #        met.phi = var_met_phi
+        #    else:
+        #        print 'WARNING: MET phi with variation {}'
+        #        'not available, using the nominal value'.format(syst_var)
+        #except:
+        #    var_met_pt  = getattr(event,  "MET_pt_nom", None)
+        #    var_met_phi = getattr(event, "MET_phi_nom", None)
+        #    if var_met_pt:
+        #        met.pt = var_met_pt
+        #    if var_met_phi:
+        #        met.phi = var_met_phi
+    
 
         met_p4 = ROOT.TLorentzVector()
         met_p4.SetPtEtaPhiM(met.pt,0.0,met.phi, 0.0)
 
 
         # Electrons Energy
-        if "ElectronEn" in self.syst_var:
-            (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
-            if "Up" in self.syst_var:
-                for i, elec in enumerate(electrons):
-                    met_px = met_px + (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
-                    met_py = met_py + (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
-                    elec.pt = elec.pt + elec.energyErr/math.cosh(elec.eta)
-            else:
-                for i, elec in enumerate(electrons):
-                    met_px = met_px - (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
-                    met_py = met_py - (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
-                    elec.pt = elec.pt - elec.energyErr/math.cosh(elec.eta)
-            met.pt  = math.sqrt(met_px**2 + met_py**2)
-            met.phi = math.atan2(met_py, met_px)
+        #if "ElectronEn" in self.syst_var:
+        #    (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
+        #    if "Up" in self.syst_var:
+        #        for i, elec in enumerate(electrons):
+        #            met_px = met_px + (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
+        #            met_py = met_py + (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
+        #            elec.pt = elec.pt + elec.energyErr/math.cosh(elec.eta)
+        #    else:
+        #        for i, elec in enumerate(electrons):
+        #            met_px = met_px - (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
+        #            met_py = met_py - (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
+        #            elec.pt = elec.pt - elec.energyErr/math.cosh(elec.eta)
+        #    met.pt  = math.sqrt(met_px**2 + met_py**2)
+        #    met.phi = math.atan2(met_py, met_px)
 
-        # Muons Energy
-        if self.isMC:
-            muons_pts = getattr(event, "Muon_corrected_pt")
-            for i, muon in enumerate(muons):
-                muon.pt = muons_pts[i]
+        ## Muons Energy
+        #if self.isMC:
+        #    muons_pts = getattr(event, "Muon_corrected_pt")
+        #    for i, muon in enumerate(muons):
+        #        muon.pt = muons_pts[i]
 
-        if "MuonEn" in self.syst_var:
-            (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
-            if "Up" in self.syst_var:
-                muons_pts = getattr(event, "Muon_correctedUp_pt")
-                for i, muon in enumerate(muons):
-                    met_px = met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
-                    met_py = met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
-                    muon.pt = muons_pts[i]
-            else:
-                muons_pts = getattr(event, "Muon_correctedDown_pt")
-                for i, muon in enumerate(muons):
-                    met_px =met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
-                    met_py =met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
-                    muon.pt = muons_pts[i]
-            met.pt  = math.sqrt(met_px**2 + met_py**2)
-            met.phi = math.atan2(met_py, met_px)
+        #if "MuonEn" in self.syst_var:
+        #    (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
+        #    if "Up" in self.syst_var:
+        #        muons_pts = getattr(event, "Muon_correctedUp_pt")
+        #        for i, muon in enumerate(muons):
+        #            met_px = met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
+        #            met_py = met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
+        #            muon.pt = muons_pts[i]
+        #    else:
+        #        muons_pts = getattr(event, "Muon_correctedDown_pt")
+        #        for i, muon in enumerate(muons):
+        #            met_px =met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
+        #            met_py =met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
+        #            muon.pt = muons_pts[i]
+        #    met.pt  = math.sqrt(met_px**2 + met_py**2)
+        #    met.phi = math.atan2(met_py, met_px)
             
         # filling and contructing the event categorisation
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
@@ -406,33 +407,33 @@ class SUEPProducer(Module):
 
         # Leptons efficiency/Trigger/Isolation Scale factors
         # These are applied only of the first 2 leading leptons
-        if self.isMC:
-            w_muon_SF     = w_electron_SF     = 1.0
-            w_muon_SFUp   = w_electron_SFUp   = 1.0
-            w_muon_SFDown = w_electron_SFDown = 1.0
-            if len(good_leptons) >= 2:
-                if abs(good_leptons[0].pdgId) == 11:
-                    w_electron_SF     *=  good_leptons[0].SF
-                    w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
-                    w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
-                if abs(good_leptons[0].pdgId) == 11:
-                    w_electron_SF     *=  good_leptons[1].SF
-                    w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
-                    w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-                if abs(good_leptons[0].pdgId) == 13:
-                    w_muon_SF     *=  good_leptons[0].SF
-                    w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
-                    w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
-                if abs(good_leptons[1].pdgId) == 13:
-                    w_muon_SF     *=  good_leptons[1].SF
-                    w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
-                    w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-            self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
-            self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
-            self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )
-            self.out.fillBranch("w_electron_SF"    , w_electron_SF    )
-            self.out.fillBranch("w_electron_SFUp"  , w_electron_SFUp  )
-            self.out.fillBranch("w_electron_SFDown", w_electron_SFDown)
+        #if self.isMC:
+        #    w_muon_SF     = w_electron_SF     = 1.0
+        #    w_muon_SFUp   = w_electron_SFUp   = 1.0
+        #    w_muon_SFDown = w_electron_SFDown = 1.0
+        #    if len(good_leptons) >= 2:
+        #        if abs(good_leptons[0].pdgId) == 11:
+        #            w_electron_SF     *=  good_leptons[0].SF
+        #            w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+        #            w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+        #        if abs(good_leptons[0].pdgId) == 11:
+        #            w_electron_SF     *=  good_leptons[1].SF
+        #            w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+        #            w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+        #        if abs(good_leptons[0].pdgId) == 13:
+        #            w_muon_SF     *=  good_leptons[0].SF
+        #            w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
+        #            w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
+        #        if abs(good_leptons[1].pdgId) == 13:
+        #            w_muon_SF     *=  good_leptons[1].SF
+        #            w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
+        #            w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
+        #    self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
+        #    self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
+        #    self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )
+        #    self.out.fillBranch("w_electron_SF"    , w_electron_SF    )
+        #    self.out.fillBranch("w_electron_SFUp"  , w_electron_SFUp  )
+        #    self.out.fillBranch("w_electron_SFDown", w_electron_SFDown)
 
         #look through all the PFCands. See here (https://github.com/SUEPPhysics/SUEPNano/blob/autumn18/python/addPFCands_cff.py)
         good_cands   = []

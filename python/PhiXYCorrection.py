@@ -40,7 +40,6 @@ class PhiXYCorrection(Module):
         #Get the variables we need.
         year = self.era
         isMC = self.isMC
-        print("the npv is:", npv)
         if npv > 100: npv = 100
         runera='y2019MC'
         usemetv2 = False

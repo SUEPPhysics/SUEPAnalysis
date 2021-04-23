@@ -1,2 +1,0 @@
-ALL_PACKAGES += PhysicsTools/SUEP
-subdirs_src_PhysicsTools_SUEP := src_PhysicsTools_SUEP_condor src_PhysicsTools_SUEP_python src_PhysicsTools_SUEP_data

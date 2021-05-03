@@ -36,7 +36,7 @@ Additionally, in the condor directory there is the kraken_run.py file which will
 ```
 python kraken_run.py --isMC=1 --era=2018 --tag=<tag name> --input=../data/list_2018_MC.txt 
 ```
-The submission will name a directory in the output directory after the tage name you input. If the tag already exists use the --force option if you are trying to resubmit/overwrite.
+The submission will name a directory in the output directory after the tage name you input. If the tag already exists use the ```--force option``` if you are trying to resubmit/overwrite.
 
 Note that this submission will look for the dataset xsec in ../data/xsections_<era>.yaml.
   

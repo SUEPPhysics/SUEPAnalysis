@@ -16,24 +16,28 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc7_amd64_gcc820
 export HOME=.
 
-wget http://t3serv001.mit.edu/~freerc/CMSSW_10_6_4.tgz
-tar -xf CMSSW_10_6_4.tgz
+wget http://t3serv001.mit.edu/~freerc/CMSSW_10_6_4.tgz > /dev/null 2>&1
+tar -xf CMSSW_10_6_4.tgz > /dev/null 2>&1
 rm CMSSW_10_6_4.tgz
 cd CMSSW_10_6_4/src/
 scramv1 b ProjectRename
 eval `scramv1 runtime -sh` 
 cd -
 
+echo "hostname:"
+hostname
+echo "XXXXX"
+
 echo $_CONDOR_SCRATCH_DIR 
 cd   $_CONDOR_SCRATCH_DIR 
 
-export PYTHONPATH=/home/freerc/.local/lib/python2.7/site-packages/
-echo PYTHONPATH
+export PYTHONPATH
+#export PYTHONPATH=$PYTHONPATH:/home/freerc/.local/lib/python2.7/site-packages/:/usr/lib64/python2.7/site-packages
+export PYTHONPATH
 
 echo "----- Found Proxy in: $X509_USER_PROXY"
 echo "python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --dataset={dataset} --infile=$2"
 python condor_Run2_proc.py --jobNum=$1 --isMC={ismc} --era={era} --dataset={dataset} --infile=$2
-rm tmp.root
 
 echo "----- transferring output to scratch :"
 mv tree_$1.root {final_outdir}
@@ -46,16 +50,19 @@ condor_TEMPLATE = """
 universe              = vanilla
 request_disk          = 1024
 executable            = {jobdir}/script.sh
-Environment           = "PYTHONPATH=/usr/lib64/python2.7/site-packages"
 arguments             = $(ProcId) $(jobid)
-transfer_input_files  = {transfer_file}
+transfer_input_files  = {transfer_file}, $Fp(/home/freerc/.local/lib/python2.7/site-packages/)
 output                = $(ClusterId).$(ProcId).out
 error                 = $(ClusterId).$(ProcId).err
 log                   = $(ClusterId).$(ProcId).log
-requirements          = (TARGET.machine == t3btch012.mit.edu)
 initialdir            = {jobdir}
 transfer_output_files = ""
-+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
+#requirements          = ((Arch == "X86_64") && ((GLIDEIN_Site =!= "MIT_CampusFactory") || (GLIDEIN_Site == "MIT_CampusFactory" && BOSCOCluster == "ce03.cmsaf.mit.edu" && BOSCOGroup == "bosco_cms" && HAS_CVMFS_cms_cern_ch)))
+Environment           = "PYTHONPATH=/home/freerc/.local/lib/python2.7/site-packages/:/usr/lib64/python2.7/site-packages"
+DIRNAME               = "/home/freerc/.local/lib/python2.7/site-packages/"
+PYTHONPATH            = $ENV(/home/freerc/.local/lib/python2.7/site-packages/:/usr/lib64/python2.7/site-packages)
++DESIRED_Sites        = "T3_US_MIT"
++SingularityImage     = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
 +JobFlavour           = "{queue}"
 
 queue jobid from {jobdir}/inputfiles.dat
@@ -91,7 +98,6 @@ def main():
         lifetime = subprocess.check_output(
             ['voms-proxy-info', '--file', proxy_copy, '--timeleft']
         )
-        print lifetime
         lifetime = float(lifetime)
         lifetime = lifetime / (60*60)
         logging.info("--- proxy lifetime is {} hours".format(lifetime))
@@ -125,34 +131,27 @@ def main():
                     os.mkdir(jobs_dir)
             else:
                 os.mkdir(jobs_dir)
-
+            
             if not options.submit:
-                # ---- getting the list of file for the dataset
-                sample_files = subprocess.check_output(['xrdfs', 'xrootd.cmsaf.mit.edu', 'ls', '/store/user/paus/nanosu/A00/{}'.format(sample_name)])
-                time.sleep(3)
-                sample_line = sample_files.splitlines()
+                # ---- getting the list of file for the dataset (For Kraken these are stored in catalogues on T2)
+                input_list = "/home/cmsprod/catalog/t2mit/nanosu/A00/{}/RawFiles.00".format(sample_name)
+                Raw_list = open(input_list, "r")
                 with open(os.path.join(jobs_dir, "inputfiles.dat"), 'w') as infiles:
-                     for name in sample_line:
-                     #print(name)
-                         infiles.write("root://xrootd.cmsaf.mit.edu/"+name+"\n")
-                #with open(os.path.join(jobs_dir, "inputfiles.dat"), 'w') as infiles:
-                #    infiles.write(sample_files)
+                     for i in Raw_list:
+                         infiles.write(i.split(" ")[0]+"\n")
                      infiles.close()
-            time.sleep(10)
             fin_outdir =  outdir.format(tag=options.tag,sample=sample_name)
             os.system("mkdir -p {}".format(fin_outdir))
-
+  
             with open(os.path.join(jobs_dir, "script.sh"), "w") as scriptfile:
                 script = script_TEMPLATE.format(
                     home_base=home_base,
                     proxy=proxy_copy,
                     CMSSW=CMSSW,
-                    #cmssw_base=cmssw_base,
                     ismc=options.isMC,
                     era=options.era,
                     final_outdir=fin_outdir,          
                     dataset=sample_name
-                    #eosdir=eosoutdir
                 )
                 scriptfile.write(script)
                 scriptfile.close()
@@ -176,7 +175,7 @@ def main():
                 condorfile.close()
             if options.dryrun:
                 continue
-
+ 
             htc = subprocess.Popen(
                 "condor_submit " + os.path.join(jobs_dir, "condor.sub"),
                 shell  = True,

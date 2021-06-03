@@ -61,7 +61,8 @@ if options.isMC:
 
 
 #pre_selection = "(Sum$(Jet_pt>500) >= 1) && (HLT_PFHT1050 || HLT_PFJet500)"
-pre_selection = "(HLT_PFHT1050 || HLT_PFJet500)"
+#pre_selection = "(HLT_PFHT1050 || HLT_PFJet500)"
+pre_selection = ""
 if float(options.nevt) > 0:
    print (" passing this cut and : ", options.nevt)
    pre_selection += ' && (Entry$ < {})'.format(options.nevt)
@@ -78,25 +79,13 @@ if options.isMC:
    if options.era=="2016":
       modules_era.append(puAutoWeight_2016())
       modules_era.append(PrefCorr())
-      #modules_era.append(jetmetUncertainties2016All())
-      #modules_era.append(btagSFProducer("Legacy2016", "deepcsv"))
-      #modules_era.append(muonScaleRes2016())
-      #modules_era.append(lepSF_2016())
       ext_syst.append("PrefireWeight")
    if options.era=="2017":
       modules_era.append(puAutoWeight_2017())
       modules_era.append(PrefCorr())
-      #modules_era.append(jetmetUncertainties2017All())
-      #modules_era.append(btagSFProducer("2017", "deepcsv"))
-      #modules_era.append(muonScaleRes2017())
-      #modules_era.append(lepSF_2017())
       ext_syst.append("PrefireWeight")
    if options.era=="2018":
       modules_era.append(puAutoWeight_2018())
-      #modules_era.append(jetmetUncertainties2018All())
-      #modules_era.append(btagSFProducer("2018", "deepcsv"))
-      #modules_era.append(muonScaleRes2018())
-      #modules_era.append(lepSF_2018())
 
    #modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
    modules_era.append(SUEPProducer(isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))
@@ -112,12 +101,12 @@ else:
    print ("sample : ", options.dataset, " candtag : ", condtag_)
 
    print (" -- era : ",)
-   if options.era=="2016":
-      modules_era.append(getattr(jetRecalib, 'jetRecalib2016%s' % condtag_.split(options.era)[1][:1])() )
-   if options.era=="2017":
-      modules_era.append(getattr(jetRecalib, 'jetRecalib2017%s' % condtag_.split(options.era)[1][:1])() )
-   if options.era=="2018":
-      modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
+   #if options.era=="2016":
+   #   modules_era.append(getattr(jetRecalib, 'jetRecalib2016%s' % condtag_.split(options.era)[1][:1])() )
+   #if options.era=="2017":
+   #   modules_era.append(getattr(jetRecalib, 'jetRecalib2017%s' % condtag_.split(options.era)[1][:1])() )
+   #if options.era=="2018":
+   #   modules_era.append(getattr(jetRecalib, 'jetRecalib2018%s' % condtag_.split(options.era)[1][:1])() )
 
    #modules_era.append(PhiXYCorrection(era=options.era,isMC=options.isMC,sys=''))
    modules_era.append(SUEPProducer  (isMC=options.isMC, era=str(options.era), do_syst=1, syst_var=''))

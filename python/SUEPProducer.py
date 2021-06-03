@@ -9,6 +9,7 @@ import itertools
 from copy import deepcopy
 #from pyjet import cluster
 #from pyjet.testdata import get_event
+import pyjet
 from numba import jit
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -17,11 +18,11 @@ import PhysicsTools.NanoAODTools.postprocessing.tools as tk
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-local_path = ['/home/freerc/.local/lib/python2.7/site-packages/']
-def _get_module(name):
-    found = imp.find_module(name,local_path)
-    return imp.load_module(name,*found)
-pyjet = _get_module('pyjet')
+#local_path = ['/home/freerc/.local/lib/python2.7/site-packages/']
+#def _get_module(name):
+#    found = imp.find_module(name,local_path)
+#    return imp.load_module(name,*found)
+#pyjet = _get_module('pyjet')
 
 class SUEPProducer(Module):
     def __init__(self, isMC, era, do_syst=False, syst_var=''):
@@ -77,6 +78,19 @@ class SUEPProducer(Module):
         self.out.branch("SUEP_pt_FW2M{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_pt_D{}".format(self.syst_suffix), "F")
 
+        self.out.branch("SUEP_pt_akt_pt{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_m{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_eta{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_phi{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_nconst{}".format(self.syst_suffix), "I")
+        self.out.branch("SUEP_pt_akt_pt_ave{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_girth{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_spher{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_aplan{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_FW2M{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_pt_akt_D{}".format(self.syst_suffix), "F")
+
+
         self.out.branch("SUEP_mult_pt{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_mult_m{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_mult_eta{}".format(self.syst_suffix), "F")
@@ -89,8 +103,18 @@ class SUEPProducer(Module):
         self.out.branch("SUEP_mult_FW2M{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_mult_D{}".format(self.syst_suffix), "F")
 
+        self.out.branch("SUEP_dphi1_nconst{}".format(self.syst_suffix),"I")
+        self.out.branch("SUEP_dphi1_spher{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_dphi3_nconst{}".format(self.syst_suffix),"I")
+        self.out.branch("SUEP_dphi3_spher{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_dphi5_nconst{}".format(self.syst_suffix),"I")
+        self.out.branch("SUEP_dphi5_spher{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_dphi7_nconst{}".format(self.syst_suffix),"I")
+        self.out.branch("SUEP_dphi7_spher{}".format(self.syst_suffix), "F")
+
         self.out.branch("met_filter{}".format(self.syst_suffix), "I")
 
+        self.out.branch("HT{}".format(self.syst_suffix), "F")
         self.out.branch("ngood_jets{}".format(self.syst_suffix), "I")
         self.out.branch("ngood_bjets{}".format(self.syst_suffix), "I")
         self.out.branch("lead_jet_pt{}".format(self.syst_suffix), "F")
@@ -261,6 +285,7 @@ class SUEPProducer(Module):
         PFCands = list(Collection(event, "PFCands"))
         flag = Object(event, "Flag")
         met = Object(event, "MET")
+        genpart = list(Collection(event, "GenPart"))
 
         # in case of systematic take the shifted values are default
         # For the central values, need to include jetMetTool all the time
@@ -551,6 +576,68 @@ class SUEPProducer(Module):
             self.out.fillBranch("SUEP_pt_aplan{}".format(self.syst_suffix), SUEP_pt_aplan)
             self.out.fillBranch("SUEP_pt_FW2M{}".format(self.syst_suffix), SUEP_pt_FW2M)
             self.out.fillBranch("SUEP_pt_D{}".format(self.syst_suffix), SUEP_pt_D)
+  
+            nconst_dphi1 = nconst_dphi3 = nconst_dphi5 = nconst_dphi7 = 0
+            if len(fastjets)>1:
+                if len(fastjets[0]) > len(fastjets[1]):
+                   SUEP_dphi_cand = fastjets[0]
+                   ISR_dphi_cand = fastjets[1]
+                else:
+                   SUEP_dphi_cand = fastjets[1]
+                   ISR_dphi_cand = fastjets[0]
+
+
+                SUEP_dphi_vector = ROOT.TLorentzVector()
+                SUEP_dphi_vector.SetPtEtaPhiM(SUEP_dphi_cand.pt, SUEP_dphi_cand.eta, SUEP_dphi_cand.phi, SUEP_dphi_cand.mass)
+                boost_dphi = SUEP_dphi_vector.BoostVector()
+                spher_dphi1 = []
+                spher_dphi3 = []
+                spher_dphi5 = []
+                spher_dphi7 = []
+                for const in SUEP_dphi_cand:
+                    #dphi = abs(tk.deltaPhi(const.phi, ISR_dphi_cand.phi))
+                    spher_tmp.SetPtEtaPhiM(const.pt, const.eta, const.phi, const.mass)
+                    spher_tmp.Boost(-boost_dphi)
+                    dphi = abs(tk.deltaPhi(spher_tmp.Phi(), ISR_dphi_cand.phi))
+                    if dphi < 0.1:
+                       continue
+                    nconst_dphi1 += 1
+                    spher_dphi1.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+                    if dphi < 0.3:
+                       continue
+                    nconst_dphi3 += 1
+                    spher_dphi3.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+                    if dphi < 0.5:
+                       continue
+                    nconst_dphi5 += 1
+                    spher_dphi5.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+                    if dphi < 0.7:
+                       continue
+                    nconst_dphi7 += 1
+                    spher_dphi7.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+            try:
+                sorted_dphi1 = self.sphericity(spher_dphi1,2.0)
+                sorted_dphi3 = self.sphericity(spher_dphi3,2.0)
+                sorted_dphi5 = self.sphericity(spher_dphi5,2.0)
+                sorted_dphi7 = self.sphericity(spher_dphi7,2.0)
+            except:
+                sorted_dphi1 = [0.0, 0.0, 0.0]
+                sorted_dphi3 = [0.0, 0.0, 0.0]
+                sorted_dphi5 = [0.0, 0.0, 0.0]
+                sorted_dphi7 = [0.0, 0.0, 0.0]
+            SUEP_dphi1_spher = 1.5 * (sorted_dphi1[1]+sorted_dphi1[0])
+            SUEP_dphi3_spher = 1.5 * (sorted_dphi3[1]+sorted_dphi3[0])
+            SUEP_dphi5_spher = 1.5 * (sorted_dphi5[1]+sorted_dphi5[0])
+            SUEP_dphi7_spher = 1.5 * (sorted_dphi7[1]+sorted_dphi7[0])
+
+            self.out.fillBranch("SUEP_dphi1_nconst{}".format(self.syst_suffix), nconst_dphi1)
+            self.out.fillBranch("SUEP_dphi1_spher{}".format(self.syst_suffix), SUEP_dphi1_spher)
+            self.out.fillBranch("SUEP_dphi3_nconst{}".format(self.syst_suffix), nconst_dphi3)
+            self.out.fillBranch("SUEP_dphi3_spher{}".format(self.syst_suffix), SUEP_dphi3_spher)
+            self.out.fillBranch("SUEP_dphi5_nconst{}".format(self.syst_suffix), nconst_dphi5)
+            self.out.fillBranch("SUEP_dphi5_spher{}".format(self.syst_suffix), SUEP_dphi5_spher)
+            self.out.fillBranch("SUEP_dphi7_nconst{}".format(self.syst_suffix), nconst_dphi7)
+            self.out.fillBranch("SUEP_dphi7_spher{}".format(self.syst_suffix), SUEP_dphi7_spher)
 
             #look at the fastjet with the most constituents for SUEP_mult
             fastjets.sort(key=lambda fastjet: len(fastjet), reverse=True)
@@ -598,17 +685,58 @@ class SUEPProducer(Module):
             self.out.fillBranch("SUEP_mult_aplan{}".format(self.syst_suffix), SUEP_mult_aplan)
             self.out.fillBranch("SUEP_mult_FW2M{}".format(self.syst_suffix), SUEP_mult_FW2M)
             self.out.fillBranch("SUEP_mult_D{}".format(self.syst_suffix), SUEP_mult_D)
-        # process jet
+
+        sequence = pyjet.cluster(fastjet_in, R=1.5, p=-1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
+        fastjets = sequence.inclusive_jets(ptmin=3)
+
+
+
+        if len(fastjets)>0:
+            #looking at the highest pT fastjet for SUEP_pt
+            self.out.fillBranch("SUEP_pt_akt_pt{}".format(self.syst_suffix), fastjets[0].pt)
+            self.out.fillBranch("SUEP_pt_akt_m{}".format(self.syst_suffix), fastjets[0].mass)
+            self.out.fillBranch("SUEP_pt_akt_eta{}".format(self.syst_suffix), fastjets[0].eta)
+            self.out.fillBranch("SUEP_pt_akt_phi{}".format(self.syst_suffix), fastjets[0].phi)
+            self.out.fillBranch("SUEP_pt_akt_nconst{}".format(self.syst_suffix), len(fastjets[0]))
+            sum_SUEP_pt = 0.0
+            girth_pt = 0.0
+            SUEP_pt = ROOT.TLorentzVector()
+            SUEP_pt.SetPtEtaPhiM(fastjets[0].pt, fastjets[0].eta, fastjets[0].phi, fastjets[0].mass)
+            boost_pt = SUEP_pt.BoostVector()
+            spher_pt = []
+            for const in fastjets[0]:
+                sum_SUEP_pt += const.pt
+                dR = abs(tk.deltaR(const.eta, const.phi, fastjets[0].eta, fastjets[0].phi,))
+                girth_pt += dR * const.pt / fastjets[0].pt
+                spher_tmp.SetPtEtaPhiM(const.pt, const.eta, const.phi, const.mass)
+                spher_tmp.Boost(-boost_pt)
+                spher_pt.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+            try:
+                sorted_evals = self.sphericity(spher_pt,2.0)
+            except:
+                sorted_evals = [0.0, 0.0, 0.0]
+            SUEP_pt_spher = 1.5 * (sorted_evals[1]+sorted_evals[0])
+            SUEP_pt_aplan = 1.5 * sorted_evals[0]
+            SUEP_pt_FW2M  = 1.0 - 3.0 * (sorted_evals[2]*sorted_evals[1] + sorted_evals[2]*sorted_evals[0] + sorted_evals[1]*sorted_evals[0])
+            SUEP_pt_D     = 27.0 * sorted_evals[2]*sorted_evals[1]*sorted_evals[0]
+            self.out.fillBranch("SUEP_pt_akt_pt_ave{}".format(self.syst_suffix), sum_SUEP_pt / len(fastjets[0]))
+            self.out.fillBranch("SUEP_pt_akt_girth{}".format(self.syst_suffix), girth_pt)
+            self.out.fillBranch("SUEP_pt_akt_spher{}".format(self.syst_suffix), SUEP_pt_spher)
+            self.out.fillBranch("SUEP_pt_akt_aplan{}".format(self.syst_suffix), SUEP_pt_aplan)
+            self.out.fillBranch("SUEP_pt_akt_FW2M{}".format(self.syst_suffix), SUEP_pt_FW2M)
+            self.out.fillBranch("SUEP_pt_akt_D{}".format(self.syst_suffix), SUEP_pt_D)  # process jet
         good_jets  = []
         good_bjets = []
+        HT = 0.0
         for jet in jets:
             if jet.pt < 30.0 or abs(jet.eta) > 4.7:
                 continue
             if not jet.jetId:
                 continue
-            if tk.closest(jet, good_leptons)[1] < 0.4:
-                continue
+            #if tk.closest(jet, good_leptons)[1] < 0.4:
+            #    continue
             good_jets.append(jet)
+            HT += jet.pt
             # Count b-tag with medium WP DeepCSV
             # ref : https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if abs(jet.eta) <= 2.4 and jet.btagDeepB > self.btag_id("medium"):
@@ -620,7 +748,8 @@ class SUEPProducer(Module):
         _dphi_j_met = tk.deltaPhi(good_jets[0], met.phi) if len(good_jets) else -99.0
         _lead_jet_pt = good_jets[0].pt if len(good_jets) else 0.0
         _lead_bjet_pt = good_bjets[0].pt if len(good_bjets) else 0.0
-
+        
+        self.out.fillBranch("HT{}".format(self.syst_suffix), HT)
         self.out.fillBranch("ngood_jets{}".format(self.syst_suffix), len(good_jets))
         self.out.fillBranch("ngood_bjets{}".format(self.syst_suffix), len(good_bjets))
         self.out.fillBranch("lead_jet_pt{}".format(self.syst_suffix), _lead_jet_pt)
@@ -639,6 +768,29 @@ class SUEPProducer(Module):
                 had_taus.append(tau)
         self.out.fillBranch("nhad_taus{}".format(self.syst_suffix), len(had_taus))
         self.out.fillBranch("lead_tau_pt{}".format(self.syst_suffix), had_taus[0].pt if len(had_taus) else 0)
+        
+        #print ('New Event!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        #good_genparts = []
+        #for part in genpart:
+        #    #if part.status != 1:
+        #    #    continue
+        #    #if part.statusFlags != 49280:#bitwise information for isPrompt and isHardProcess
+        #    #    continue
+        #    if part.pt < 1 or part.eta > 2.4:
+        #         continue
+        #    part_vars = (part.pt,part.eta ,part.phi ,part.mass)
+        #    good_genparts.append(part_vars)
+        #    print("The status flag: ", part.statusFlags)
+        #    print("Gen particle info")
+        #    print("The status: ", part.status)
+        #    print("The pdg ID: ", part.pdgId)
+        #    print("The mother: ", part.genPartIdxMother)
+
+        ##make new jet collection based on fastjet
+        #fastjet_in = np.array(good_genparts[:], dtype=[('pT', 'f8'), ('eta', 'f8'), ('phi', 'f8'), ('mass', 'f8')])
+        #sequence = pyjet.cluster(fastjet_in, R=1.5, p=1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
+        #fastjets = sequence.inclusive_jets(ptmin=3)
+        #print(fastjets[0].pt)
 
         # This will reduce the size of most of the background and data
         if (len(fastjets)>0):

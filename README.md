@@ -12,7 +12,7 @@ cmsenv
 
 mkdir PhysicsTools/
 git clone https://github.com/yhaddad/nanoAOD-tools.git PhysicsTools/NanoAODTools
-git clone git@github.com:chadfreer/Nano_SUEP.git PhysicsTools/SUEP
+git clone https://github.com/SUEPPhysics/SUEPAnalysis.git PhysicsTools/SUEP
 
 cd $CMSSW_BASE/src/PhysicsTools/NanoAODTools
 git checkout remotes/origin/topic-Run2-Lepton-SF

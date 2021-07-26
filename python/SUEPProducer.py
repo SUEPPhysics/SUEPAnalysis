@@ -46,25 +46,17 @@ class SUEPProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("met_pt{}".format(self.syst_suffix), "F")
         self.out.branch("met_phi{}".format(self.syst_suffix), "F")
-        self.out.branch("ngood_leptons{}".format(self.syst_suffix), "I")
-        self.out.branch("nextra_leptons{}".format(self.syst_suffix), "I")
 
         self.out.branch("nCleaned_Cands{}".format(self.syst_suffix), "I")
         self.out.branch("HTTot{}".format(self.syst_suffix), "F")
         self.out.branch("ave_cand_pt{}".format(self.syst_suffix), "F")
         self.out.branch("ngood_fastjets".format(self.syst_suffix), "I")
 
-        self.out.branch("SUEP_isr_pt{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_m{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_eta{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_phi{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_nconst{}".format(self.syst_suffix), "I")
-        self.out.branch("SUEP_isr_pt_ave{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_girth{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_spher{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_aplan{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_FW2M{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_isr_D{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_ch_nconst{}".format(self.syst_suffix), "I")
+        self.out.branch("SUEP_ch_spher{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_ch_aplan{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_ch_FW2M{}".format(self.syst_suffix), "F")
+        self.out.branch("SUEP_ch_D{}".format(self.syst_suffix), "F")
 
         self.out.branch("SUEP_pt_pt{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_pt_m{}".format(self.syst_suffix), "F")
@@ -77,19 +69,6 @@ class SUEPProducer(Module):
         self.out.branch("SUEP_pt_aplan{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_pt_FW2M{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_pt_D{}".format(self.syst_suffix), "F")
-
-        self.out.branch("SUEP_pt_akt_pt{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_m{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_eta{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_phi{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_nconst{}".format(self.syst_suffix), "I")
-        self.out.branch("SUEP_pt_akt_pt_ave{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_girth{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_spher{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_aplan{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_FW2M{}".format(self.syst_suffix), "F")
-        self.out.branch("SUEP_pt_akt_D{}".format(self.syst_suffix), "F")
-
 
         self.out.branch("SUEP_mult_pt{}".format(self.syst_suffix), "F")
         self.out.branch("SUEP_mult_m{}".format(self.syst_suffix), "F")
@@ -124,102 +103,9 @@ class SUEPProducer(Module):
         self.out.branch("nhad_taus{}".format(self.syst_suffix), "I")
         self.out.branch("lead_tau_pt{}".format(self.syst_suffix), "F")
 
-        #if self.isMC and len(self.syst_suffix)==0:
-        #    self.out.branch("w_muon_SF{}".format(self.syst_suffix), "F")
-        #    self.out.branch("w_muon_SFUp{}".format(self.syst_suffix), "F")
-        #    self.out.branch("w_muon_SFDown{}".format(self.syst_suffix), "F")
-        #    self.out.branch("w_electron_SF{}".format(self.syst_suffix), "F")
-        #    self.out.branch("w_electron_SFUp{}".format(self.syst_suffix), "F")
-        #    self.out.branch("w_electron_SFDown{}".format(self.syst_suffix), "F")
-
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
-
-    def electron_id(self, electron, wp):
-        pass_id = 0
-        if (self.era == "2016" and wp == "80"):
-            return electron.mvaSpring16GP_WP80
-        elif (self.era == "2016" and wp == "90"):
-            return electron.mvaSpring16GP_WP90
-
-        elif (self.era == "2017" and wp == "80"):
-            try:
-                pass_id = electron.mvaFall17V2Iso_WP80
-            except:
-                try:
-                    pass_id = electron.mvaFall17V1Iso_WP80
-                except:
-                    try:
-                        pass_id = electron.mvaFall17Iso_WP80
-                    except ValueError:
-                        print "[error] not mvaFall17 electron id found ... "
-
-            return pass_id
-        elif (self.era == "2017" and wp == "90"):
-            try:
-                pass_id = electron.mvaFall17V2Iso_WP90
-            except:
-                try:
-                    pass_id = electron.mvaFall17V1Iso_WP90
-                except:
-                    try:
-                        pass_id = electron.mvaFall17Iso_WP90
-                    except ValueError:
-                        print "[error] not mvaFall17 electron id found ... "
-
-            return pass_id
-        elif (self.era == "2017" and wp == "WPL"):
-            try:
-                pass_id = electron.mvaFall17V2Iso_WPL
-            except:
-                try:
-                    pass_id = electron.mvaFall17V1Iso_WPL
-                except:
-                    try:
-                        pass_id = electron.mvaFall17Iso_WPL
-                    except ValueError:
-                        print "[error] not mvaFall17 electron id found ... "
-
-        elif (self.era == "2018" and wp == "80"):
-            try:
-                pass_id = electron.mvaFall17V2Iso_WP80
-            except:
-                try:
-                    pass_id = electron.mvaFall17V1Iso_WP80
-                except:
-                    try:
-                        pass_id = electron.mvaFall17Iso_WP80
-                    except ValueError:
-                        print "[error] not mvaFall17 electron id found ... "
-
-            return pass_id
-        elif (self.era == "2018" and wp == "90"):
-            try:
-                pass_id = electron.mvaFall17V2Iso_WP90
-            except:
-                try:
-                    pass_id = electron.mvaFall17V1Iso_WP90
-                except:
-                    try:
-                        pass_id = electron.mvaFall17Iso_WP90
-                    except ValueError:
-                        print "[error] not mvaFall17 electron id found ... "
-
-            return pass_id
-        elif (self.era == "2018" and wp == "WPL"):
-            try:
-                pass_id = electron.mvaFall17V2Iso_WPL
-            except:
-                try:
-                    pass_id = electron.mvaFall17V1Iso_WPL
-                except:
-                    try:
-                        pass_id = electron.mvaFall17Iso_WPL
-                    except ValueError:
-                        print "[error] not mvaFall18 electron id found ... "
-
-            return pass_id
 
 
     def btag_id(self, wp):
@@ -277,8 +163,6 @@ class SUEPProducer(Module):
         process event, return True (go to next module)
         or False (fail, go to next event)
         """
-        electrons = list(Collection(event, "Electron"))
-        muons = list(Collection(event, "Muon"))
         jets = list(Collection(event, "Jet"))
         fatjets = list(Collection(event, "FatJet"))
         taus = list(Collection(event, "Tau"))
@@ -287,91 +171,9 @@ class SUEPProducer(Module):
         met = Object(event, "MET")
         genpart = list(Collection(event, "GenPart"))
 
-        # in case of systematic take the shifted values are default
-        # For the central values, need to include jetMetTool all the time
-        # Jet systematics
-        #if self.syst_var == "":
-        #    syst_var = "nom"
-        #else:
-        #    syst_var = self.syst_var
-        ## checking something
-        #try:
-        #    var_jet_pts = getattr(event,  "Jet_pt_{}".format(syst_var), None)
-        #    if var_jet_pts:
-        #        for i,jet in enumerate(jets):
-        #            jet.pt = var_jet_pts[i]
-        #    else:
-        #        print 'WARNING: jet pts with variation {}'
-        #        'not available, using the nominal value'.format(syst_var)
-        #except:
-        #    var_jet_pts = getattr(event,  "Jet_pt_nom", None)
-        #    for i,jet in enumerate(jets):
-        #        jet.pt = var_jet_pts[i]
-
-        #try:
-        #    var_met_pt  = getattr(event,  "MET_pt_{}".format(syst_var), None)
-        #    var_met_phi = getattr(event, "MET_phi_{}".format(syst_var), None)
-        #    if var_met_pt:
-        #        met.pt = var_met_pt
-        #    else:
-        #        print 'WARNING: MET pt with variation '
-        #        '{} not available, using the nominal value'.format(syst_var)
-        #    if var_met_phi:
-        #        met.phi = var_met_phi
-        #    else:
-        #        print 'WARNING: MET phi with variation {}'
-        #        'not available, using the nominal value'.format(syst_var)
-        #except:
-        #    var_met_pt  = getattr(event,  "MET_pt_nom", None)
-        #    var_met_phi = getattr(event, "MET_phi_nom", None)
-        #    if var_met_pt:
-        #        met.pt = var_met_pt
-        #    if var_met_phi:
-        #        met.phi = var_met_phi
-    
-
         met_p4 = ROOT.TLorentzVector()
         met_p4.SetPtEtaPhiM(met.pt,0.0,met.phi, 0.0)
 
-
-        # Electrons Energy
-        #if "ElectronEn" in self.syst_var:
-        #    (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
-        #    if "Up" in self.syst_var:
-        #        for i, elec in enumerate(electrons):
-        #            met_px = met_px + (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
-        #            met_py = met_py + (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
-        #            elec.pt = elec.pt + elec.energyErr/math.cosh(elec.eta)
-        #    else:
-        #        for i, elec in enumerate(electrons):
-        #            met_px = met_px - (elec.energyErr)*np.cos(elec.phi)/math.cosh(elec.eta)
-        #            met_py = met_py - (elec.energyErr)*np.sin(elec.phi)/math.cosh(elec.eta)
-        #            elec.pt = elec.pt - elec.energyErr/math.cosh(elec.eta)
-        #    met.pt  = math.sqrt(met_px**2 + met_py**2)
-        #    met.phi = math.atan2(met_py, met_px)
-
-        ## Muons Energy
-        #if self.isMC:
-        #    muons_pts = getattr(event, "Muon_corrected_pt")
-        #    for i, muon in enumerate(muons):
-        #        muon.pt = muons_pts[i]
-
-        #if "MuonEn" in self.syst_var:
-        #    (met_px, met_py) = ( met.pt*np.cos(met.phi), met.pt*np.sin(met.phi) )
-        #    if "Up" in self.syst_var:
-        #        muons_pts = getattr(event, "Muon_correctedUp_pt")
-        #        for i, muon in enumerate(muons):
-        #            met_px = met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
-        #            met_py = met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
-        #            muon.pt = muons_pts[i]
-        #    else:
-        #        muons_pts = getattr(event, "Muon_correctedDown_pt")
-        #        for i, muon in enumerate(muons):
-        #            met_px =met_px - (muons_pts[i] - muon.pt)*np.cos(muon.phi)
-        #            met_py =met_py - (muons_pts[i] - muon.pt)*np.sin(muon.phi)
-        #            muon.pt = muons_pts[i]
-        #    met.pt  = math.sqrt(met_px**2 + met_py**2)
-        #    met.phi = math.atan2(met_py, met_px)
             
         # filling and contructing the event categorisation
         self.out.fillBranch("met_pt{}".format(self.syst_suffix), met.pt)
@@ -379,87 +181,7 @@ class SUEPProducer(Module):
 
         pass_met_filter = self.met_filter(flag, True)
         self.out.fillBranch("met_filter{}".format(self.syst_suffix), pass_met_filter)
-
-        # count electrons and muons
-        good_leptons = []
-        good_muons = []
-        good_electrons = []
-
-	muons.sort(key=lambda muon: muon.pt, reverse=True)
-        electrons.sort(key=lambda el: el.pt, reverse=True)
-        # Choose tight-quality e/mu for event categorization
-        for idx,mu in enumerate(muons):
-            isoLep   = mu.pfRelIso04_all
-            pass_ips = abs(mu.dxy) < 0.02 and abs(mu.dz) < 0.1
-            pass_fid = abs(mu.eta) < 2.4 and mu.pt >= (25 if idx==0 else 20)
-            pass_ids = mu.tightId and isoLep <= 0.15
-            if pass_fid and pass_ids and pass_ips:
-                good_muons.append(mu)
-        for idy,el in enumerate(electrons):
-            id_CB = el.cutBased
-            # changing to MVA based ID :
-            if el.pt >= (25 if idy==0 else 20) and abs(el.eta) <= 2.5 and self.electron_id(el, "90"):
-                good_electrons.append(el)
-
-        # let sort the muons in pt
-        good_muons.sort(key=lambda x: x.pt, reverse=True)
-        good_electrons.sort(key=lambda x: x.pt, reverse=True)
-
-        # Find any remaining e/mu that pass looser selection
-        extra_leptons = []
-        for mu in muons:
-            isoLep   = mu.pfRelIso04_all
-            pass_ids = mu.softId and isoLep <= 0.25
-            pass_fid = abs(mu.eta) < 2.4 and mu.pt >= 10
-            if tk.closest(mu, good_muons)[1] < 0.01:
-                continue
-            if pass_fid and pass_ids:
-                extra_leptons.append(mu)
-
-        for el in electrons:
-            pass_fid = abs(el.eta) < 2.5 and el.pt >= 10
-            if tk.closest(el, good_electrons)[1] < 0.01:
-                continue
-            if pass_fid and self.electron_id(el, "WPL"):
-                extra_leptons.append(el)
-
-
-        good_leptons = good_electrons + good_muons
-        good_leptons.sort(key=lambda x: x.pt, reverse=True)
-
-        self.out.fillBranch("ngood_leptons{}".format(self.syst_suffix), len(good_leptons))
-        self.out.fillBranch("nextra_leptons{}".format(self.syst_suffix), len(extra_leptons))
-
-        # Leptons efficiency/Trigger/Isolation Scale factors
-        # These are applied only of the first 2 leading leptons
-        #if self.isMC:
-        #    w_muon_SF     = w_electron_SF     = 1.0
-        #    w_muon_SFUp   = w_electron_SFUp   = 1.0
-        #    w_muon_SFDown = w_electron_SFDown = 1.0
-        #    if len(good_leptons) >= 2:
-        #        if abs(good_leptons[0].pdgId) == 11:
-        #            w_electron_SF     *=  good_leptons[0].SF
-        #            w_electron_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
-        #            w_electron_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
-        #        if abs(good_leptons[0].pdgId) == 11:
-        #            w_electron_SF     *=  good_leptons[1].SF
-        #            w_electron_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
-        #            w_electron_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-        #        if abs(good_leptons[0].pdgId) == 13:
-        #            w_muon_SF     *=  good_leptons[0].SF
-        #            w_muon_SFUp   *= (good_leptons[0].SF + good_leptons[0].SFErr)
-        #            w_muon_SFDown *= (good_leptons[0].SF - good_leptons[0].SFErr)
-        #        if abs(good_leptons[1].pdgId) == 13:
-        #            w_muon_SF     *=  good_leptons[1].SF
-        #            w_muon_SFUp   *= (good_leptons[1].SF + good_leptons[1].SFErr)
-        #            w_muon_SFDown *= (good_leptons[1].SF - good_leptons[1].SFErr)
-        #    self.out.fillBranch("w_muon_SF"        , w_muon_SF        )
-        #    self.out.fillBranch("w_muon_SFUp"      , w_muon_SFUp      )
-        #    self.out.fillBranch("w_muon_SFDown"    , w_muon_SFDown    )
-        #    self.out.fillBranch("w_electron_SF"    , w_electron_SF    )
-        #    self.out.fillBranch("w_electron_SFUp"  , w_electron_SFUp  )
-        #    self.out.fillBranch("w_electron_SFDown", w_electron_SFDown)
-
+ 
         #look through all the PFCands. See here (https://github.com/SUEPPhysics/SUEPNano/blob/autumn18/python/addPFCands_cff.py)
         good_cands   = []
         fastjet_list = []
@@ -481,66 +203,47 @@ class SUEPProducer(Module):
 
         #make new jet collection based on fastjet
         fastjet_in = np.array(fastjet_list[:], dtype=[('pT', 'f8'), ('eta', 'f8'), ('phi', 'f8'), ('mass', 'f8')])
-        sequence = pyjet.cluster(fastjet_in, R=1.5, p=1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
+        sequence = pyjet.cluster(fastjet_in, R=1.5, p=-1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
         fastjets = sequence.inclusive_jets(ptmin=3)
         self.out.fillBranch("ngood_fastjets".format(self.syst_suffix), len(fastjets))
 
         #remove the 10 hardest tracks for SUEP_isr
-        good_cands.sort(key=lambda cand: cand.trkPt, reverse=True)
-        sum_SUEP_ave = 0.0
-        SUEP_isr = ROOT.TLorentzVector()
-        tmp = ROOT.TLorentzVector()
-        for i,  cand in enumerate(good_cands):
-            if i < 9: continue
-            sum_SUEP_ave += cand.trkPt
-            tmp.SetPtEtaPhiM(cand.trkPt,cand.trkEta ,cand.trkPhi ,cand.mass)
-            SUEP_isr += tmp
-        if nCands > 10:
-            sum_SUEP_ave = sum_SUEP_ave/(nCands - 10)
-            self.out.fillBranch("SUEP_isr_pt{}".format(self.syst_suffix), SUEP_isr.Pt())
-            self.out.fillBranch("SUEP_isr_m{}".format(self.syst_suffix), SUEP_isr.M())
-            self.out.fillBranch("SUEP_isr_eta{}".format(self.syst_suffix), SUEP_isr.Eta())
-            self.out.fillBranch("SUEP_isr_phi{}".format(self.syst_suffix), SUEP_isr.Phi())
-            self.out.fillBranch("SUEP_isr_nconst{}".format(self.syst_suffix), nCands - 10)
-            self.out.fillBranch("SUEP_isr_pt_ave{}".format(self.syst_suffix), sum_SUEP_ave)
-        else:
-            self.out.fillBranch("SUEP_isr_pt{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_m{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_eta{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_phi{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_nconst{}".format(self.syst_suffix), -1)
-            self.out.fillBranch("SUEP_isr_pt_ave{}".format(self.syst_suffix), -99.0)
-        girth_isr = 0.0
-        boost = SUEP_isr.BoostVector()
+        #fastjets.sort(key=lambda fastjet: len(fastjet), reverse=True)
         spher_tmp = ROOT.TLorentzVector()
-        spher_isr = []
-        for i,  cand in enumerate(good_cands):
-            if i < 9: continue
-            dR = abs(tk.deltaR(cand.trkEta, cand.trkPhi, SUEP_isr.Eta(), SUEP_isr.Phi(),))
-            girth_isr += dR * cand.trkPt / SUEP_isr.Pt()
-            spher_tmp.SetPtEtaPhiM(cand.trkPt,cand.trkEta ,cand.trkPhi, cand.mass)
-            spher_tmp.Boost(-boost)
-            spher_isr.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
-        try:
-            sorted_evals = self.sphericity(spher_isr,2.0)
-        except:
-            sorted_evals = [0.0, 0.0, 0.0]
-        SUEP_isr_spher = 1.5 * (sorted_evals[1]+sorted_evals[0])
-        SUEP_isr_aplan = 1.5 * sorted_evals[0]
-        SUEP_isr_FW2M  = 1.0 - 3.0 * (sorted_evals[2]*sorted_evals[1] + sorted_evals[2]*sorted_evals[0] + sorted_evals[1]*sorted_evals[0])
-        SUEP_isr_D     = 27.0 * sorted_evals[2]*sorted_evals[1]*sorted_evals[0]
-        if nCands > 10:
-            self.out.fillBranch("SUEP_isr_girth{}".format(self.syst_suffix), girth_isr)
-            self.out.fillBranch("SUEP_isr_spher{}".format(self.syst_suffix), SUEP_isr_spher)
-            self.out.fillBranch("SUEP_isr_aplan{}".format(self.syst_suffix), SUEP_isr_aplan)
-            self.out.fillBranch("SUEP_isr_FW2M{}".format(self.syst_suffix), SUEP_isr_FW2M)
-            self.out.fillBranch("SUEP_isr_D{}".format(self.syst_suffix), SUEP_isr_D)
-        else:
-            self.out.fillBranch("SUEP_isr_girth{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_spher{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_aplan{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_FW2M{}".format(self.syst_suffix), -99.0)
-            self.out.fillBranch("SUEP_isr_D{}".format(self.syst_suffix), -99.0)
+        if len(fastjets)>1:
+            SUEP_cand = fastjets[0]
+            ISR_cand = fastjets[1]
+            if len(fastjets[1]) > len(fastjets[0]):
+                SUEP_cand = fastjets[1]
+                ISR_cand = fastjets[0]
+
+            SUEP_pt = ROOT.TLorentzVector()
+            SUEP_pt.SetPtEtaPhiM(SUEP_cand.pt, SUEP_cand.eta, SUEP_cand.phi, SUEP_cand.mass)
+            boost_pt = SUEP_pt.BoostVector()
+            boosted_cands = []
+            for cands in good_cands:
+                 spher_tmp.SetPtEtaPhiM(cands.trkPt, cands.trkEta, cands.trkPhi, cands.mass)
+                 spher_tmp.Boost(-boost_pt)
+                 if abs(tk.deltaPhi(spher_tmp.Phi(),ISR_cand.phi)) < 1.6: continue
+                 boosted_cands.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
+            try:
+                sorted_evals = self.sphericity(boosted_cands,2.0)
+            except:
+                sorted_evals = [0.0, 0.0, 0.0]
+            SUEP_ch_spher = 1.5 * (sorted_evals[1]+sorted_evals[0])
+            SUEP_ch_aplan = 1.5 * sorted_evals[0]
+            SUEP_ch_FW2M  = 1.0 - 3.0 * (sorted_evals[2]*sorted_evals[1] + sorted_evals[2]*sorted_evals[0] + sorted_evals[1]*sorted_evals[0])
+            SUEP_ch_D     = 27.0 * sorted_evals[2]*sorted_evals[1]*sorted_evals[0]
+            self.out.fillBranch("SUEP_ch_nconst{}".format(self.syst_suffix), len(boosted_cands))
+            self.out.fillBranch("SUEP_ch_spher{}".format(self.syst_suffix), SUEP_ch_spher)
+            self.out.fillBranch("SUEP_ch_aplan{}".format(self.syst_suffix), SUEP_ch_aplan)
+            self.out.fillBranch("SUEP_ch_FW2M{}".format(self.syst_suffix), SUEP_ch_FW2M)
+            self.out.fillBranch("SUEP_ch_D{}".format(self.syst_suffix), SUEP_ch_D)     
+
+
+
+
+
 
         if len(fastjets)>0:  
             #looking at the highest pT fastjet for SUEP_pt
@@ -686,45 +389,6 @@ class SUEPProducer(Module):
             self.out.fillBranch("SUEP_mult_FW2M{}".format(self.syst_suffix), SUEP_mult_FW2M)
             self.out.fillBranch("SUEP_mult_D{}".format(self.syst_suffix), SUEP_mult_D)
 
-        sequence = pyjet.cluster(fastjet_in, R=1.5, p=-1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
-        fastjets = sequence.inclusive_jets(ptmin=3)
-
-
-
-        if len(fastjets)>0:
-            #looking at the highest pT fastjet for SUEP_pt
-            self.out.fillBranch("SUEP_pt_akt_pt{}".format(self.syst_suffix), fastjets[0].pt)
-            self.out.fillBranch("SUEP_pt_akt_m{}".format(self.syst_suffix), fastjets[0].mass)
-            self.out.fillBranch("SUEP_pt_akt_eta{}".format(self.syst_suffix), fastjets[0].eta)
-            self.out.fillBranch("SUEP_pt_akt_phi{}".format(self.syst_suffix), fastjets[0].phi)
-            self.out.fillBranch("SUEP_pt_akt_nconst{}".format(self.syst_suffix), len(fastjets[0]))
-            sum_SUEP_pt = 0.0
-            girth_pt = 0.0
-            SUEP_pt = ROOT.TLorentzVector()
-            SUEP_pt.SetPtEtaPhiM(fastjets[0].pt, fastjets[0].eta, fastjets[0].phi, fastjets[0].mass)
-            boost_pt = SUEP_pt.BoostVector()
-            spher_pt = []
-            for const in fastjets[0]:
-                sum_SUEP_pt += const.pt
-                dR = abs(tk.deltaR(const.eta, const.phi, fastjets[0].eta, fastjets[0].phi,))
-                girth_pt += dR * const.pt / fastjets[0].pt
-                spher_tmp.SetPtEtaPhiM(const.pt, const.eta, const.phi, const.mass)
-                spher_tmp.Boost(-boost_pt)
-                spher_pt.append([spher_tmp.Px(),spher_tmp.Py(),spher_tmp.Pz()])
-            try:
-                sorted_evals = self.sphericity(spher_pt,2.0)
-            except:
-                sorted_evals = [0.0, 0.0, 0.0]
-            SUEP_pt_spher = 1.5 * (sorted_evals[1]+sorted_evals[0])
-            SUEP_pt_aplan = 1.5 * sorted_evals[0]
-            SUEP_pt_FW2M  = 1.0 - 3.0 * (sorted_evals[2]*sorted_evals[1] + sorted_evals[2]*sorted_evals[0] + sorted_evals[1]*sorted_evals[0])
-            SUEP_pt_D     = 27.0 * sorted_evals[2]*sorted_evals[1]*sorted_evals[0]
-            self.out.fillBranch("SUEP_pt_akt_pt_ave{}".format(self.syst_suffix), sum_SUEP_pt / len(fastjets[0]))
-            self.out.fillBranch("SUEP_pt_akt_girth{}".format(self.syst_suffix), girth_pt)
-            self.out.fillBranch("SUEP_pt_akt_spher{}".format(self.syst_suffix), SUEP_pt_spher)
-            self.out.fillBranch("SUEP_pt_akt_aplan{}".format(self.syst_suffix), SUEP_pt_aplan)
-            self.out.fillBranch("SUEP_pt_akt_FW2M{}".format(self.syst_suffix), SUEP_pt_FW2M)
-            self.out.fillBranch("SUEP_pt_akt_D{}".format(self.syst_suffix), SUEP_pt_D)  # process jet
         good_jets  = []
         good_bjets = []
         HT = 0.0
@@ -759,8 +423,8 @@ class SUEPProducer(Module):
         # process taus
         had_taus = []
         for tau in taus:
-            if tk.closest(tau, good_leptons)[1] < 0.4:
-                continue
+            #if tk.closest(tau, good_leptons)[1] < 0.4:
+            #    continue
             # only hadronic tau decay
             if tau.decayMode != 5:
                 continue
@@ -769,28 +433,6 @@ class SUEPProducer(Module):
         self.out.fillBranch("nhad_taus{}".format(self.syst_suffix), len(had_taus))
         self.out.fillBranch("lead_tau_pt{}".format(self.syst_suffix), had_taus[0].pt if len(had_taus) else 0)
         
-        #print ('New Event!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        #good_genparts = []
-        #for part in genpart:
-        #    #if part.status != 1:
-        #    #    continue
-        #    #if part.statusFlags != 49280:#bitwise information for isPrompt and isHardProcess
-        #    #    continue
-        #    if part.pt < 1 or part.eta > 2.4:
-        #         continue
-        #    part_vars = (part.pt,part.eta ,part.phi ,part.mass)
-        #    good_genparts.append(part_vars)
-        #    print("The status flag: ", part.statusFlags)
-        #    print("Gen particle info")
-        #    print("The status: ", part.status)
-        #    print("The pdg ID: ", part.pdgId)
-        #    print("The mother: ", part.genPartIdxMother)
-
-        ##make new jet collection based on fastjet
-        #fastjet_in = np.array(good_genparts[:], dtype=[('pT', 'f8'), ('eta', 'f8'), ('phi', 'f8'), ('mass', 'f8')])
-        #sequence = pyjet.cluster(fastjet_in, R=1.5, p=1) #p=-1,0,1 for anti-kt, aachen, and kt respectively
-        #fastjets = sequence.inclusive_jets(ptmin=3)
-        #print(fastjets[0].pt)
 
         # This will reduce the size of most of the background and data
         if (len(fastjets)>0):
